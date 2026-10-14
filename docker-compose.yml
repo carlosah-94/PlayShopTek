@@ -16,6 +16,21 @@ services:
       timeout: 3s
       retries: 10
 
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-playshoptek}:${POSTGRES_PASSWORD:-playshoptek}@db:5432/${POSTGRES_DB:-playshoptek}
+      WATCHFILES_FORCE_POLLING: "true"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
   adminer:
     image: adminer:latest
     ports:
