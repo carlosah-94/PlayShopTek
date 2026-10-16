@@ -2298,7 +2298,7 @@ a:hover{color:var(--psk-link-h)}
             </div>
           </div>
           <div class="field"><label>Método de pago</label>
-            <select class="input" value="{{ vrMetodo }}" onChange="{{ setVrMetodo }}" style="height:44px;width:100%"><option>Yape</option><option>Tarjeta</option></select>
+            <sc-if value="{{ vrEsTienda }}" hint-placeholder-val="{{ true }}"><select class="input" value="{{ vrMetodo }}" onChange="{{ setVrMetodo }}" style="height:44px;width:100%"><option>Efectivo</option><option>Yape</option><option>Transferencia BCP</option></select></sc-if><sc-if value="{{ vrEsWa }}" hint-placeholder-val="{{ false }}"><select class="input" value="Yape" onChange="{{ setVrMetodo }}" style="height:44px;width:100%"><option>Yape</option></select><div style="font-size:12px;color:rgb(var(--ink) / 0.72);margin-top:4px">Por WhatsApp se cobra solo con Yape.</div></sc-if>
           </div>
           <div class="field"><label>Celular del cliente *</label>
             <input class="input" value="{{ vrTel }}" onChange="{{ setVrTel }}" placeholder="987 112 445" inputmode="tel" style="height:44px">
@@ -5173,7 +5173,7 @@ class Component extends DCLogic {
     return { txt: (pct >= 0 ? '+' : '') + pct + '% vs. período anterior', color: pct >= 0 ? 'rgb(var(--c-green))' : 'rgb(var(--c-red))', pct, act, prev };
   }
   ventaRapidaVals() {
-    const s = this.state, vr = Object.assign({ prodId: '', cant: '1', canal: 'tienda', metodo: 'Yape', tel: '', items: [] }, s.vr || {});
+    const s = this.state, vr = Object.assign({ prodId: '', cant: '1', canal: 'tienda', metodo: 'Efectivo', tel: '', items: [] }, s.vr || {});
     const p = this.prod(vr.prodId), cant = Math.max(0, parseInt(vr.cant, 10) || 0);
     const setVr = (patch) => this.setState({ vr: Object.assign({}, vr, patch), vrError: '' });
     const hoy = this.hoyISO(), enLista = (id) => (vr.items.find(i => i.id === id) || { cant: 0 }).cant;
@@ -5182,7 +5182,7 @@ class Component extends DCLogic {
     const total = lineas.reduce((a, l) => a + l.unit * l.cant, 0), dig = this.telDigitos(vr.tel), cuenta = dig.length === 9 ? this.cuentasClientes().find(c => this.telDigitos(c.tel) === dig) : null;
     const puedeAnadir = p && cant >= 1 && cant <= disp(p);
     return {
-      vrCant: String(vr.cant), vrMetodo: vr.metodo, vrError: s.vrError || false, vrTel: vr.tel,
+      vrCant: String(vr.cant), vrMetodo: vr.metodo, vrEsTienda: vr.canal !== 'whatsapp', vrEsWa: vr.canal === 'whatsapp', vrError: s.vrError || false, vrTel: vr.tel,
       vrQ: vr.q !== undefined ? vr.q : (p ? p.nombre : ''), vrAbierto: !!vr.abierto,
       ...(() => {
         const q = (vr.q || '').trim().toLowerCase();
@@ -5203,7 +5203,7 @@ class Component extends DCLogic {
       setVrMetodo: (e) => setVr({ metodo: e.target.value }),
       setVrTel: (e) => setVr({ tel: e.target.value.replace(/[^0-9 ]/g, '').slice(0, 11) }),
       vrCanales: [{ id: 'tienda', nombre: 'En tienda', icono: 'ph ph-storefront', colorIcono: 'rgb(var(--c-lav))' }, { id: 'whatsapp', nombre: 'WhatsApp', icono: 'ph-fill ph-whatsapp-logo', colorIcono: '#25D366' }].map(c => ({
-        nombre: c.nombre, icono: c.icono, colorIcono: c.colorIcono, pick: () => setVr({ canal: c.id }),
+        nombre: c.nombre, icono: c.icono, colorIcono: c.colorIcono, pick: () => setVr({ canal: c.id, metodo: c.id === 'whatsapp' ? 'Yape' : 'Efectivo' }),
         fondo: vr.canal === c.id ? 'rgba(222,28,187,.14)' : 'transparent', borde: vr.canal === c.id ? 'rgba(222,28,187,.6)' : 'rgb(var(--ink) / 0.18)'
       })),
       vrHayProd: !!p, vrPuedeAnadir: !!puedeAnadir, vrNoAnadir: !puedeAnadir,
@@ -5230,7 +5230,7 @@ class Component extends DCLogic {
         const venta = { id: 'V-' + num, cliente: cuenta ? cuenta.nombre : (wa ? 'Cliente por WhatsApp' : 'Cliente en tienda'), cuenta: cuenta ? cuenta.email : undefined, clienteTel: dig, fecha: hoy,
           items: lineas.map(l => ({ id: l.x.id, nombre: l.x.nombre, precio: l.unit, cant: l.cant })), prodId: lineas[0].x.id,
           detalle: lineas[0].x.nombre + (lineas[0].cant > 1 ? ' ×' + lineas[0].cant : '') + (lineas.length > 1 ? ' + ' + (lineas.length - 1) + ' más' : ''), unidades: lineas.reduce((a, l) => a + l.cant, 0), total,
-          estado: wa ? 'Pagado' : 'Entregado', entrega: 'Recojo en tienda', metodo: vr.metodo, manual: true, canal: wa ? 'whatsapp' : 'tienda' };
+          estado: wa ? 'Pagado' : 'Entregado', entrega: 'Recojo en tienda', metodo: wa ? 'Yape' : vr.metodo, manual: true, canal: wa ? 'whatsapp' : 'tienda' };
         this.setState({ ventas: [venta].concat(s.ventas), productos: s.productos.map(x => { const l = lineas.find(y => y.x.id === x.id); return l ? Object.assign({}, x, { stock: x.stock - l.cant }) : x; }), vr: Object.assign({}, vr, { items: [], tel: '', cant: '1', prodId: '', q: '' }), vrError: '', adminVentasPag: 1 });
         if (cuenta && cuenta.email === 'cliente@demo.pe') this.notificar('Registramos tu compra ' + venta.id, 'Ya aparece en Mis compras · ' + this.fmt(total), 'ph ph-receipt', 'histCompras');
         this.avisar('Venta ' + venta.id + ' registrada · ' + this.fmt(total) + ' · stock actualizado');
