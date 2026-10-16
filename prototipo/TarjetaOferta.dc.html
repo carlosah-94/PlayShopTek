@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="_ds/nocturne-698eb73c-050c-47b3-945c-098a0e0f7ace/styles.css">
+<script src="_ds/nocturne-698eb73c-050c-47b3-945c-098a0e0f7ace/_ds_bundle.js"></script>
+<script src="image-slot.js"></script>
+<style>
+[data-psk-art] > image-slot:not([data-filled]){opacity:.3}
+[data-psk-art]:has(> image-slot[data-filled]) > i{display:none}
+:root{--color-accent:#DE1CBB;--font-heading:"Chakra Petch",system-ui,sans-serif;--font-heading-weight:600;--font-body:"Outfit",system-ui,sans-serif;--color-text:#FFF}body{margin:0;font-family:var(--font-body)}</style>
+</helmet>
+<div style="height:100%;box-sizing:border-box;display:flex;flex-direction:column;background:linear-gradient(160deg,rgba(85,70,228,.07),rgba(222,28,187,.06));border:1px solid rgba(222,28,187,.32);border-radius:14px;overflow:hidden;box-shadow:0 10px 26px rgba(26,16,64,0.23)">
+  <div data-psk-art onClick="{{ o.abrir }}" style="position:relative;aspect-ratio:3/4;display:grid;place-items:center;cursor:pointer;overflow:hidden;background:radial-gradient(120% 120% at 30% 10%,rgba(85,70,228,.35),transparent 60%),linear-gradient(180deg,rgba(85,70,228,.05),rgb(var(--paper) / .9))">
+    <i class="{{ o.glyph }}" style="position:absolute;z-index:3;pointer-events:none;font-size:62px;color:rgba(222,28,187,.55);text-shadow:0 0 22px rgba(222,28,187,.55)"></i>
+    <sc-if value="{{ o.hayImg }}" hint-placeholder-val="{{ false }}"><image-slot id="{{ o.slotId }}" fit="contain" shape="rounded" radius="0" placeholder="Carátula de {{ o.nombre }}" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></image-slot></sc-if>
+    <span style="position:absolute;top:8px;left:8px;z-index:4;display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#DE1CBB;color:#FFF;font-family:var(--font-heading);font-weight:700;font-size:14px;box-shadow:0 0 16px rgba(222,28,187,.6)">-{{ o.pct }}%</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:9px;padding:12px 13px 14px;flex:1">
+    <div style="display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgb(var(--c-lav));white-space:nowrap;overflow:hidden;height:14px"><span>{{ o.categoria }}</span><sc-if value="{{ o.razon }}" hint-placeholder-val="{{ false }}"><span style="color:rgb(var(--c-pink2))">· {{ o.razon }}</span></sc-if></div>
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <div onClick="{{ o.abrir }}" style="font-family:var(--font-heading);font-weight:600;font-size:15px;line-height:1.25;cursor:pointer;height:37.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ o.nombre }}</div>
+      <div style="font-size:11.5px;color:rgb(var(--ink) / 0.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.sub }}</div>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+      <span style="font-family:var(--font-heading);font-weight:700;font-size:22px;text-shadow:0 0 16px rgba(222,28,187,.5)">{{ o.ahora }}</span>
+      <span style="font-size:13px;color:rgb(var(--ink) / 0.65);text-decoration:line-through">{{ o.antes }}</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="display:flex;justify-content:space-between;gap:8px;font-size:11.5px"><span style="color:{{ o.stockColor }}">{{ o.stockTxt }}</span><span style="color:rgb(var(--c-green))">{{ o.ahorro }}</span></div>
+      <div style="height:6px;border-radius:4px;background:rgb(var(--ink) / 0.08);overflow:hidden"><div style="height:100%;width:{{ o.stockPct }};border-radius:4px;background:linear-gradient(90deg,#5546E4,#DE1CBB);color:#FFFFFF"></div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgb(var(--c-yellow))"><i class="ph ph-timer" style="font-size:13px"></i>La oferta termina en</div>
+      <dc-import name="ContadorOferta" fin="{{ o.fin }}" hint-size="100%,46px"></dc-import>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:auto">
+      <button class="btn btn-secondary" onClick="{{ o.abrir }}" style="flex:1;padding:7px 10px;font-size:12.5px">Ver</button>
+      <button class="btn btn-primary" onClick="{{ o.agregar }}" disabled="{{ o.agotado }}" style="flex:1;padding:7px 10px;font-size:12.5px"><i class="ph ph-shopping-cart" style="font-size:14px"></i>Añadir</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:250,&quot;height&quot;:620},&quot;o&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Oferta&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const o = this.props.o || { nombre: 'Mando DualShock 4 V2 Negro', categoria: 'Mandos', sub: 'Original Sony · Negro', glyph: 'ph ph-game-controller', slotId: 'psk-prod-p6', antes: 'S/ 189', ahora: 'S/ 151', pct: 20, ahorro: 'Ahorras S/ 38', fin: Date.now() + 3 * 864e5, razon: false, stockTxt: 'Quedan 14 en tienda', stockPct: '93%', stockColor: 'rgb(var(--c-green))', agotado: false };
+    return { o };
+  }
+}
+</script>
+</body>
+</html>

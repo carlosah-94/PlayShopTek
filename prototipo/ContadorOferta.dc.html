@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap">
+<style>body{margin:0;font-family:"Outfit",system-ui,sans-serif}</style>
+</helmet>
+<sc-if value="{{ activa }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px">
+  <sc-for list="{{ partes }}" as="p" hint-placeholder-count="4">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 2px;border-radius:9px;background:rgb(var(--paper) / .9);border:1px solid rgba(255,201,60,.3)">
+      <span style="font-family:'Chakra Petch',system-ui,sans-serif;font-weight:700;font-size:17px;line-height:1.1;color:rgb(var(--ink));font-variant-numeric:tabular-nums">{{ p.v }}</span>
+      <span style="font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:rgb(var(--ink) / 0.75)">{{ p.k }}</span>
+    </div>
+  </sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ terminada }}" hint-placeholder-val="{{ false }}">
+<div style="padding:9px;border-radius:9px;text-align:center;font-size:12.5px;color:rgb(var(--ink) / 0.85);background:rgb(var(--ink) / 0.05);border:1px solid rgb(var(--ink) / 0.12)">La oferta terminó · vuelve a su precio normal</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:230,&quot;height&quot;:50},&quot;fin&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  state = { ahora: Date.now() };
+  componentDidMount() { this.t = setInterval(() => this.setState({ ahora: Date.now() }), 1000); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const fin = Number(this.props.fin) || (this.state.ahora + 2 * 864e5 + 5025e3);
+    let r = Math.max(0, Math.floor((fin - this.state.ahora) / 1000));
+    const d = Math.floor(r / 86400); r -= d * 86400;
+    const h = Math.floor(r / 3600); r -= h * 3600;
+    const m = Math.floor(r / 60), sg = r - m * 60;
+    const z = (n) => String(n).padStart(2, '0');
+    return {
+      activa: fin > this.state.ahora, terminada: fin <= this.state.ahora,
+      partes: [{ k: 'días', v: z(d) }, { k: 'horas', v: z(h) }, { k: 'min', v: z(m) }, { k: 'seg', v: z(sg) }]
+    };
+  }
+}
+</script>
+</body>
+</html>

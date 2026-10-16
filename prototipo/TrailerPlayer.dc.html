@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>body{margin:0;font-family:"Outfit",system-ui,sans-serif}
+[data-psk-vol]{-webkit-appearance:none;appearance:none;height:4px;border-radius:3px;background:rgba(255,255,255,.3);outline:none;cursor:pointer}
+[data-psk-vol]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#FFF;border:0}
+[data-psk-vol]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#FFF;border:0}</style>
+</helmet>
+<div ref="{{ rootRef }}" onMouseMove="{{ mover }}" onMouseLeave="{{ salir }}" style="position:{{ pos }};inset:0;z-index:{{ z }};background:#05001A;display:grid;place-items:center;overflow:hidden;cursor:{{ cursor }}">
+  <div style="position:relative;width:{{ caja }};aspect-ratio:16/9;max-height:100%">
+    <iframe ref="{{ frameRef }}" src="{{ src }}" onLoad="{{ alCargar }}" title="Tráiler del juego" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none"></iframe>
+    <div onClick="{{ togglePlay }}" onDoubleClick="{{ toggleFull }}" style="position:absolute;inset:0"></div>
+    <sc-if value="{{ mostrarPlayGrande }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ togglePlay }}" title="Reproducir" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;border:1px solid rgba(222,28,187,.7);background:rgba(11,2,48,.72);display:grid;place-items:center;cursor:pointer;box-shadow:0 0 26px rgba(222,28,187,.5)"><i class="ph-fill ph-play" style="font-size:28px;color:#FFF;margin-left:3px"></i></button>
+    </sc-if>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:28px 12px 10px;background:linear-gradient(180deg,transparent,rgba(5,0,26,.9));display:flex;flex-direction:column;gap:8px;opacity:{{ ctrlOp }};pointer-events:{{ ctrlPe }};transition:opacity .25s ease">
+    <div onClick="{{ seek }}" title="Ir a este punto" style="position:relative;height:14px;display:flex;align-items:center;cursor:pointer">
+      <div style="position:relative;width:100%;height:4px;border-radius:3px;background:rgba(255,255,255,.28)">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:{{ pct }};border-radius:3px;background:#DE1CBB"></div>
+        <div style="position:absolute;top:50%;left:{{ pct }};width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#FFF;box-shadow:0 0 8px rgba(222,28,187,.8)"></div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onClick="{{ togglePlay }}" title="{{ playTitulo }}" style="width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:#FFF;cursor:pointer;display:grid;place-items:center" style-hover="background:rgba(255,255,255,.12)"><i class="{{ playIcono }}" style="font-size:18px"></i></button>
+      <button onClick="{{ toggleMute }}" title="{{ volTitulo }}" style="width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:#FFF;cursor:pointer;display:grid;place-items:center" style-hover="background:rgba(255,255,255,.12)"><i class="{{ volIcono }}" style="font-size:18px"></i></button>
+      <input data-psk-vol type="range" min="0" max="100" value="{{ volVal }}" onChange="{{ setVol }}" title="Volumen" style="width:70px">
+      <span style="font-size:11.5px;font-family:'Chakra Petch',system-ui,sans-serif;color:rgba(255,255,255,.85);white-space:nowrap">{{ tiempo }}</span>
+      <span style="flex:1"></span>
+      <div style="position:relative">
+        <button onClick="{{ toggleCal }}" title="Configuración" aria-expanded="{{ calAria }}" style="position:relative;width:32px;height:32px;border:0;border-radius:8px;background:{{ calFondo }};color:#FFF;cursor:pointer;display:grid;place-items:center" style-hover="background:rgba(255,255,255,.12)"><i class="ph-fill ph-gear-six" style="font-size:18px;transform:rotate({{ calRot }});transition:transform .25s ease"></i><sc-if value="{{ esHD }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:2px;right:0;font-size:8px;font-weight:700;line-height:1;padding:1px 2px;border-radius:3px;background:#DE1CBB;color:#FFF">HD</span></sc-if></button>
+        <sc-if value="{{ calAbierto }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;right:0;bottom:calc(100% + 10px);min-width:190px;border-radius:12px;background:rgba(11,2,48,.95);border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 34px rgba(0,0,0,.5);padding:6px;display:flex;flex-direction:column;gap:2px;backdrop-filter:blur(8px)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 9px 8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:3px;font-size:12px;color:rgba(255,255,255,.75)"><span style="display:flex;align-items:center;gap:6px"><i class="ph ph-sliders-horizontal"></i>Calidad</span><span style="color:#FFF">{{ calActualTxt }}</span></div>
+          <sc-for list="{{ calOpciones }}" as="q" hint-placeholder-count="5">
+            <button onClick="{{ q.pick }}" style="display:flex;align-items:center;gap:8px;padding:8px 9px;border:0;border-radius:8px;background:{{ q.fondo }};color:#FFF;font-size:13px;cursor:pointer;text-align:left" style-hover="background:rgba(255,255,255,.1)"><i class="ph ph-check" style="font-size:14px;opacity:{{ q.check }}"></i><span style="flex:1">{{ q.nombre }}</span><sc-if value="{{ q.hd }}" hint-placeholder-val="{{ false }}"><span style="font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;background:#DE1CBB">HD</span></sc-if></button>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+      <button onClick="{{ toggleFull }}" title="{{ fullTitulo }}" style="width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:#FFF;cursor:pointer;display:grid;place-items:center" style-hover="background:rgba(255,255,255,.12)"><i class="{{ fullIcono }}" style="font-size:18px"></i></button>
+    </div>
+  </div>
+  <sc-if value="{{ esFull }}" hint-placeholder-val="{{ false }}">
+  <button onClick="{{ toggleFull }}" title="Salir de pantalla completa (Esc)" style="position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(11,2,48,.75);color:#FFF;cursor:pointer;display:grid;place-items:center;opacity:{{ ctrlOp }};transition:opacity .25s ease"><i class="ph ph-x" style="font-size:18px"></i></button>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:480,&quot;height&quot;:270},&quot;videoId&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;g1wr0DfV73E&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { playing: false, t: 0, dur: 0, muted: false, vol: 100, ctrl: true, full: false, ready: false, cal: false, calidad: 'auto', actual: '', niveles: [] };
+  rootRef = React.createRef();
+  frameRef = React.createRef();
+
+  componentDidMount() {
+    this.onMsg = (e) => {
+      const fr = this.frameRef.current;
+      if (!fr || e.source !== fr.contentWindow) return;
+      let d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (_) { return; }
+      if (!d || typeof d !== 'object') return;
+      if (d.event === 'onReady' && !this.state.ready) {
+        this.setState({ ready: true });
+        this.cmd('addEventListener', ['onStateChange']);
+        this.autoT = setTimeout(() => { if (!this.state.playing && !this.pausadoPorUsuario) { this.cmd('mute'); this.cmd('playVideo'); } }, 1400);
+      }
+      if (d.event === 'onStateChange' && typeof d.info === 'number') this.aplicarEstado(d.info);
+      const info = d.info;
+      if ((d.event === 'infoDelivery' || d.event === 'initialDelivery') && info && typeof info === 'object') {
+        const up = {};
+        if (typeof info.currentTime === 'number' && Math.abs(info.currentTime - this.state.t) > 0.2) up.t = info.currentTime;
+        if (typeof info.duration === 'number' && info.duration > 0 && info.duration !== this.state.dur) up.dur = info.duration;
+        if (typeof info.muted === 'boolean' && info.muted !== this.state.muted) up.muted = info.muted;
+        if (typeof info.volume === 'number' && info.volume !== this.state.vol) up.vol = info.volume;
+        if (typeof info.playbackQuality === 'string' && info.playbackQuality !== this.state.actual) up.actual = info.playbackQuality;
+        if (Array.isArray(info.availableQualityLevels) && info.availableQualityLevels.length && info.availableQualityLevels.join() !== this.state.niveles.join()) up.niveles = info.availableQualityLevels.filter(q => q !== 'auto');
+        if (Object.keys(up).length) this.setState(up);
+        if (typeof info.playerState === 'number') this.aplicarEstado(info.playerState);
+      }
+    };
+    window.addEventListener('message', this.onMsg);
+    this.onFs = () => { if (!document.fullscreenElement && this.realFs) { this.realFs = false; this.setState({ full: false }); } };
+    document.addEventListener('fullscreenchange', this.onFs);
+    this.onKey = (e) => {
+      if (!this.state.full) return;
+      if (e.key === 'Escape') this.salirFull();
+      if (e.key === ' ' || e.key === 'k') { e.preventDefault(); this.togglePlay(); }
+    };
+    window.addEventListener('keydown', this.onKey);
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.videoId !== this.props.videoId) {
+      clearTimeout(this.hideT); clearTimeout(this.autoT);
+      this.pausadoPorUsuario = false;
+      this.setState({ playing: false, t: 0, dur: 0, ctrl: true, ready: false });
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('message', this.onMsg);
+    document.removeEventListener('fullscreenchange', this.onFs);
+    window.removeEventListener('keydown', this.onKey);
+    clearTimeout(this.hideT); clearTimeout(this.autoT); clearInterval(this.hs);
+    if (this.realFs && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+
+  post(o) {
+    const w = this.frameRef.current && this.frameRef.current.contentWindow;
+    if (w) w.postMessage(JSON.stringify(Object.assign({ id: 1, channel: 'widget' }, o)), '*');
+  }
+  cmd(func, args) { this.post({ event: 'command', func, args: args || [] }); }
+
+  aplicarEstado(st) {
+    const playing = st === 1 || st === 3;
+    if (playing !== this.state.playing) this.setState({ playing });
+    if (playing) { if (!this.hideT) this.programarOcultar(); }
+    else { clearTimeout(this.hideT); this.hideT = null; if (!this.state.ctrl) this.setState({ ctrl: true }); }
+  }
+  programarOcultar(ms) {
+    clearTimeout(this.hideT);
+    this.hideT = setTimeout(() => { this.hideT = null; if (this.state.playing && !this.state.cal) this.setState({ ctrl: false }); }, ms || 2500);
+  }
+
+  alCargar = () => {
+    clearInterval(this.hs);
+    this.post({ event: 'listening' });
+    this.hs = setInterval(() => { if (this.state.ready) clearInterval(this.hs); else this.post({ event: 'listening' }); }, 300);
+    setTimeout(() => clearInterval(this.hs), 10000);
+  };
+  mover = () => {
+    if (!this.state.ctrl) this.setState({ ctrl: true });
+    if (this.state.playing) this.programarOcultar();
+  };
+  salir = () => { if (this.state.playing) this.programarOcultar(700); };
+  toggleCal = () => { const cal = !this.state.cal; this.setState({ cal, ctrl: true }); if (!cal && this.state.playing) this.programarOcultar(); };
+  elegirCalidad(q) {
+    this.cmd('setPlaybackQuality', [q === 'auto' ? 'default' : q]);
+    this.cmd('setPlaybackQualityRange', [q === 'auto' ? 'default' : q, q === 'auto' ? 'default' : q]);
+    this.setState({ calidad: q, cal: false });
+    if (this.state.playing) this.programarOcultar();
+  }
+  togglePlay = () => {
+    if (this.state.cal) { this.setState({ cal: false }); if (this.state.playing) this.programarOcultar(); return; }
+    if (this.state.playing) { this.pausadoPorUsuario = true; this.cmd('pauseVideo'); this.aplicarEstado(2); }
+    else { this.pausadoPorUsuario = false; this.cmd('playVideo'); this.setState({ playing: true }); this.programarOcultar(); }
+  };
+  toggleMute = () => {
+    if (this.state.muted || this.state.vol === 0) { this.cmd('unMute'); if (this.state.vol === 0) this.cmd('setVolume', [60]); this.setState({ muted: false, vol: this.state.vol || 60 }); }
+    else { this.cmd('mute'); this.setState({ muted: true }); }
+  };
+  setVol = (e) => {
+    const v = Number(e.target.value);
+    this.cmd('setVolume', [v]);
+    if (v > 0) this.cmd('unMute'); else this.cmd('mute');
+    this.setState({ vol: v, muted: v === 0 });
+  };
+  seek = (e) => {
+    if (!this.state.dur) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const t = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * this.state.dur;
+    this.cmd('seekTo', [t, true]);
+    this.setState({ t });
+  };
+  toggleFull = () => { if (this.state.full) this.salirFull(); else this.entrarFull(); };
+  entrarFull() {
+    this.setState({ full: true, ctrl: true });
+    if (this.state.playing) this.programarOcultar();
+    const el = this.rootRef.current;
+    if (el && el.requestFullscreen) {
+      try { el.requestFullscreen().then(() => { this.realFs = true; }).catch(() => {}); } catch (_) {}
+    }
+  }
+  salirFull() {
+    if (this.realFs && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    this.realFs = false;
+    this.setState({ full: false });
+  }
+
+  renderVals() {
+    const s = this.state, id = this.props.videoId || 'g1wr0DfV73E';
+    const fmt = (x) => { x = Math.max(0, Math.floor(x || 0)); return Math.floor(x / 60) + ':' + String(x % 60).padStart(2, '0'); };
+    const origin = (typeof location !== 'undefined' && location.origin && location.origin !== 'null') ? '&origin=' + encodeURIComponent(location.origin) : '';
+    const silencio = s.muted || s.vol === 0;
+    return {
+      rootRef: this.rootRef, frameRef: this.frameRef,
+      src: 'https://www.youtube-nocookie.com/embed/' + id + '?enablejsapi=1&controls=0&rel=0&playsinline=1&autoplay=1&iv_load_policy=3&disablekb=1&fs=0&modestbranding=1' + origin,
+      pos: s.full ? 'fixed' : 'absolute', z: s.full ? '900' : '3',
+      caja: s.full ? 'min(100vw,177.78vh)' : '100%',
+      cursor: s.ctrl ? 'default' : 'none',
+      ctrlOp: s.ctrl ? '1' : '0', ctrlPe: s.ctrl ? 'auto' : 'none',
+      pct: (s.dur ? Math.min(100, s.t / s.dur * 100) : 0) + '%',
+      tiempo: fmt(s.t) + ' / ' + fmt(s.dur),
+      mostrarPlayGrande: !s.playing,
+      playIcono: s.playing ? 'ph-fill ph-pause' : 'ph-fill ph-play', playTitulo: s.playing ? 'Pausar' : 'Reproducir',
+      volIcono: silencio ? 'ph-fill ph-speaker-slash' : (s.vol < 50 ? 'ph-fill ph-speaker-low' : 'ph-fill ph-speaker-high'),
+      volTitulo: silencio ? 'Activar sonido' : 'Silenciar', volVal: silencio ? 0 : s.vol,
+      fullIcono: s.full ? 'ph ph-corners-in' : 'ph ph-corners-out', fullTitulo: s.full ? 'Salir de pantalla completa' : 'Pantalla completa',
+      esFull: s.full,
+      ...(() => {
+        const nom = { highres: '4K', hd2160: '2160p 4K', hd1440: '1440p', hd1080: '1080p', hd720: '720p', large: '480p', medium: '360p', small: '240p', tiny: '144p' };
+        const niveles = (s.niveles.length ? s.niveles : ['hd1080', 'hd720', 'large', 'medium', 'small']).filter(q => nom[q]);
+        const opts = niveles.concat(['auto']);
+        const efectiva = s.calidad === 'auto' ? s.actual : s.calidad;
+        return {
+          calAbierto: s.cal, calAria: s.cal ? 'true' : 'false', calFondo: s.cal ? 'rgba(255,255,255,.14)' : 'transparent', calRot: s.cal ? '60deg' : '0deg',
+          esHD: /^hd|highres/.test(efectiva || ''),
+          calActualTxt: s.calidad === 'auto' ? 'Auto' + (nom[s.actual] ? ' (' + nom[s.actual] + ')' : '') : nom[s.calidad],
+          calOpciones: opts.map(q => ({ nombre: q === 'auto' ? 'Automática' : nom[q], hd: /^hd|highres/.test(q), check: s.calidad === q ? '1' : '0', fondo: s.calidad === q ? 'rgba(222,28,187,.22)' : 'transparent', pick: () => this.elegirCalidad(q) }))
+        };
+      })(),
+      toggleCal: this.toggleCal,
+      mover: this.mover, salir: this.salir, alCargar: this.alCargar,
+      togglePlay: this.togglePlay, toggleMute: this.toggleMute, setVol: this.setVol, seek: this.seek, toggleFull: this.toggleFull
+    };
+  }
+}
+</script>
+</body>
+</html>

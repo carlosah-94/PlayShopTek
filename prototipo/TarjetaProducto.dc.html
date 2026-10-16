@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="_ds/nocturne-698eb73c-050c-47b3-945c-098a0e0f7ace/styles.css">
+<script src="_ds/nocturne-698eb73c-050c-47b3-945c-098a0e0f7ace/_ds_bundle.js"></script>
+<script src="image-slot.js"></script>
+<style>
+[data-psk-art] > image-slot:not([data-filled]){opacity:.3}
+[data-psk-art]:has(> image-slot[data-filled]) > i{display:none}
+:root{--color-accent:#DE1CBB;--font-heading:"Chakra Petch",system-ui,sans-serif;--font-heading-weight:600;--font-body:"Outfit",system-ui,sans-serif;--color-text:#FFF}body{margin:0;font-family:var(--font-body)}</style>
+</helmet>
+<div style="height:100%;box-sizing:border-box;display:flex;flex-direction:column;background:linear-gradient(160deg,rgba(85,70,228,.07),rgba(222,28,187,.06));border:1px solid rgb(var(--ink) / 0.1);border-radius:14px;overflow:hidden;box-shadow:0 10px 26px rgba(26,16,64,0.23);transition:transform .16s,box-shadow .16s,border-color .16s" style-hover="transform:translateY(-3px);box-shadow:0 0 0 1px rgba(222,28,187,.45),0 16px 34px rgba(26,16,64,0.3)">
+  <div data-psk-art style="position:relative;aspect-ratio:3/4;display:grid;place-items:center;background:radial-gradient(120% 120% at 30% 10%,rgba(85,70,228,.35),transparent 60%),linear-gradient(180deg,rgba(85,70,228,.05),rgb(var(--paper) / .9));cursor:pointer;overflow:hidden" onClick="{{ open }}">
+    <i class="{{ glyphClass }}" style="position:absolute;z-index:3;pointer-events:none;font-size:62px;color:rgba(222,28,187,.55);text-shadow:0 0 22px rgba(222,28,187,.55)"></i>
+    <sc-if value="{{ hayImg }}" hint-placeholder-val="{{ false }}"><image-slot id="{{ slotId }}" fit="contain" shape="rounded" radius="0" placeholder="{{ slotPlaceholder }}" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></image-slot></sc-if>
+    <div style="position:absolute;top:8px;left:8px;display:flex;gap:6px">
+      <sc-if value="{{ esPreventa }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:#5546E4;color:#FFF;font-family:var(--font-heading);font-weight:700;font-size:12px;box-shadow:0 0 14px rgba(85,70,228,.55)">Preventa</span></sc-if>
+      <sc-if value="{{ agotado }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">Agotado</span></sc-if>
+      <sc-if value="{{ enOferta }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:#DE1CBB;color:#FFF;font-family:var(--font-heading);font-weight:700;font-size:12px;box-shadow:0 0 14px rgba(222,28,187,.55)">-{{ descPct }}%</span></sc-if>
+    </div>
+    <button class="btn btn-icon" onClick="{{ toggleWish }}" title="Lista de deseados" style="position:absolute;top:6px;right:6px;border-color:rgb(var(--ink) / 0.18);background:rgb(var(--paper) / .9)">
+      <i class="{{ wishIcon }}" style="font-size:16px;color:rgb(var(--c-pink))"></i>
+    </button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px;padding:12px 13px 14px;flex:1">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgb(var(--c-lav));line-height:14px;height:28px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">
+      <span>{{ categoria }}</span><sc-if value="{{ razon }}" hint-placeholder-val="{{ false }}"><span style="color:rgb(var(--ink) / 0.6)"> · {{ razon }}</span></sc-if>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;height:56px;overflow:hidden">
+      <div onClick="{{ open }}" title="{{ nombre }}" style="font-family:var(--font-heading);font-weight:600;font-size:15px;line-height:1.25;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:none">{{ nombre }}</div>
+      <div style="font-size:11.5px;line-height:16px;height:16px;color:rgb(var(--ink) / 0.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ subTxt }}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgb(var(--ink) / 0.75);white-space:nowrap">
+      <i class="ph-fill ph-star" style="color:rgb(var(--c-yellow));font-size:12px"></i><span>{{ rating }}</span><span>· {{ stockTexto }}</span>
+    </div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px">
+      <div style="display:flex;flex-direction:column;gap:1px;min-width:0;flex:none">
+        <div style="height:16px;display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:12px"><sc-if value="{{ enOferta }}" hint-placeholder-val="{{ false }}"><span style="color:rgb(var(--ink) / 0.65);text-decoration:line-through">{{ precioOriginal }}</span><span style="display:flex;align-items:center;gap:3px;font-size:11px;color:rgb(var(--c-yellow))"><i class="ph ph-timer"></i>{{ quedanTxt }}</span></sc-if></div>
+        <div style="font-family:var(--font-heading);font-weight:700;font-size:20px;white-space:nowrap;color:rgb(var(--ink));text-shadow:0 0 16px rgba(222,28,187,.5)">{{ precio }}</div>
+      </div>
+      <div style="display:flex;gap:6px;margin-left:auto">
+        <button class="btn btn-secondary" onClick="{{ open }}" style="padding:6px 10px;font-size:12.5px">Ver</button>
+        <button class="btn btn-primary" onClick="{{ addCart }}" disabled="{{ agotado }}" style="padding:6px 10px;font-size:12.5px;white-space:nowrap;box-shadow:0 0 14px rgba(222,28,187,.28)"><i class="ph ph-shopping-cart" style="font-size:14px"></i>{{ addTxt }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:260,&quot;height&quot;:300},&quot;item&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Producto&quot;},&quot;razon&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;enDeseados&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;onOpen&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(p:Producto)=&gt;void&quot;},&quot;onAdd&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(p:Producto)=&gt;void&quot;},&quot;onWish&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(p:Producto)=&gt;void&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    this._cambio = () => this.forceUpdate();
+    window.addEventListener('image-slots-change', this._cambio);
+    customElements.whenDefined('image-slot').then(() => { const IS = customElements.get('image-slot'); if (IS && IS.ready) IS.ready().then(this._cambio); });
+  }
+  componentWillUnmount() { window.removeEventListener('image-slots-change', this._cambio); }
+  renderVals() {
+    const p = this.props.item || {};
+    const glyphs = { consola: 'ph ph-television-simple', mando: 'ph ph-game-controller', juego: 'ph ph-disc', accesorio: 'ph ph-headphones', pc: 'ph ph-desktop', servicio: 'ph ph-ticket' };
+    const agotado = (p.stock || 0) <= 0 && !p.preventa;
+    const M = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const lz = p.lanzamiento || '', lanzTxt = (p.fechaTBC || !lz) ? 'fecha por confirmar' : (/^\d{4}-\d{2}-\d{2}$/.test(lz) ? 'sale el ' + Number(lz.slice(8, 10)) + ' ' + M[Number(lz.slice(5, 7)) - 1] : 'sale el ' + lz);
+    const juego = ['PS2', 'PS3', 'PS4', 'PS5'].includes(p.categoria);
+    const inc = p.incluye || {};
+    const sub = p.categoria === 'Mandos' ? (p.origen === 'Genérico' ? 'Genérico' : 'Original Sony') + ' · ' + (p.color || '')
+      : juego ? (p.estado || 'Nuevo, sellado') + ' · ' + [inc.caja && 'caja', inc.manual && 'manual', inc.disco !== false && 'disco'].filter(Boolean).join(', ')
+      : p.categoria === 'PC y periféricos' ? (p.sub || '') + ' · ' + (p.estado || 'Nuevo')
+      : (p.estado || false);
+    let oferta = null;
+    if (p.descPct > 0 && p.descDias > 0 && p.descInicio) {
+      const ini = new Date(p.descInicio + 'T00:00:00'), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+      const quedan = p.descDias - Math.round((hoy - ini) / 864e5);
+      if (quedan > 0) oferta = { quedan, final: Math.round(p.precio * (100 - p.descPct) / 100) };
+    }
+    const soles = (n) => 'S/ ' + (n || 0).toLocaleString('es-PE');
+    return {
+      nombre: p.nombre, categoria: juego ? 'Juegos ' + p.categoria : p.categoria, sub, subTxt: sub || '\u00a0', rating: (p.rating || 4.5).toFixed(1),
+      precio: soles(oferta ? oferta.final : p.precio),
+      precioOriginal: soles(p.precio), enOferta: !!oferta, descPct: p.descPct,
+      quedanTxt: oferta ? (oferta.quedan === 1 ? 'último día' : 'quedan ' + oferta.quedan + ' días') : '',
+      glyphClass: glyphs[p.glyph] || 'ph ph-game-controller',
+      ...(() => {
+        const ids = p.id === 'p8' ? ['psk-producto-principal', 'psk-producto-2', 'psk-producto-3', 'psk-producto-4'] : [0, 1, 2, 3].map(i => 'psk-prod-' + (p.id || 'x') + (i ? '-' + (i + 1) : ''));
+        const vid = (p.media || []).map(m => m && m.tipo === 'video');
+        const IS = typeof customElements !== 'undefined' ? customElements.get('image-slot') : null;
+        const id = ids.find((x, i) => !vid[i] && IS && IS.has && IS.has(x)) || '';
+        return { slotId: id, hayImg: !!id };
+      })(),
+      slotPlaceholder: 'Carátula de ' + (p.nombre || 'el producto'),
+      esPreventa: !!p.preventa, agotado,
+      stockTexto: p.preventa ? 'Preventa · ' + lanzTxt : (agotado ? 'Sin stock' : p.stock + ' en stock'),
+      addTxt: p.preventa ? 'Reservar S/ ' + (Number(p.reserva) || 50) : 'Añadir',
+      razon: false,
+      wishIcon: this.props.enDeseados ? 'ph-fill ph-heart' : 'ph ph-heart',
+      open: () => this.props.onOpen && this.props.onOpen(p),
+      addCart: (e) => { e.stopPropagation(); this.props.onAdd && this.props.onAdd(p); },
+      toggleWish: (e) => { e.stopPropagation(); this.props.onWish && this.props.onWish(p); }
+    };
+  }
+}
+</script>
+</body>
+</html>
