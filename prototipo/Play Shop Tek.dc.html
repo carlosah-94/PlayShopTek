@@ -3107,7 +3107,8 @@ class Component extends DCLogic {
   mediaGuardar(media, juego) { return (media || []).map((m, i) => (juego && i > 0 && m.tipo === 'video' && this.ytId(m.url)) ? { tipo: 'video', url: m.url.trim() } : { tipo: 'img' }); }
   asesoresWa(texto) {
     return [
-      { nombre: 'Play Shop Tek · WhatsApp 915 152 886', inicial: 'P', num: '51915152886' }
+      { nombre: 'Asesor 1', inicial: '1', num: '51915152886' },
+      { nombre: 'Asesor 2', inicial: '2', num: '51999649195' }
     ].map(x => ({ nombre: x.nombre, inicial: x.inicial, href: 'https://wa.me/' + x.num + '?text=' + encodeURIComponent(texto) }));
   }
   invEstado(p) { return p.preventa ? 'Preventa' : (p.stock > 0 ? 'Publicado' : 'Agotado'); }
@@ -3626,7 +3627,7 @@ class Component extends DCLogic {
     usuario: { nombre: 'Kevin Ticona', email: 'cliente@demo.pe', tel: '987 112 445', distrito: 'Villa El Salvador' },
     menuAbierto: false, cuentaTab: 'general', cuGuardado: false,
     cpActual: '', cpNueva: '', cpRepetir: '', cpError: '', cpOk: false,
-    trabajadores: [{ id: 'w1', nombre: 'Linda Azumi Quichua Sumari', email: 'linda@playshoptek.pe', tel: '987 445 210', activo: true, desde: 'marzo 2025', reps: 86 }],
+    trabajadores: [{ id: 'w1', nombre: 'Linda Azumi Quichua Sumari', email: 'linda@playshoptek.pe', tel: '999 649 195', activo: true, desde: 'marzo 2025', reps: 86 }],
     nuevoTrab: { nombre: '', email: '', tel: '' }, ntError: '', trabConfirm: null, editProdId: null,
     infoTema: 'nosotros', infoVolverA: 'home', pideLogin: null, trasLogin: null, verTrailerId: null,
     galIdx: 0, waAbierto: false, adminProdQ: '', npDraftId: 'pn-' + Date.now(), resenaPendiente: null,
