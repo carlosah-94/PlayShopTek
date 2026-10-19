@@ -1,0 +1,6615 @@
+{
+ "exportado": "2026-10-13",
+ "productos": [
+  {
+   "id": "p1",
+   "nombre": "PlayStation 5 Slim Digital",
+   "categoria": "Máquinas",
+   "glyph": "consola",
+   "precio": 2399,
+   "stock": 4,
+   "generos": [
+    "accion",
+    "deportes",
+    "shooter",
+    "carreras",
+    "rol"
+   ],
+   "plat": "PS5",
+   "desc": "PS5 Slim edición digital de 1TB. Incluye un mando DualSense, cable HDMI y cable de poder. Nueva y sellada, con 6 meses de garantía de tienda.",
+   "rating": 4.9,
+   "estado": "Nueva, sellada"
+  },
+  {
+   "id": "p2",
+   "nombre": "PlayStation 5 Pro",
+   "categoria": "Máquinas",
+   "glyph": "consola",
+   "precio": 3999,
+   "stock": 1,
+   "generos": [
+    "accion",
+    "shooter",
+    "carreras"
+   ],
+   "plat": "PS5",
+   "desc": "La PS5 más potente: 2TB, ray tracing mejorado y upscaling por IA. Incluye mando DualSense y cables. Stock muy limitado.",
+   "rating": 5,
+   "estado": "Nueva, sellada"
+  },
+  {
+   "id": "p25",
+   "nombre": "PlayStation 4 Pro 1TB",
+   "categoria": "Máquinas",
+   "glyph": "consola",
+   "precio": 1499,
+   "stock": 2,
+   "generos": [
+    "accion",
+    "shooter",
+    "deportes"
+   ],
+   "plat": "PS4",
+   "desc": "PS4 Pro reacondicionada en nuestro taller: limpieza interna, pasta térmica nueva y 48 horas de prueba. Incluye un mando original y cables.",
+   "rating": 4.6,
+   "estado": "Reacondicionada en taller",
+   "descPct": 8,
+   "descDias": 10,
+   "descInicio": "2026-10-11"
+  },
+  {
+   "id": "p3",
+   "nombre": "PlayStation 4 Slim 1TB",
+   "categoria": "Máquinas",
+   "glyph": "consola",
+   "precio": 1099,
+   "stock": 6,
+   "generos": [
+    "accion",
+    "deportes",
+    "familiar"
+   ],
+   "plat": "PS4",
+   "desc": "PS4 Slim reacondicionada: limpieza interna, pasta térmica nueva y prueba de 48 horas. Incluye un mando y cables.",
+   "rating": 4.6,
+   "estado": "Reacondicionada en taller",
+   "descPct": 10,
+   "descDias": 5,
+   "descInicio": "2026-10-04"
+  },
+  {
+   "id": "p19",
+   "nombre": "PlayStation 3 Super Slim 500GB",
+   "categoria": "Máquinas",
+   "glyph": "consola",
+   "precio": 649,
+   "stock": 7,
+   "generos": [
+    "accion",
+    "deportes",
+    "familiar",
+    "pelea"
+   ],
+   "plat": "PS3",
+   "desc": "PS3 Super Slim repotenciada en taller, con 10 juegos instalados. Incluye un mando y cables. La más vendida del mostrador.",
+   "rating": 4.5,
+   "estado": "Repotenciada en taller"
+  },
+  {
+   "id": "p20",
+   "nombre": "PlayStation 3 Slim 320GB",
+   "categoria": "Máquinas",
+   "glyph": "consola",
+   "precio": 549,
+   "stock": 5,
+   "generos": [
+    "deportes",
+    "familiar"
+   ],
+   "plat": "PS3",
+   "desc": "PS3 Slim reacondicionada con dos mandos y prueba de 48 horas. Ideal para jugar en familia.",
+   "rating": 4.3,
+   "estado": "Reacondicionada en taller"
+  },
+  {
+   "id": "p24",
+   "nombre": "PlayStation 2 Slim + 2 mandos",
+   "categoria": "Máquinas",
+   "glyph": "consola",
+   "precio": 349,
+   "stock": 3,
+   "generos": [
+    "deportes",
+    "familiar",
+    "pelea"
+   ],
+   "plat": "PS2",
+   "desc": "PS2 Slim revisada en taller, con lector calibrado, dos mandos y memory card de 8MB. Para volver a los clásicos.",
+   "rating": 4.4,
+   "estado": "Usada, revisada en taller"
+  },
+  {
+   "id": "p4",
+   "nombre": "Mando DualSense Blanco",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 279,
+   "stock": 12,
+   "generos": [
+    "accion",
+    "deportes",
+    "shooter"
+   ],
+   "plat": "PS5",
+   "desc": "Mando inalámbrico DualSense original Sony, con gatillos adaptativos y vibración háptica. Incluye cable USB-C.",
+   "rating": 4.8,
+   "color": "Blanco",
+   "origen": "Original"
+  },
+  {
+   "id": "p26",
+   "nombre": "Mando DualSense Midnight Black",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 299,
+   "stock": 6,
+   "generos": [
+    "shooter",
+    "accion"
+   ],
+   "plat": "PS5",
+   "desc": "DualSense original Sony en negro. Nuevo, en caja sellada.",
+   "rating": 4.8,
+   "color": "Negro",
+   "origen": "Original"
+  },
+  {
+   "id": "p28",
+   "nombre": "Mando DualSense Cosmic Red",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 299,
+   "stock": 4,
+   "generos": [
+    "deportes",
+    "carreras"
+   ],
+   "plat": "PS5",
+   "desc": "DualSense original Sony, edición roja. Nuevo, en caja sellada.",
+   "rating": 4.7,
+   "color": "Rojo",
+   "origen": "Original"
+  },
+  {
+   "id": "p5",
+   "nombre": "Mando DualSense Edge",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 799,
+   "stock": 2,
+   "generos": [
+    "shooter",
+    "pelea"
+   ],
+   "plat": "PS5",
+   "desc": "Mando pro original Sony, con sticks intercambiables, gatillos de recorrido corto y perfiles guardados.",
+   "rating": 4.7,
+   "color": "Blanco",
+   "origen": "Original"
+  },
+  {
+   "id": "p6",
+   "nombre": "Mando DualShock 4 V2 Negro",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 189,
+   "stock": 14,
+   "generos": [
+    "deportes",
+    "familiar"
+   ],
+   "plat": "PS4",
+   "desc": "Mando original Sony para PS4, revisado en taller y con batería nueva.",
+   "rating": 4.4,
+   "color": "Negro",
+   "origen": "Original",
+   "descPct": 20,
+   "descDias": 5,
+   "descInicio": "2026-10-12"
+  },
+  {
+   "id": "p14",
+   "nombre": "Mando inalámbrico PS4 Rojo (genérico)",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 69,
+   "stock": 15,
+   "generos": [
+    "deportes",
+    "familiar"
+   ],
+   "plat": "PS4",
+   "desc": "Mando compatible con PS4, de otra marca. Bluetooth, vibración y touchpad. Buena opción para el segundo jugador.",
+   "rating": 4,
+   "color": "Rojo",
+   "origen": "Genérico",
+   "descPct": 15,
+   "descDias": 6,
+   "descInicio": "2026-10-13"
+  },
+  {
+   "id": "p15",
+   "nombre": "Mando inalámbrico PS4 Azul (genérico)",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 69,
+   "stock": 10,
+   "generos": [
+    "deportes",
+    "familiar"
+   ],
+   "plat": "PS4",
+   "desc": "Mando compatible con PS4, de otra marca. Bluetooth y vibración, con cable de carga.",
+   "rating": 4,
+   "color": "Azul",
+   "origen": "Genérico"
+  },
+  {
+   "id": "p21",
+   "nombre": "Mando DualShock 3 Inalámbrico",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 89,
+   "stock": 18,
+   "generos": [
+    "deportes",
+    "familiar",
+    "pelea"
+   ],
+   "plat": "PS3",
+   "desc": "Mando original Sony para PS3, con batería nueva instalada en taller. El repuesto que más rota en tienda.",
+   "rating": 4.2,
+   "color": "Negro",
+   "origen": "Original"
+  },
+  {
+   "id": "p16",
+   "nombre": "Mando inalámbrico PS3 Negro (genérico)",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 45,
+   "stock": 20,
+   "generos": [
+    "deportes",
+    "pelea"
+   ],
+   "plat": "PS3",
+   "desc": "Mando compatible con PS3, de otra marca. Inalámbrico, con cable de carga mini USB.",
+   "rating": 3.9,
+   "color": "Negro",
+   "origen": "Genérico"
+  },
+  {
+   "id": "p27",
+   "nombre": "Mando PS2 con cable (genérico)",
+   "categoria": "Mandos",
+   "glyph": "mando",
+   "precio": 35,
+   "stock": 12,
+   "generos": [
+    "pelea",
+    "deportes"
+   ],
+   "plat": "PS2",
+   "desc": "Mando analógico compatible con PS2, de otra marca. Con vibración.",
+   "rating": 3.9,
+   "color": "Negro",
+   "origen": "Genérico"
+  },
+  {
+   "id": "p7",
+   "nombre": "FIFA 26 (PS5)",
+   "categoria": "PS5",
+   "glyph": "juego",
+   "precio": 249,
+   "stock": 6,
+   "generos": [
+    "deportes"
+   ],
+   "plat": "PS5",
+   "desc": "La nueva temporada de fútbol con licencias oficiales, modo carrera renovado y Ultimate Team.",
+   "rating": 4.5,
+   "estado": "Nuevo, sellado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=cUVG74gNUDk",
+   "modos": [
+    "solo",
+    "local",
+    "online"
+   ],
+   "tags": [
+    "fútbol",
+    "competitivo"
+   ]
+  },
+  {
+   "id": "p8",
+   "nombre": "God of War Ragnarök (PS5)",
+   "categoria": "PS5",
+   "glyph": "juego",
+   "precio": 179,
+   "stock": 5,
+   "generos": [
+    "accion",
+    "rol",
+    "aventura"
+   ],
+   "plat": "PS5",
+   "desc": "Kratos y Atreus enfrentan el Ragnarök. Un solo jugador, historia completa en español latino.",
+   "rating": 4.9,
+   "estado": "Nuevo, sellado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=g1wr0DfV73E",
+   "descPct": 15,
+   "descDias": 7,
+   "descInicio": "2026-10-08",
+   "modos": [
+    "solo"
+   ],
+   "tags": [
+    "mitología",
+    "hack and slash",
+    "historia"
+   ]
+  },
+  {
+   "id": "p9",
+   "nombre": "Gran Turismo 7 (PS5)",
+   "categoria": "PS5",
+   "glyph": "juego",
+   "precio": 159,
+   "stock": 0,
+   "generos": [
+    "carreras"
+   ],
+   "plat": "PS5",
+   "desc": "Simulador de manejo con más de 450 autos y campeonatos en línea.",
+   "rating": 4.6,
+   "estado": "Usado, como nuevo",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=PJfKtoLdri4",
+   "modos": [
+    "solo",
+    "local",
+    "online"
+   ],
+   "tags": [
+    "simulación",
+    "autos"
+   ]
+  },
+  {
+   "id": "p10",
+   "nombre": "Mortal Kombat 1 (PS5)",
+   "categoria": "PS5",
+   "glyph": "juego",
+   "precio": 139,
+   "stock": 7,
+   "generos": [
+    "pelea"
+   ],
+   "plat": "PS5",
+   "desc": "Reinicio de la saga con el modo Kameo y peleas locales para dos jugadores.",
+   "rating": 4.5,
+   "estado": "Nuevo, sellado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=2sQEh8k5j-M",
+   "modos": [
+    "solo",
+    "local",
+    "online"
+   ],
+   "tags": [
+    "lucha 1 vs 1"
+   ]
+  },
+  {
+   "id": "p11",
+   "nombre": "Marvel’s Spider-Man 2 (PS5)",
+   "categoria": "PS5",
+   "glyph": "juego",
+   "precio": 229,
+   "stock": 3,
+   "generos": [
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS5",
+   "desc": "Peter y Miles en un Nueva York enorme. Uno de los más pedidos del mostrador.",
+   "rating": 4.8,
+   "estado": "Nuevo, sellado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=9fVYKsEmuRo",
+   "modos": [
+    "solo"
+   ],
+   "tags": [
+    "superhéroes",
+    "mundo abierto"
+   ],
+   "descPct": 10,
+   "descDias": 2,
+   "descInicio": "2026-10-12"
+  },
+  {
+   "id": "p12",
+   "nombre": "Call of Duty: Black Ops 7 (PS5)",
+   "categoria": "PS5",
+   "glyph": "juego",
+   "precio": 269,
+   "stock": 0,
+   "generos": [
+    "shooter"
+   ],
+   "plat": "PS5",
+   "desc": "Preventa: reserva con S/ 50 y paga el resto al recogerlo. Incluye paquete de operador digital.",
+   "rating": 4.3,
+   "estado": "Nuevo, sellado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "preventa": true,
+   "lanzamiento": "2026-11-14",
+   "reserva": 50,
+   "stockLanz": 6,
+   "trailer": "https://www.youtube.com/watch?v=-q7uatEiCu4",
+   "modos": [
+    "solo",
+    "online"
+   ],
+   "tags": [
+    "bélico",
+    "competitivo"
+   ]
+  },
+  {
+   "id": "p50",
+   "nombre": "Onimusha: Way of the Sword (PS5)",
+   "categoria": "PS5",
+   "glyph": "juego",
+   "precio": 259,
+   "stock": 3,
+   "generos": [
+    "accion",
+    "rol"
+   ],
+   "plat": "PS5",
+   "desc": "Samuráis y demonios en el Kioto de la era Edo. Combate con espada exigente, al estilo souls. Un jugador, textos en español.",
+   "rating": 4.6,
+   "estado": "Nuevo, sellado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "modos": [
+    "solo"
+   ],
+   "tags": [
+    "souls",
+    "espadas",
+    "samurái"
+   ],
+   "trailer": "https://www.youtube.com/watch?v=Gbmd6YFm5oU"
+  },
+  {
+   "id": "p17",
+   "nombre": "Resident Evil 4 (PS5)",
+   "categoria": "PS5",
+   "glyph": "juego",
+   "precio": 149,
+   "stock": 4,
+   "generos": [
+    "terror",
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS5",
+   "desc": "El remake del clásico de terror, con Leon en un pueblo de España.",
+   "rating": 4.7,
+   "estado": "Usado, buen estado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=eLbmKhuC9tk",
+   "modos": [
+    "solo"
+   ],
+   "tags": [
+    "survival horror",
+    "zombis"
+   ]
+  },
+  {
+   "id": "p13",
+   "nombre": "EA Sports FC 25 (PS4)",
+   "categoria": "PS4",
+   "glyph": "juego",
+   "precio": 119,
+   "stock": 9,
+   "generos": [
+    "deportes"
+   ],
+   "plat": "PS4",
+   "desc": "Fútbol para PS4, ideal para partidas en casa con amigos.",
+   "rating": 4.1,
+   "estado": "Nuevo, sellado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=OIo_OzAU4Vc",
+   "modos": [
+    "solo",
+    "local",
+    "online"
+   ],
+   "tags": [
+    "fútbol",
+    "competitivo"
+   ]
+  },
+  {
+   "id": "p29",
+   "nombre": "The Last of Us Parte II (PS4)",
+   "categoria": "PS4",
+   "glyph": "juego",
+   "precio": 79,
+   "stock": 4,
+   "generos": [
+    "accion",
+    "terror",
+    "aventura"
+   ],
+   "plat": "PS4",
+   "desc": "Ellie en una historia de supervivencia. Dos discos, en español latino.",
+   "rating": 4.8,
+   "estado": "Usado, buen estado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=VSLSvEjDm5s",
+   "modos": [
+    "solo"
+   ],
+   "tags": [
+    "survival horror",
+    "historia"
+   ],
+   "descPct": 25,
+   "descDias": 3,
+   "descInicio": "2026-10-11"
+  },
+  {
+   "id": "p30",
+   "nombre": "GTA V (PS4)",
+   "categoria": "PS4",
+   "glyph": "juego",
+   "precio": 89,
+   "stock": 7,
+   "generos": [
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS4",
+   "desc": "Mundo abierto en Los Santos, con GTA Online.",
+   "rating": 4.7,
+   "estado": "Usado, completo",
+   "incluye": {
+    "caja": true,
+    "manual": true,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=hvoD7ehZPcM",
+   "modos": [
+    "solo",
+    "online"
+   ],
+   "tags": [
+    "mundo abierto",
+    "crimen"
+   ]
+  },
+  {
+   "id": "p31",
+   "nombre": "Marvel’s Spider-Man (PS4)",
+   "categoria": "PS4",
+   "glyph": "juego",
+   "precio": 69,
+   "stock": 5,
+   "generos": [
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS4",
+   "desc": "La primera aventura de Peter Parker en PS4. Probado en tienda.",
+   "rating": 4.7,
+   "estado": "Usado, buen estado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=q4GdJVvdxss",
+   "modos": [
+    "solo"
+   ],
+   "tags": [
+    "superhéroes",
+    "mundo abierto"
+   ]
+  },
+  {
+   "id": "p18",
+   "nombre": "Minecraft (PS4)",
+   "categoria": "PS4",
+   "glyph": "juego",
+   "precio": 99,
+   "stock": 6,
+   "generos": [
+    "familiar"
+   ],
+   "plat": "PS4",
+   "desc": "Construye y explora con toda la familia, cooperativo en la misma pantalla.",
+   "rating": 4.4,
+   "estado": "Nuevo, sellado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "trailer": "https://www.youtube.com/watch?v=KPliZeLO2Z0",
+   "modos": [
+    "solo",
+    "local"
+   ],
+   "tags": [
+    "construcción",
+    "sandbox"
+   ]
+  },
+  {
+   "id": "p22",
+   "nombre": "Pro Evolution Soccer 2019 (PS3)",
+   "categoria": "PS3",
+   "glyph": "juego",
+   "precio": 49,
+   "stock": 12,
+   "generos": [
+    "deportes"
+   ],
+   "plat": "PS3",
+   "desc": "El clásico del mostrador: fútbol para PS3 con parche de ligas actualizado.",
+   "rating": 4.4,
+   "estado": "Usado, buen estado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "modos": [
+    "solo",
+    "local",
+    "online"
+   ],
+   "tags": [
+    "fútbol",
+    "competitivo"
+   ],
+   "descPct": 30,
+   "descDias": 3,
+   "descInicio": "2026-10-13"
+  },
+  {
+   "id": "p23",
+   "nombre": "GTA V (PS3)",
+   "categoria": "PS3",
+   "glyph": "juego",
+   "precio": 69,
+   "stock": 9,
+   "generos": [
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS3",
+   "desc": "Disco en buen estado, probado en tienda antes de entregarlo.",
+   "rating": 4.7,
+   "estado": "Usado, completo",
+   "incluye": {
+    "caja": true,
+    "manual": true,
+    "disco": true
+   },
+   "modos": [
+    "solo",
+    "online"
+   ],
+   "tags": [
+    "mundo abierto",
+    "crimen"
+   ]
+  },
+  {
+   "id": "p32",
+   "nombre": "God of War III (PS3)",
+   "categoria": "PS3",
+   "glyph": "juego",
+   "precio": 39,
+   "stock": 6,
+   "generos": [
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS3",
+   "desc": "La venganza de Kratos contra el Olimpo. Probado en tienda.",
+   "rating": 4.6,
+   "estado": "Usado, buen estado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "modos": [
+    "solo"
+   ],
+   "tags": [
+    "mitología",
+    "hack and slash",
+    "historia"
+   ]
+  },
+  {
+   "id": "p33",
+   "nombre": "Uncharted 2 (PS3)",
+   "categoria": "PS3",
+   "glyph": "juego",
+   "precio": 35,
+   "stock": 4,
+   "generos": [
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS3",
+   "desc": "Nathan Drake en busca de Shambhala. Solo el disco, sin caja.",
+   "rating": 4.5,
+   "estado": "Usado, solo disco",
+   "incluye": {
+    "caja": false,
+    "manual": false,
+    "disco": true
+   },
+   "modos": [
+    "solo"
+   ],
+   "tags": []
+  },
+  {
+   "id": "p34",
+   "nombre": "GTA San Andreas (PS2)",
+   "categoria": "PS2",
+   "glyph": "juego",
+   "precio": 25,
+   "stock": 8,
+   "generos": [
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS2",
+   "desc": "El clásico de CJ en Los Santos. Disco original revisado, con caja.",
+   "rating": 4.8,
+   "estado": "Usado, buen estado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "modos": [
+    "solo",
+    "online"
+   ],
+   "tags": [
+    "mundo abierto",
+    "crimen"
+   ],
+   "descPct": 20,
+   "descDias": 4,
+   "descInicio": "2026-10-12"
+  },
+  {
+   "id": "p35",
+   "nombre": "Winning Eleven 10 (PS2)",
+   "categoria": "PS2",
+   "glyph": "juego",
+   "precio": 20,
+   "stock": 10,
+   "generos": [
+    "deportes"
+   ],
+   "plat": "PS2",
+   "desc": "El fútbol de la PS2 que todos jugaron. Con caja y manual originales.",
+   "rating": 4.6,
+   "estado": "Usado, completo",
+   "incluye": {
+    "caja": true,
+    "manual": true,
+    "disco": true
+   },
+   "modos": [
+    "solo",
+    "local",
+    "online"
+   ],
+   "tags": []
+  },
+  {
+   "id": "p36",
+   "nombre": "God of War II (PS2)",
+   "categoria": "PS2",
+   "glyph": "juego",
+   "precio": 30,
+   "stock": 3,
+   "generos": [
+    "accion",
+    "aventura"
+   ],
+   "plat": "PS2",
+   "desc": "Kratos desafía al destino. Disco original con caja, sin manual.",
+   "rating": 4.7,
+   "estado": "Usado, buen estado",
+   "incluye": {
+    "caja": true,
+    "manual": false,
+    "disco": true
+   },
+   "modos": [
+    "solo"
+   ],
+   "tags": [
+    "mitología",
+    "hack and slash",
+    "historia"
+   ]
+  },
+  {
+   "id": "p37",
+   "nombre": "Shadow of the Colossus (PS2)",
+   "categoria": "PS2",
+   "glyph": "juego",
+   "precio": 35,
+   "stock": 2,
+   "generos": [
+    "accion",
+    "rol"
+   ],
+   "plat": "PS2",
+   "desc": "Uno de los juegos más recordados de la consola. Edición completa.",
+   "rating": 4.6,
+   "estado": "Usado, completo",
+   "incluye": {
+    "caja": true,
+    "manual": true,
+    "disco": true
+   },
+   "modos": [
+    "solo"
+   ],
+   "tags": []
+  },
+  {
+   "id": "p40",
+   "nombre": "Teclado mecánico Redragon Kumara K552 RGB",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 159,
+   "stock": 8,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Teclado mecánico TKL con switches Outemu Red y retroiluminación RGB. Cable USB trenzado, teclas en español.",
+   "rating": 4.6,
+   "sub": "Teclados",
+   "estado": "Nuevo"
+  },
+  {
+   "id": "p41",
+   "nombre": "Teclado mecánico Logitech G413 SE",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 299,
+   "stock": 3,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Teclado mecánico de tamaño completo con switches táctiles y placa superior de aluminio. 2 años de garantía de marca.",
+   "rating": 4.7,
+   "sub": "Teclados",
+   "estado": "Nuevo"
+  },
+  {
+   "id": "p42",
+   "nombre": "Mouse gamer Logitech G203 Lightsync",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 99,
+   "stock": 12,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Mouse de 8,000 DPI con 6 botones programables e iluminación RGB. Ligero, ideal para shooters.",
+   "rating": 4.7,
+   "sub": "Mouse",
+   "estado": "Nuevo",
+   "descPct": 20,
+   "descDias": 6,
+   "descInicio": "2026-10-11"
+  },
+  {
+   "id": "p43",
+   "nombre": "Mouse gamer Razer DeathAdder Essential",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 129,
+   "stock": 5,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Diseño ergonómico para diestros, sensor óptico de 6,400 DPI y 5 botones. Cable de 1.8 m.",
+   "rating": 4.5,
+   "sub": "Mouse",
+   "estado": "Nuevo"
+  },
+  {
+   "id": "p44",
+   "nombre": "Monitor LG UltraGear 24\" 144 Hz IPS",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 749,
+   "stock": 3,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Monitor Full HD de 24\" con panel IPS, 144 Hz y 1 ms. Compatible con FreeSync y G-Sync. Entradas HDMI y DisplayPort.",
+   "rating": 4.8,
+   "sub": "Monitores",
+   "estado": "Nuevo"
+  },
+  {
+   "id": "p45",
+   "nombre": "Monitor Samsung Odyssey G3 27\" 165 Hz",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 999,
+   "stock": 0,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Monitor Full HD de 27\" a 165 Hz y 1 ms, con base regulable en altura. Ideal también para PS5.",
+   "rating": 4.6,
+   "sub": "Monitores",
+   "estado": "Nuevo"
+  },
+  {
+   "id": "p46",
+   "nombre": "Audífonos gamer HyperX Cloud Stinger 2",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 189,
+   "stock": 6,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Audífonos livianos con micrófono abatible y sonido envolvente DTS. Conector de 3.5 mm: sirven en PC, PS4 y PS5.",
+   "rating": 4.6,
+   "sub": "Audífonos",
+   "estado": "Nuevo",
+   "descPct": 15,
+   "descDias": 5,
+   "descInicio": "2026-10-12"
+  },
+  {
+   "id": "p47",
+   "nombre": "Audífonos gamer Redragon Zeus X RGB",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 219,
+   "stock": 4,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Audífonos USB con sonido 7.1 virtual, micrófono desmontable e iluminación RGB.",
+   "rating": 4.4,
+   "sub": "Audífonos",
+   "estado": "Nuevo"
+  },
+  {
+   "id": "p48",
+   "nombre": "Memoria RAM Kingston Fury Beast 16 GB DDR4 3200",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 179,
+   "stock": 9,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Módulo de 16 GB DDR4 a 3200 MHz con disipador. La instalamos gratis si repotencias tu PC con nosotros.",
+   "rating": 4.8,
+   "sub": "Componentes",
+   "estado": "Nuevo"
+  },
+  {
+   "id": "p49",
+   "nombre": "SSD Kingston NV2 1 TB NVMe M.2",
+   "categoria": "PC y periféricos",
+   "glyph": "pc",
+   "precio": 259,
+   "stock": 7,
+   "generos": [],
+   "plat": "PC",
+   "desc": "Unidad NVMe PCIe 4.0 de 1 TB, hasta 3,500 MB/s. Tu PC prende en segundos; migramos tus datos en taller.",
+   "rating": 4.7,
+   "sub": "Componentes",
+   "estado": "Nuevo"
+  }
+ ],
+ "ventas": [
+  {
+   "id": "V-1088",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-12",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1087",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-12",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Pagado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1086",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-10-12",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1085",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-10-11",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1084",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-11",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1083",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-10-11",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Cancelado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1082",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-10-10",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1081",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-10",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1080",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-10-09",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1079",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-10-09",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1078",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-09",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1077",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-10-08",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1076",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-10-08",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1075",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-07",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1074",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-10-07",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1073",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-07",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1072",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-06",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1071",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-10-06",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1070",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-10-06",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1069",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-05",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1068",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-10-05",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1067",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-10-04",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1066",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-04",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1065",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-10-04",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1064",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-10-03",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1063",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-03",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1062",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-10-02",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1061",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-10-02",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1060",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-02",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1059",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-10-01",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1058",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-01",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1057",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-01",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1056",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-09-30",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1055",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-09-30",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1054",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-09-29",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Cancelado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": false
+  },
+  {
+   "id": "V-1053",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-09-29",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1052",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-09-29",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1051",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-09-28",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": true
+  },
+  {
+   "id": "V-1050",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-09-28",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1049",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-09-27",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1048",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-09-27",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "resenada": true
+  },
+  {
+   "id": "V-1047",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-09-27",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1046",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-09-26",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1045",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-09-26",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1044",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-09-25",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1043",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-09-25",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1042",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-09-25",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1041",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-09-24",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1040",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-09-24",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1039",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-09-24",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1038",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-09-23",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1037",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-09-23",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1036",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-09-22",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1035",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-09-22",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1034",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-09-22",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1033",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-09-21",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1032",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-09-21",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1031",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-09-20",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1030",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-09-20",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1029",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-09-20",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1028",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-09-19",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1027",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-09-19",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1026",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-09-19",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1025",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-09-18",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Cancelado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1024",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-09-18",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1023",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-09-17",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1022",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-09-17",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1021",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-09-17",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1020",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-09-16",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1019",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-09-16",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1018",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-09-15",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1017",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-09-15",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1016",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-09-15",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1015",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-09-14",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1014",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-09-14",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1013",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-09-13",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1012",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-09-13",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1011",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-09-13",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1010",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-09-12",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1009",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-09-12",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1008",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-09-12",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1007",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-09-11",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1006",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-09-11",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1005",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-09-10",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1004",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-09-10",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1003",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-09-10",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1002",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-09-09",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-1001",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-09-09",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1000",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-09-08",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-999",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-09-08",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-998",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-09-08",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-997",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-09-07",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-996",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-09-07",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Cancelado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-995",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-09-07",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-994",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-09-06",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-993",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-09-06",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-992",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-09-05",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-991",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-09-05",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-990",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-09-05",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-989",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-09-04",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-988",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-09-04",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-987",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-09-03",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-986",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-09-03",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-985",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-09-03",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-984",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-09-02",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-983",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-09-02",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-982",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-09-01",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-981",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-09-01",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-980",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-09-01",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-979",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-08-31",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-978",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-08-31",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-977",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-08-31",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-976",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-08-30",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-975",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-08-30",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-974",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-08-29",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-973",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-08-29",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-972",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-08-29",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-971",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-08-28",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-970",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-08-28",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-969",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-08-27",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-968",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-08-27",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-967",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-08-27",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Cancelado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-966",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-08-26",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-965",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-08-26",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-964",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-08-26",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-963",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-08-25",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-962",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-08-25",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-961",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-08-24",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-960",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-08-24",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-959",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-08-24",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-958",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-08-23",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-957",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-08-23",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-956",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-08-22",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-955",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-08-22",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-954",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-08-22",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-953",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-08-21",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-952",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-08-21",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-951",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-08-20",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-950",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-08-20",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-949",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-08-20",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-948",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-08-19",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-947",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-08-19",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-946",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-08-19",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-945",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-08-18",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-944",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-08-18",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-943",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-08-17",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-942",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-08-17",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-941",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-08-17",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-940",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-08-16",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-939",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-08-16",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-938",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-08-15",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Cancelado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-937",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-08-15",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-936",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-08-15",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-935",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-08-14",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-934",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-08-14",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-933",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-08-14",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-932",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-08-13",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-931",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-08-13",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-930",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-08-12",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-929",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-08-12",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-928",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-08-12",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-927",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-08-11",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-926",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-08-11",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-925",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-08-10",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-924",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-08-10",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-923",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-08-10",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-922",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-08-09",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-921",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-08-09",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-920",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-08-08",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-919",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-08-08",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-918",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-08-08",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-917",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-08-07",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-916",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-08-07",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-915",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-08-07",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-914",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-08-06",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-913",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-08-06",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-912",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-08-05",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-911",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-08-05",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-910",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-08-05",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-909",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-08-04",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Cancelado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-908",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-08-04",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-907",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-08-03",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-906",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-08-03",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-905",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-08-03",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-904",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-08-02",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-903",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-08-02",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-902",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-08-02",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-901",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-08-01",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-900",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-08-01",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-899",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-07-31",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-898",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-07-31",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-897",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-07-31",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-896",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-07-30",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-895",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-07-30",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-894",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-07-29",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-893",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-07-29",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-892",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-07-29",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-891",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-07-28",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-890",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-07-28",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-889",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-07-27",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-888",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-07-27",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-887",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-07-27",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-886",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-07-26",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-885",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-07-26",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-884",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-07-26",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-883",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-07-25",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-882",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-07-25",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-881",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-07-24",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-880",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-07-24",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Cancelado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-879",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-07-24",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-878",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-07-23",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-877",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-07-23",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-876",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-07-22",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-875",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-07-22",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-874",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-07-22",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-873",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-07-21",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-872",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-07-21",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-871",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-07-21",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-870",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-07-20",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-869",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-07-20",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-868",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-07-19",
+   "detalle": "Mando DualSense Blanco + 1 más",
+   "unidades": 2,
+   "total": 558,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-867",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-07-19",
+   "detalle": "Mando DualShock 3 Inalámbrico",
+   "unidades": 1,
+   "total": 89,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-866",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-07-19",
+   "detalle": "GTA V (PS3)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-865",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-07-18",
+   "detalle": "Mortal Kombat 1 (PS5)",
+   "unidades": 1,
+   "total": 139,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-864",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-07-18",
+   "detalle": "Pro Evolution Soccer 2019 (PS3) + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-863",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-07-17",
+   "detalle": "PlayStation 5 Slim Digital",
+   "unidades": 1,
+   "total": 2399,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-862",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-07-17",
+   "detalle": "PlayStation 4 Slim 1TB",
+   "unidades": 1,
+   "total": 1099,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-861",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-07-17",
+   "detalle": "FIFA 26 (PS5)",
+   "unidades": 1,
+   "total": 249,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-860",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-07-16",
+   "detalle": "PlayStation 3 Super Slim 500GB + 1 más",
+   "unidades": 2,
+   "total": 698,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape"
+  },
+  {
+   "id": "V-859",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-07-16",
+   "detalle": "PlayStation 3 Slim 320GB",
+   "unidades": 1,
+   "total": 549,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta"
+  },
+  {
+   "id": "V-1300",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-10-10",
+   "detalle": "PlayStation 4 Pro 1TB",
+   "unidades": 1,
+   "total": 1499,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p25"
+  },
+  {
+   "id": "V-1301",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-10-13",
+   "detalle": "PlayStation 4 Pro 1TB",
+   "unidades": 1,
+   "total": 1379,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p25"
+  },
+  {
+   "id": "V-1302",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-10-11",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p6"
+  },
+  {
+   "id": "V-1303",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-10-10",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p6"
+  },
+  {
+   "id": "V-1304",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-10-13",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 151,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p6"
+  },
+  {
+   "id": "V-1305",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-10-12",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 151,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p6"
+  },
+  {
+   "id": "V-1306",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-10-13",
+   "detalle": "Mando DualShock 4 V2 Negro",
+   "unidades": 1,
+   "total": 151,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p6"
+  },
+  {
+   "id": "V-1307",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-10-12",
+   "detalle": "Mando inalámbrico PS4 Rojo (genérico)",
+   "unidades": 1,
+   "total": 69,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p14"
+  },
+  {
+   "id": "V-1308",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-10-13",
+   "detalle": "Mando inalámbrico PS4 Rojo (genérico)",
+   "unidades": 1,
+   "total": 59,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p14"
+  },
+  {
+   "id": "V-1309",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-10-07",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p8"
+  },
+  {
+   "id": "V-1310",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-10-06",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 179,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p8"
+  },
+  {
+   "id": "V-1311",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-10-13",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 152,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p8"
+  },
+  {
+   "id": "V-1312",
+   "cliente": "Kevin Ticona",
+   "fecha": "2026-10-12",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 152,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p8"
+  },
+  {
+   "id": "V-1313",
+   "cliente": "Rosa Huamán",
+   "fecha": "2026-10-11",
+   "detalle": "God of War Ragnarök (PS5)",
+   "unidades": 1,
+   "total": 152,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p8"
+  },
+  {
+   "id": "V-1314",
+   "cliente": "Jhon Ramírez",
+   "fecha": "2026-10-11",
+   "detalle": "Marvel’s Spider-Man 2 (PS5)",
+   "unidades": 1,
+   "total": 229,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p11"
+  },
+  {
+   "id": "V-1315",
+   "cliente": "Milagros Ccahuana",
+   "fecha": "2026-10-10",
+   "detalle": "Marvel’s Spider-Man 2 (PS5)",
+   "unidades": 1,
+   "total": 229,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p11"
+  },
+  {
+   "id": "V-1316",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-10-13",
+   "detalle": "Marvel’s Spider-Man 2 (PS5)",
+   "unidades": 1,
+   "total": 206,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p11"
+  },
+  {
+   "id": "V-1317",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-10-12",
+   "detalle": "Marvel’s Spider-Man 2 (PS5)",
+   "unidades": 1,
+   "total": 206,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p11"
+  },
+  {
+   "id": "V-1318",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-10-13",
+   "detalle": "Marvel’s Spider-Man 2 (PS5)",
+   "unidades": 1,
+   "total": 206,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p11"
+  },
+  {
+   "id": "V-1319",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-10-10",
+   "detalle": "The Last of Us Parte II (PS4)",
+   "unidades": 1,
+   "total": 79,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p29"
+  },
+  {
+   "id": "V-1320",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-10-13",
+   "detalle": "The Last of Us Parte II (PS4)",
+   "unidades": 1,
+   "total": 59,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p29"
+  },
+  {
+   "id": "V-1321",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-10-12",
+   "detalle": "The Last of Us Parte II (PS4)",
+   "unidades": 1,
+   "total": 59,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p29"
+  },
+  {
+   "id": "V-1322",
+   "cliente": "Yesenia Palomino",
+   "fecha": "2026-10-12",
+   "detalle": "Pro Evolution Soccer 2019 (PS3)",
+   "unidades": 1,
+   "total": 49,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p22"
+  },
+  {
+   "id": "V-1323",
+   "cliente": "Brayan Chumpitaz",
+   "fecha": "2026-10-12",
+   "detalle": "Pro Evolution Soccer 2019 (PS3)",
+   "unidades": 1,
+   "total": 49,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p22"
+  },
+  {
+   "id": "V-1324",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-10-13",
+   "detalle": "Pro Evolution Soccer 2019 (PS3)",
+   "unidades": 1,
+   "total": 34,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p22"
+  },
+  {
+   "id": "V-1325",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-10-13",
+   "detalle": "Pro Evolution Soccer 2019 (PS3)",
+   "unidades": 1,
+   "total": 34,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p22"
+  },
+  {
+   "id": "V-1326",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-10-13",
+   "detalle": "Pro Evolution Soccer 2019 (PS3)",
+   "unidades": 1,
+   "total": 34,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p22"
+  },
+  {
+   "id": "V-1327",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-10-11",
+   "detalle": "GTA San Andreas (PS2)",
+   "unidades": 1,
+   "total": 25,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p34"
+  },
+  {
+   "id": "V-1328",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-10-13",
+   "detalle": "GTA San Andreas (PS2)",
+   "unidades": 1,
+   "total": 20,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p34"
+  },
+  {
+   "id": "V-1329",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-10-12",
+   "detalle": "GTA San Andreas (PS2)",
+   "unidades": 1,
+   "total": 20,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p34"
+  },
+  {
+   "id": "V-1330",
+   "cliente": "Fiorella Mendoza",
+   "fecha": "2026-10-10",
+   "detalle": "Mouse gamer Logitech G203 Lightsync",
+   "unidades": 1,
+   "total": 99,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p42"
+  },
+  {
+   "id": "V-1331",
+   "cliente": "Cristhian Caruajulca",
+   "fecha": "2026-10-09",
+   "detalle": "Mouse gamer Logitech G203 Lightsync",
+   "unidades": 1,
+   "total": 99,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p42"
+  },
+  {
+   "id": "V-1332",
+   "cliente": "Elmer Vilca",
+   "fecha": "2026-10-13",
+   "detalle": "Mouse gamer Logitech G203 Lightsync",
+   "unidades": 1,
+   "total": 79,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p42"
+  },
+  {
+   "id": "V-1333",
+   "cliente": "Katherine Ñahui",
+   "fecha": "2026-10-12",
+   "detalle": "Mouse gamer Logitech G203 Lightsync",
+   "unidades": 1,
+   "total": 79,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p42"
+  },
+  {
+   "id": "V-1334",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-10-11",
+   "detalle": "Mouse gamer Logitech G203 Lightsync",
+   "unidades": 1,
+   "total": 79,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p42"
+  },
+  {
+   "id": "V-1335",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-10-11",
+   "detalle": "Audífonos gamer HyperX Cloud Stinger 2",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p46"
+  },
+  {
+   "id": "V-1336",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-10-10",
+   "detalle": "Audífonos gamer HyperX Cloud Stinger 2",
+   "unidades": 1,
+   "total": 189,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p46"
+  },
+  {
+   "id": "V-1337",
+   "cliente": "Alexander Mamani",
+   "fecha": "2026-10-13",
+   "detalle": "Audífonos gamer HyperX Cloud Stinger 2",
+   "unidades": 1,
+   "total": 161,
+   "estado": "Listo para recoger",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p46"
+  },
+  {
+   "id": "V-1338",
+   "cliente": "Luis Quispe",
+   "fecha": "2026-10-12",
+   "detalle": "Audífonos gamer HyperX Cloud Stinger 2",
+   "unidades": 1,
+   "total": 161,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p46"
+  },
+  {
+   "id": "V-1339",
+   "cliente": "Carla Sifuentes",
+   "fecha": "2026-10-13",
+   "detalle": "Audífonos gamer HyperX Cloud Stinger 2",
+   "unidades": 1,
+   "total": 161,
+   "estado": "Entregado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p46"
+  },
+  {
+   "id": "V-1340",
+   "cliente": "Kevin Ticona",
+   "cuenta": "cliente@demo.pe",
+   "clienteTel": "987112445",
+   "fecha": "2026-10-07",
+   "detalle": "Call of Duty: Black Ops 7 (PS5) (reserva)",
+   "unidades": 1,
+   "total": 50,
+   "estado": "Reservado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p12",
+   "reserva": true,
+   "items": [
+    {
+     "id": "p12",
+     "nombre": "Call of Duty: Black Ops 7 (PS5)",
+     "precio": 50,
+     "cant": 1,
+     "preventa": true
+    }
+   ]
+  },
+  {
+   "id": "V-1341",
+   "cliente": "Jordan Zapata",
+   "fecha": "2026-10-09",
+   "detalle": "Call of Duty: Black Ops 7 (PS5) (reserva)",
+   "unidades": 1,
+   "total": 50,
+   "estado": "Reservado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Tarjeta",
+   "prodId": "p12",
+   "reserva": true,
+   "items": [
+    {
+     "id": "p12",
+     "nombre": "Call of Duty: Black Ops 7 (PS5)",
+     "precio": 50,
+     "cant": 1,
+     "preventa": true
+    }
+   ]
+  },
+  {
+   "id": "V-1342",
+   "cliente": "Sheyla Quiroz",
+   "fecha": "2026-10-11",
+   "detalle": "Call of Duty: Black Ops 7 (PS5) (reserva)",
+   "unidades": 1,
+   "total": 50,
+   "estado": "Reservado",
+   "entrega": "Recojo en tienda",
+   "canal": "web",
+   "metodo": "Yape",
+   "prodId": "p12",
+   "reserva": true,
+   "items": [
+    {
+     "id": "p12",
+     "nombre": "Call of Duty: Black Ops 7 (PS5)",
+     "precio": 50,
+     "cant": 1,
+     "preventa": true
+    }
+   ]
+  }
+ ],
+ "reparaciones": [
+  {
+   "id": "R-2062",
+   "cliente": "Kevin Ticona",
+   "equipo": "Mando DualShock 4",
+   "falla": "Drift en stick izquierdo",
+   "estado": "En reparación",
+   "costo": 60,
+   "fecha": "2026-09-26",
+   "clienteEmail": "cliente@demo.pe",
+   "telefono": "929 446 447",
+   "diagnostico": "Cambio de módulo de stick",
+   "pago": "En tienda",
+   "duracion": "30 min",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2061",
+   "cliente": "Rosa Huamán",
+   "equipo": "PlayStation 4 Slim",
+   "falla": "Se sobrecalienta y se apaga",
+   "estado": "Listo para recoger",
+   "costo": 90,
+   "fecha": "2026-09-23",
+   "clienteEmail": "",
+   "telefono": "960 210 211",
+   "diagnostico": "Limpieza interna y pasta térmica nueva",
+   "pago": "Yape",
+   "duracion": "1 hora",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2060",
+   "cliente": "Jhon Ramírez",
+   "equipo": "Mando DualShock 3",
+   "falla": "No carga la batería",
+   "estado": "Entregado",
+   "costo": 70,
+   "fecha": "2026-09-20",
+   "clienteEmail": "",
+   "telefono": "968 913 914",
+   "diagnostico": "Batería nueva",
+   "pago": "Yape",
+   "duracion": "45 min",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2059",
+   "cliente": "Milagros Ccahuana",
+   "equipo": "PlayStation 3 Super Slim",
+   "falla": "Mantenimiento y limpieza interna",
+   "estado": "Recibido",
+   "costo": 0,
+   "fecha": "2026-09-17",
+   "clienteEmail": "",
+   "telefono": "924 704 705",
+   "diagnostico": "",
+   "pago": "Pendiente",
+   "duracion": "1 hora",
+   "tecnica": "Linda",
+   "acordado": false,
+   "historial": {}
+  },
+  {
+   "id": "R-2058",
+   "cliente": "Yesenia Palomino",
+   "equipo": "Mando DualSense",
+   "falla": "Gatillo L2 no responde",
+   "estado": "Diagnosticado",
+   "costo": 120,
+   "fecha": "2026-09-14",
+   "clienteEmail": "",
+   "telefono": "917 590 591",
+   "diagnostico": "Cambio de resorte y botón L2",
+   "pago": "Pendiente",
+   "duracion": "40 min",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2057",
+   "cliente": "Brayan Chumpitaz",
+   "equipo": "PC de escritorio",
+   "falla": "No enciende, sin video",
+   "estado": "En reparación",
+   "costo": 180,
+   "fecha": "2026-09-11",
+   "clienteEmail": "",
+   "telefono": "970 567 568",
+   "diagnostico": "Revisión de fuente y placa",
+   "pago": "Yape",
+   "duracion": "3 días",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2056",
+   "cliente": "Fiorella Mendoza",
+   "equipo": "PlayStation 5",
+   "falla": "No lee discos",
+   "estado": "Listo para recoger",
+   "costo": 150,
+   "fecha": "2026-09-08",
+   "clienteEmail": "",
+   "telefono": "920 616 617",
+   "diagnostico": "Cambio de lente del lector",
+   "pago": "En tienda",
+   "duracion": "2 días",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2055",
+   "cliente": "Cristhian Caruajulca",
+   "equipo": "Mando DualShock 4",
+   "falla": "Repotenciación: SSD y RAM",
+   "estado": "Entregado",
+   "costo": 60,
+   "fecha": "2026-09-05",
+   "clienteEmail": "",
+   "telefono": "918 962 963",
+   "diagnostico": "SSD 1TB + 8GB de RAM",
+   "pago": "Yape",
+   "duracion": "30 min",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2054",
+   "cliente": "Elmer Vilca",
+   "equipo": "PlayStation 4 Slim",
+   "falla": "Drift en stick izquierdo",
+   "estado": "Recibido",
+   "costo": 0,
+   "fecha": "2026-09-02",
+   "clienteEmail": "",
+   "telefono": "975 127 128",
+   "diagnostico": "",
+   "pago": "Pendiente",
+   "duracion": "1 hora",
+   "tecnica": "Ángel",
+   "acordado": false,
+   "historial": {}
+  },
+  {
+   "id": "R-2053",
+   "cliente": "Katherine Ñahui",
+   "equipo": "Mando DualShock 3",
+   "falla": "Se sobrecalienta y se apaga",
+   "estado": "Diagnosticado",
+   "costo": 70,
+   "fecha": "2026-09-24",
+   "clienteEmail": "",
+   "telefono": "938 245 246",
+   "diagnostico": "Limpieza interna y pasta térmica nueva",
+   "pago": "Pendiente",
+   "duracion": "45 min",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2052",
+   "cliente": "Jordan Zapata",
+   "equipo": "PlayStation 3 Super Slim",
+   "falla": "No carga la batería",
+   "estado": "En reparación",
+   "costo": 90,
+   "fecha": "2026-09-21",
+   "clienteEmail": "",
+   "telefono": "934 130 131",
+   "diagnostico": "Batería nueva",
+   "pago": "Yape",
+   "duracion": "1 hora",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2051",
+   "cliente": "Sheyla Quiroz",
+   "equipo": "Mando DualSense",
+   "falla": "Mantenimiento y limpieza interna",
+   "estado": "Listo para recoger",
+   "costo": 120,
+   "fecha": "2026-09-18",
+   "clienteEmail": "",
+   "telefono": "991 284 285",
+   "diagnostico": "Mantenimiento completo",
+   "pago": "Yape",
+   "duracion": "40 min",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2050",
+   "cliente": "Kevin Ticona",
+   "equipo": "PlayStation 4 Slim",
+   "falla": "Mantenimiento y limpieza interna",
+   "estado": "Entregado",
+   "costo": 180,
+   "fecha": "2026-09-15",
+   "clienteEmail": "cliente@demo.pe",
+   "telefono": "929 446 447",
+   "diagnostico": "Mantenimiento completo",
+   "pago": "En tienda",
+   "duracion": "3 días",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2049",
+   "cliente": "Rosa Huamán",
+   "equipo": "PlayStation 5",
+   "falla": "No enciende, sin video",
+   "estado": "Recibido",
+   "costo": 0,
+   "fecha": "2026-09-12",
+   "clienteEmail": "",
+   "telefono": "960 210 211",
+   "diagnostico": "",
+   "pago": "Pendiente",
+   "duracion": "2 días",
+   "tecnica": "Linda",
+   "acordado": false,
+   "historial": {}
+  },
+  {
+   "id": "R-2048",
+   "cliente": "Jhon Ramírez",
+   "equipo": "Mando DualShock 4",
+   "falla": "No lee discos",
+   "estado": "Diagnosticado",
+   "costo": 60,
+   "fecha": "2026-09-09",
+   "clienteEmail": "",
+   "telefono": "968 913 914",
+   "diagnostico": "Cambio de lente del lector",
+   "pago": "Pendiente",
+   "duracion": "30 min",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2047",
+   "cliente": "Milagros Ccahuana",
+   "equipo": "PlayStation 4 Slim",
+   "falla": "Repotenciación: SSD y RAM",
+   "estado": "En reparación",
+   "costo": 90,
+   "fecha": "2026-09-06",
+   "clienteEmail": "",
+   "telefono": "924 704 705",
+   "diagnostico": "SSD 1TB + 8GB de RAM",
+   "pago": "En tienda",
+   "duracion": "1 hora",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2046",
+   "cliente": "Yesenia Palomino",
+   "equipo": "Mando DualShock 3",
+   "falla": "Drift en stick izquierdo",
+   "estado": "Listo para recoger",
+   "costo": 70,
+   "fecha": "2026-09-03",
+   "clienteEmail": "",
+   "telefono": "917 590 591",
+   "diagnostico": "Cambio de módulo de stick",
+   "pago": "Yape",
+   "duracion": "45 min",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2045",
+   "cliente": "Brayan Chumpitaz",
+   "equipo": "PlayStation 3 Super Slim",
+   "falla": "Se sobrecalienta y se apaga",
+   "estado": "Entregado",
+   "costo": 90,
+   "fecha": "2026-09-25",
+   "clienteEmail": "",
+   "telefono": "970 567 568",
+   "diagnostico": "Limpieza interna y pasta térmica nueva",
+   "pago": "Yape",
+   "duracion": "1 hora",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2044",
+   "cliente": "Fiorella Mendoza",
+   "equipo": "Mando DualSense",
+   "falla": "No carga la batería",
+   "estado": "Recibido",
+   "costo": 0,
+   "fecha": "2026-09-22",
+   "clienteEmail": "",
+   "telefono": "920 616 617",
+   "diagnostico": "",
+   "pago": "Pendiente",
+   "duracion": "40 min",
+   "tecnica": "Ángel",
+   "acordado": false,
+   "historial": {}
+  },
+  {
+   "id": "R-2043",
+   "cliente": "Cristhian Caruajulca",
+   "equipo": "PC de escritorio",
+   "falla": "Mantenimiento y limpieza interna",
+   "estado": "Diagnosticado",
+   "costo": 180,
+   "fecha": "2026-09-19",
+   "clienteEmail": "",
+   "telefono": "918 962 963",
+   "diagnostico": "Mantenimiento completo",
+   "pago": "Pendiente",
+   "duracion": "3 días",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2042",
+   "cliente": "Elmer Vilca",
+   "equipo": "PlayStation 5",
+   "falla": "Gatillo L2 no responde",
+   "estado": "En reparación",
+   "costo": 150,
+   "fecha": "2026-08-16",
+   "clienteEmail": "",
+   "telefono": "975 127 128",
+   "diagnostico": "Cambio de resorte y botón L2",
+   "pago": "Yape",
+   "duracion": "2 días",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2041",
+   "cliente": "Katherine Ñahui",
+   "equipo": "Mando DualShock 4",
+   "falla": "No enciende, sin video",
+   "estado": "Listo para recoger",
+   "costo": 60,
+   "fecha": "2026-08-13",
+   "clienteEmail": "",
+   "telefono": "938 245 246",
+   "diagnostico": "Revisión de fuente y placa",
+   "pago": "En tienda",
+   "duracion": "30 min",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2040",
+   "cliente": "Jordan Zapata",
+   "equipo": "PlayStation 4 Slim",
+   "falla": "No lee discos",
+   "estado": "Entregado",
+   "costo": 90,
+   "fecha": "2026-08-10",
+   "clienteEmail": "",
+   "telefono": "934 130 131",
+   "diagnostico": "Cambio de lente del lector",
+   "pago": "Yape",
+   "duracion": "1 hora",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2039",
+   "cliente": "Sheyla Quiroz",
+   "equipo": "Mando DualShock 3",
+   "falla": "Repotenciación: SSD y RAM",
+   "estado": "Recibido",
+   "costo": 0,
+   "fecha": "2026-08-07",
+   "clienteEmail": "",
+   "telefono": "991 284 285",
+   "diagnostico": "",
+   "pago": "Pendiente",
+   "duracion": "45 min",
+   "tecnica": "Linda",
+   "acordado": false,
+   "historial": {}
+  },
+  {
+   "id": "R-2038",
+   "cliente": "Kevin Ticona",
+   "equipo": "Mando DualShock 3",
+   "falla": "No carga la batería",
+   "estado": "Diagnosticado",
+   "costo": 90,
+   "fecha": "2026-08-04",
+   "clienteEmail": "cliente@demo.pe",
+   "telefono": "929 446 447",
+   "diagnostico": "Batería nueva",
+   "pago": "Pendiente",
+   "duracion": "1 hora",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2037",
+   "cliente": "Rosa Huamán",
+   "equipo": "Mando DualSense",
+   "falla": "Se sobrecalienta y se apaga",
+   "estado": "En reparación",
+   "costo": 120,
+   "fecha": "2026-08-26",
+   "clienteEmail": "",
+   "telefono": "960 210 211",
+   "diagnostico": "Limpieza interna y pasta térmica nueva",
+   "pago": "Yape",
+   "duracion": "40 min",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2036",
+   "cliente": "Jhon Ramírez",
+   "equipo": "PC de escritorio",
+   "falla": "No carga la batería",
+   "estado": "Listo para recoger",
+   "costo": 180,
+   "fecha": "2026-08-23",
+   "clienteEmail": "",
+   "telefono": "968 913 914",
+   "diagnostico": "Batería nueva",
+   "pago": "Yape",
+   "duracion": "3 días",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2035",
+   "cliente": "Milagros Ccahuana",
+   "equipo": "PlayStation 5",
+   "falla": "Mantenimiento y limpieza interna",
+   "estado": "Entregado",
+   "costo": 150,
+   "fecha": "2026-08-20",
+   "clienteEmail": "",
+   "telefono": "924 704 705",
+   "diagnostico": "Mantenimiento completo",
+   "pago": "En tienda",
+   "duracion": "2 días",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2034",
+   "cliente": "Yesenia Palomino",
+   "equipo": "Mando DualShock 4",
+   "falla": "Gatillo L2 no responde",
+   "estado": "Recibido",
+   "costo": 0,
+   "fecha": "2026-08-17",
+   "clienteEmail": "",
+   "telefono": "917 590 591",
+   "diagnostico": "",
+   "pago": "Pendiente",
+   "duracion": "30 min",
+   "tecnica": "Ángel",
+   "acordado": false,
+   "historial": {}
+  },
+  {
+   "id": "R-2033",
+   "cliente": "Brayan Chumpitaz",
+   "equipo": "PlayStation 4 Slim",
+   "falla": "No enciende, sin video",
+   "estado": "Diagnosticado",
+   "costo": 90,
+   "fecha": "2026-08-14",
+   "clienteEmail": "",
+   "telefono": "970 567 568",
+   "diagnostico": "Revisión de fuente y placa",
+   "pago": "Pendiente",
+   "duracion": "1 hora",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2032",
+   "cliente": "Fiorella Mendoza",
+   "equipo": "Mando DualShock 3",
+   "falla": "No lee discos",
+   "estado": "En reparación",
+   "costo": 70,
+   "fecha": "2026-08-11",
+   "clienteEmail": "",
+   "telefono": "920 616 617",
+   "diagnostico": "Cambio de lente del lector",
+   "pago": "En tienda",
+   "duracion": "45 min",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2031",
+   "cliente": "Cristhian Caruajulca",
+   "equipo": "PlayStation 3 Super Slim",
+   "falla": "Repotenciación: SSD y RAM",
+   "estado": "Listo para recoger",
+   "costo": 90,
+   "fecha": "2026-08-08",
+   "clienteEmail": "",
+   "telefono": "918 962 963",
+   "diagnostico": "SSD 1TB + 8GB de RAM",
+   "pago": "Yape",
+   "duracion": "1 hora",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2030",
+   "cliente": "Elmer Vilca",
+   "equipo": "Mando DualSense",
+   "falla": "Drift en stick izquierdo",
+   "estado": "Entregado",
+   "costo": 120,
+   "fecha": "2026-08-05",
+   "clienteEmail": "",
+   "telefono": "975 127 128",
+   "diagnostico": "Cambio de módulo de stick",
+   "pago": "Yape",
+   "duracion": "40 min",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2029",
+   "cliente": "Katherine Ñahui",
+   "equipo": "PC de escritorio",
+   "falla": "Se sobrecalienta y se apaga",
+   "estado": "Recibido",
+   "costo": 0,
+   "fecha": "2026-08-02",
+   "clienteEmail": "",
+   "telefono": "938 245 246",
+   "diagnostico": "",
+   "pago": "Pendiente",
+   "duracion": "3 días",
+   "tecnica": "Linda",
+   "acordado": false,
+   "historial": {}
+  },
+  {
+   "id": "R-2028",
+   "cliente": "Jordan Zapata",
+   "equipo": "PlayStation 5",
+   "falla": "No carga la batería",
+   "estado": "Diagnosticado",
+   "costo": 150,
+   "fecha": "2026-08-24",
+   "clienteEmail": "",
+   "telefono": "934 130 131",
+   "diagnostico": "Batería nueva",
+   "pago": "Pendiente",
+   "duracion": "2 días",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2027",
+   "cliente": "Sheyla Quiroz",
+   "equipo": "Mando DualShock 4",
+   "falla": "Mantenimiento y limpieza interna",
+   "estado": "En reparación",
+   "costo": 60,
+   "fecha": "2026-08-21",
+   "clienteEmail": "",
+   "telefono": "991 284 285",
+   "diagnostico": "Mantenimiento completo",
+   "pago": "Yape",
+   "duracion": "30 min",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2026",
+   "cliente": "Kevin Ticona",
+   "equipo": "PC de escritorio",
+   "falla": "Repotenciación: SSD y RAM",
+   "estado": "Listo para recoger",
+   "costo": 90,
+   "fecha": "2026-08-18",
+   "clienteEmail": "cliente@demo.pe",
+   "telefono": "929 446 447",
+   "diagnostico": "SSD 1TB + 8GB de RAM",
+   "pago": "En tienda",
+   "duracion": "1 hora",
+   "tecnica": "Ángel",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2025",
+   "cliente": "Rosa Huamán",
+   "equipo": "Mando DualShock 3",
+   "falla": "No enciende, sin video",
+   "estado": "Entregado",
+   "costo": 70,
+   "fecha": "2026-08-15",
+   "clienteEmail": "",
+   "telefono": "960 210 211",
+   "diagnostico": "Revisión de fuente y placa",
+   "pago": "Yape",
+   "duracion": "45 min",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  },
+  {
+   "id": "R-2024",
+   "cliente": "Jhon Ramírez",
+   "equipo": "PlayStation 3 Super Slim",
+   "falla": "No lee discos",
+   "estado": "Recibido",
+   "costo": 0,
+   "fecha": "2026-08-12",
+   "clienteEmail": "",
+   "telefono": "968 913 914",
+   "diagnostico": "",
+   "pago": "Pendiente",
+   "duracion": "1 hora",
+   "tecnica": "Ángel",
+   "acordado": false,
+   "historial": {}
+  },
+  {
+   "id": "R-2023",
+   "cliente": "Milagros Ccahuana",
+   "equipo": "Mando DualSense",
+   "falla": "Repotenciación: SSD y RAM",
+   "estado": "Diagnosticado",
+   "costo": 120,
+   "fecha": "2026-08-09",
+   "clienteEmail": "",
+   "telefono": "924 704 705",
+   "diagnostico": "SSD 1TB + 8GB de RAM",
+   "pago": "Pendiente",
+   "duracion": "40 min",
+   "tecnica": "Linda",
+   "acordado": true,
+   "historial": {}
+  }
+ ],
+ "tipos": [
+  {
+   "id": "t1",
+   "nombre": "Reparación de mandos",
+   "detalle": "Drift de sticks, gatillos, botones, batería · el servicio más pedido",
+   "desde": 60,
+   "dias": "30 a 45 min en tienda",
+   "icono": "ph ph-game-controller",
+   "activo": true
+  },
+  {
+   "id": "t2",
+   "nombre": "Mantenimiento de consola",
+   "detalle": "Limpieza interna, cambio de pasta térmica · PS3, PS4 y PS5",
+   "desde": 90,
+   "dias": "45 min a 1 hora",
+   "icono": "ph ph-wrench",
+   "activo": true
+  },
+  {
+   "id": "t3",
+   "nombre": "Lector de discos",
+   "detalle": "Cambio de lente o mecanismo completo",
+   "desde": 180,
+   "dias": "2 a 4 días",
+   "icono": "ph ph-disc",
+   "activo": true
+  },
+  {
+   "id": "t4",
+   "nombre": "Puerto HDMI",
+   "detalle": "Cambio de puerto con soldadura BGA",
+   "desde": 220,
+   "dias": "3 días",
+   "icono": "ph ph-plug",
+   "activo": true
+  },
+  {
+   "id": "t5",
+   "nombre": "Reparación de PC",
+   "detalle": "Placas madre, fuentes y diagnóstico a nivel de componente",
+   "desde": 150,
+   "dias": "3 a 5 días",
+   "icono": "ph ph-cpu",
+   "activo": true
+  },
+  {
+   "id": "t7",
+   "nombre": "Repotenciación de PC",
+   "detalle": "Más RAM, SSD, tarjeta de video y limpieza completa",
+   "desde": 180,
+   "dias": "1 a 2 días",
+   "icono": "ph ph-desktop-tower",
+   "activo": true
+  },
+  {
+   "id": "t6",
+   "nombre": "Recuperación de datos",
+   "detalle": "Copia de partidas y perfiles a otro disco",
+   "desde": 120,
+   "dias": "2 días",
+   "icono": "ph ph-hard-drives",
+   "activo": false
+  }
+ ],
+ "resenas": [
+  {
+   "id": "rs1",
+   "tipo": "producto",
+   "sobre": "PlayStation 5 Slim Digital",
+   "cliente": "Yesenia Palomino",
+   "estrellas": 5,
+   "texto": "Llegó sellada y con boleta. Me explicaron cómo configurar la cuenta peruana, muy pacientes.",
+   "fecha": "2026-09-02"
+  },
+  {
+   "id": "rs2",
+   "tipo": "producto",
+   "sobre": "Mando DualSense Blanco",
+   "cliente": "Brayan Chumpitaz",
+   "estrellas": 5,
+   "texto": "Original, lo probé ahí mismo en la tienda. Precio más barato que en el centro.",
+   "fecha": "2026-08-28"
+  },
+  {
+   "id": "rs3",
+   "tipo": "servicio",
+   "sobre": "Reparación de mandos",
+   "cliente": "Kevin Ticona",
+   "estrellas": 5,
+   "texto": "Mi mando tenía drift, me lo dejaron como nuevo en un día y me avisaron por el chat.",
+   "fecha": "2026-09-05"
+  },
+  {
+   "id": "rs4",
+   "tipo": "producto",
+   "sobre": "FIFA 26 (PS5)",
+   "cliente": "Jordan Zapata",
+   "estrellas": 4,
+   "texto": "Buen precio, aunque quería la edición con la camiseta. Igual me guardaron el juego un día.",
+   "fecha": "2026-08-19"
+  },
+  {
+   "id": "rs5",
+   "tipo": "servicio",
+   "sobre": "Lector de discos",
+   "cliente": "Rosa Huamán",
+   "estrellas": 4,
+   "texto": "Se demoró un día más de lo dicho, pero avisaron por el chat y quedó bien.",
+   "fecha": "2026-08-11"
+  },
+  {
+   "id": "rs6",
+   "tipo": "servicio",
+   "sobre": "Mantenimiento de consola",
+   "cliente": "Fiorella Mendoza",
+   "estrellas": 5,
+   "texto": "Mi PS4 ya no se apaga sola. Me mostraron las fotos del antes y después.",
+   "fecha": "2026-09-09"
+  },
+  {
+   "id": "rs7",
+   "tipo": "producto",
+   "sobre": "God of War Ragnarök (PS5)",
+   "cliente": "Cristhian Caruajulca",
+   "estrellas": 5,
+   "texto": "Físico y sellado, lo separé por la web y lo recogí el mismo día en la tienda.",
+   "fecha": "2026-09-11"
+  }
+ ],
+ "citas": [
+  {
+   "id": "c1",
+   "cliente": "Kevin Ticona",
+   "equipo": "Mando DualSense",
+   "falla": "Drift en stick izquierdo",
+   "fecha": "2026-09-16",
+   "hora": "10:00",
+   "estado": "Diagnosticado",
+   "precio": 80,
+   "acordado": true,
+   "repId": "R-2062",
+   "noLeidos": 0,
+   "mensajes": [
+    {
+     "de": "cliente",
+     "txt": "Buenas, el stick se mueve solo en FIFA.",
+     "hora": "09:12"
+    },
+    {
+     "de": "admin",
+     "txt": "Hola Kevin, es drift del potenciómetro. Cambio de módulo S/ 80, listo mañana.",
+     "hora": "09:40"
+    },
+    {
+     "de": "cliente",
+     "txt": "De acuerdo, procedan.",
+     "hora": "09:44"
+    }
+   ]
+  },
+  {
+   "id": "c2",
+   "cliente": "Sheyla Quiroz",
+   "equipo": "PlayStation 5",
+   "falla": "No lee discos",
+   "fecha": "2026-09-16",
+   "hora": "16:00",
+   "estado": "Recibido",
+   "precio": 0,
+   "acordado": false,
+   "repId": "R-2060",
+   "noLeidos": 2,
+   "mensajes": [
+    {
+     "de": "cliente",
+     "txt": "Mete el disco y lo escupe. ¿Cuánto costaría?",
+     "hora": "11:02"
+    },
+    {
+     "de": "cliente",
+     "txt": "Es una PS5 del 2022, la compré aquí.",
+     "hora": "11:03"
+    }
+   ]
+  },
+  {
+   "id": "c3",
+   "cliente": "Elmer Vilca",
+   "equipo": "Placa madre PC",
+   "falla": "No enciende, sin video",
+   "fecha": "2026-09-17",
+   "hora": "11:00",
+   "estado": "Recibido",
+   "precio": 0,
+   "acordado": false,
+   "repId": "R-2059",
+   "noLeidos": 1,
+   "mensajes": [
+    {
+     "de": "cliente",
+     "txt": "¿Revisan placas de PC también? La mía no da video.",
+     "hora": "18:20"
+    }
+   ]
+  },
+  {
+   "id": "c4",
+   "cliente": "Katherine Ñahui",
+   "equipo": "Mando DualShock 4",
+   "falla": "No carga la batería",
+   "fecha": "2026-09-17",
+   "hora": "17:00",
+   "estado": "En reparación",
+   "precio": 60,
+   "acordado": true,
+   "repId": "R-2057",
+   "noLeidos": 0,
+   "mensajes": [
+    {
+     "de": "admin",
+     "txt": "Katherine, es la batería. S/ 60 con la nueva instalada.",
+     "hora": "10:15"
+    },
+    {
+     "de": "cliente",
+     "txt": "Ya, háganlo por favor.",
+     "hora": "10:31"
+    }
+   ]
+  },
+  {
+   "id": "c5",
+   "cliente": "Fiorella Mendoza",
+   "equipo": "PlayStation 4 Slim",
+   "falla": "Se sobrecalienta y se apaga",
+   "fecha": "2026-09-18",
+   "hora": "10:00",
+   "estado": "Listo para recoger",
+   "precio": 90,
+   "acordado": true,
+   "repId": "R-2055",
+   "noLeidos": 0,
+   "mensajes": [
+    {
+     "de": "admin",
+     "txt": "Ya está lista, con pasta térmica nueva. Puedes recogerla hoy.",
+     "hora": "15:02"
+    }
+   ]
+  }
+ ],
+ "repHistorial": [
+  {
+   "fecha": "2026-10-12",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-12",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-10-12",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-10-11",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-10-11",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-10",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-10-10",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-10-10",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-09",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Gatillos y botones"
+  },
+  {
+   "fecha": "2026-10-09",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-10-09",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-08",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-08",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-10-08",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-10-08",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-07",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-06",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-10-06",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-05",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-10-05",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-10-05",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-04",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-10-04",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-10-03",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-03",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-10-03",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-10-02",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-10-02",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-02",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-10-01",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-10-01",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-01",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-10-01",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-30",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-29",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-29",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-28",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-28",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Gatillos y botones"
+  },
+  {
+   "fecha": "2026-09-28",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-09-27",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-09-27",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-26",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-09-26",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-26",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-09-25",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-25",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-09-25",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-24",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-09-24",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-24",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-09-24",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-23",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-22",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-09-22",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-21",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-09-21",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-21",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-20",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-20",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-09-19",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-19",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-19",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-09-18",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-18",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Gatillos y botones"
+  },
+  {
+   "fecha": "2026-09-18",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-09-17",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-09-17",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-17",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-17",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-09-16",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-09-15",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-15",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-09-14",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-14",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-14",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-09-13",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-13",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-09-12",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-09-12",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-12",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-11",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-09-11",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-11",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-10",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-10",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-09-10",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-10",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Gatillos y botones"
+  },
+  {
+   "fecha": "2026-09-09",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-08",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-08",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Gatillos y botones"
+  },
+  {
+   "fecha": "2026-09-07",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-09-07",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-07",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-06",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-09-06",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-05",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-05",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-09-05",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-04",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-09-04",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-09-04",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-09-03",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-03",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-09-03",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-09-03",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-09-02",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-09-01",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-09-01",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-31",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-31",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-08-31",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-30",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-30",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-29",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-29",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-29",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-08-28",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-08-28",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-28",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-27",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-08-27",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-27",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-27",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-26",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-25",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-25",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-24",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-24",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-24",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-08-23",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-08-23",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-22",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-08-22",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-22",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-21",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-21",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-08-21",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-20",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-20",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-20",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-08-20",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-19",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-18",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-08-18",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-17",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-08-17",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-17",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-16",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-16",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-08-15",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-15",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-15",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-08-14",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-14",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-14",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-08-13",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-08-13",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-13",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-13",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-08-12",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-08-11",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-11",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-08-10",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-10",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-10",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-08-09",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-09",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Gatillos y botones"
+  },
+  {
+   "fecha": "2026-08-08",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-08-08",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-08",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-07",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-08-07",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-07",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-06",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-06",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-08-06",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-06",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Gatillos y botones"
+  },
+  {
+   "fecha": "2026-08-05",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-04",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-04",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-08-03",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-08-03",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-03",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-02",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-08-02",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-08-01",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-08-01",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-08-01",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-31",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-31",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-31",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-07-30",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-30",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-07-30",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-07-30",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-29",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-07-28",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-07-28",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-27",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-27",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-07-27",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-26",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-07-26",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-25",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-25",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Batería"
+  },
+  {
+   "fecha": "2026-07-25",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-07-24",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-07-24",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-24",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-23",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-07-23",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-23",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-23",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-22",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-21",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-21",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-20",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-20",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Gatillos y botones"
+  },
+  {
+   "fecha": "2026-07-20",
+   "tipoCat": "Lector de discos",
+   "fallaCat": "No lee discos"
+  },
+  {
+   "fecha": "2026-07-19",
+   "tipoCat": "Reparación de PC",
+   "fallaCat": "No enciende"
+  },
+  {
+   "fecha": "2026-07-19",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-18",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Limpieza preventiva"
+  },
+  {
+   "fecha": "2026-07-18",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-18",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-17",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-17",
+   "tipoCat": "Puerto HDMI",
+   "fallaCat": "HDMI dañado"
+  },
+  {
+   "fecha": "2026-07-17",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-16",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-16",
+   "tipoCat": "Mantenimiento de consola",
+   "fallaCat": "Sobrecalentamiento"
+  },
+  {
+   "fecha": "2026-07-16",
+   "tipoCat": "Repotenciación de PC",
+   "fallaCat": "Mejora de rendimiento"
+  },
+  {
+   "fecha": "2026-07-16",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  },
+  {
+   "fecha": "2026-07-15",
+   "tipoCat": "Reparación de mandos",
+   "fallaCat": "Drift de stick"
+  }
+ ],
+ "generos": [
+  {
+   "k": "accion",
+   "l": "Acción"
+  },
+  {
+   "k": "aventura",
+   "l": "Aventura"
+  },
+  {
+   "k": "deportes",
+   "l": "Deportes"
+  },
+  {
+   "k": "carreras",
+   "l": "Carreras"
+  },
+  {
+   "k": "shooter",
+   "l": "Disparos"
+  },
+  {
+   "k": "pelea",
+   "l": "Pelea"
+  },
+  {
+   "k": "rol",
+   "l": "Rol"
+  },
+  {
+   "k": "terror",
+   "l": "Terror"
+  },
+  {
+   "k": "estrategia",
+   "l": "Estrategia"
+  },
+  {
+   "k": "familiar",
+   "l": "Familiar"
+  }
+ ]
+}
