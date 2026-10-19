@@ -5,6 +5,7 @@ Documentación interactiva: http://localhost:8000/docs
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
+from app.api.routes import auth
 
 from app.config import settings
 from app.database import engine
@@ -34,5 +35,5 @@ def salud():
         conn.execute(text("SELECT 1"))
     return {"api": "ok", "base_de_datos": "ok"}
 
-
+api.include_router(auth.router)
 app.include_router(api)
