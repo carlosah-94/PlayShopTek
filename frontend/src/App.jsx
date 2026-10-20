@@ -3,6 +3,7 @@ import Catalogo from './pages/Catalogo.jsx'
 import Ficha from './pages/Ficha.jsx'
 import Login from './pages/Login.jsx'
 import Panel from './pages/Panel.jsx'
+import Taller from './pages/Taller.jsx'
 import { cerrarSesion, leerSesion } from './api.js'
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
         <nav className="ml-auto flex items-center gap-4 text-sm">
           <Link to="/" className="hover:text-rosa">Tienda</Link>
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/panel" className="hover:text-rosa">Panel</Link>}
+          {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/taller" className="hover:text-rosa">Taller</Link>}
           {sesion
             ? <button onClick={salir} className="rounded-lg border border-white/20 px-3 py-1.5">Salir ({sesion.usuario.nombre.split(' ')[0]})</button>
             : <Link to="/login" className="rounded-lg bg-rosa px-3 py-1.5 font-semibold text-white">Iniciar sesión</Link>}
@@ -31,6 +33,7 @@ export default function App() {
           <Route path="/producto/:id" element={<Ficha />} />
           <Route path="/login" element={<Login />} />
           <Route path="/panel" element={<Panel />} />
+          <Route path="/taller" element={<Taller />} />
         </Routes>
       </main>
     </div>
