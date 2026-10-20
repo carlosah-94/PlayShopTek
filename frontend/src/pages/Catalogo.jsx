@@ -1,5 +1,6 @@
 // HU-01: catálogo con filtros por categoría, género y estado.
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { api } from '../api.js'
 
 const CATEGORIAS = ['PS5', 'PS4', 'PS3', 'PS2', 'Máquinas', 'Mandos', 'PC y periféricos']
@@ -48,7 +49,8 @@ export default function Catalogo() {
 
       <ul className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {productos.map((p) => (
-          <li key={p.id} className="rounded-xl border border-white/10 bg-superficie p-4">
+          <li key={p.id}>
+            <Link to={'/producto/' + p.id} className="block h-full rounded-xl border border-white/10 bg-superficie p-4 hover:border-rosa/60">
             <p className="text-xs uppercase tracking-wide text-white/50">{p.categoria} · {p.condicion || 'Nuevo'}</p>
             <h2 className="mt-1 font-semibold">{p.nombre}</h2>
             <div className="mt-3 flex items-baseline gap-2">
@@ -59,6 +61,7 @@ export default function Catalogo() {
             <p className="mt-2 text-sm text-white/70">
               {p.es_preventa ? 'Preventa' : p.stock > 0 ? p.stock + ' en stock' : 'Agotado'}
             </p>
+            </Link>
           </li>
         ))}
       </ul>

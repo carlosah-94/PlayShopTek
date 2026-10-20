@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.models.enums import GrupoCondicion, Rol
+from app.models.enums import GrupoCondicion, ModoJuego, Rol
 
 
 class LoginEntrada(BaseModel):
@@ -50,6 +50,30 @@ class ProductoSalida(BaseModel):
     fecha_lanzamiento: date | None
     calificacion: Decimal | None
 
+class ResenaSalida(BaseModel):
+    nombre: str
+    estrellas: int
+    texto: str
+    fecha: date
+    respuesta: str | None
+
+
+class ProductoDetalle(ProductoSalida):
+    """HU-02: lo mismo del catálogo + lo que solo se ve en la ficha."""
+    descripcion: str | None
+    subcategoria: str | None
+    incluye_caja: bool | None
+    incluye_manual: bool | None
+    incluye_disco: bool | None
+    color: str | None
+    origen: str | None
+    trailer_url: str | None
+    etiquetas: list[str]
+    modos: list[ModoJuego]
+    fotos: list[str]
+    monto_reserva: Decimal | None
+    total_resenas: int
+    resenas: list[ResenaSalida]
 
 class ProductoEdicion(BaseModel):
     """Solo el dueño cambia precio; el stock también lo maneja él desde Inventario."""

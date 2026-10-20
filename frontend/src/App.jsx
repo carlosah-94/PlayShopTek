@@ -1,5 +1,6 @@
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import Catalogo from './pages/Catalogo.jsx'
+import Ficha from './pages/Ficha.jsx'
 import Login from './pages/Login.jsx'
 import Panel from './pages/Panel.jsx'
 import { cerrarSesion, leerSesion } from './api.js'
@@ -27,6 +28,7 @@ export default function App() {
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-8">
         <Routes>
           <Route path="/" element={<Catalogo />} />
+          <Route path="/producto/:id" element={<Ficha />} />
           <Route path="/login" element={<Login />} />
           <Route path="/panel" element={<Panel />} />
         </Routes>

@@ -10,7 +10,7 @@ from app.api.deps import equipo_tienda, solo_dueno
 from app.database import get_db
 from app.models import Categoria, Condicion, Genero, Producto, Resena
 from app.models.enums import GrupoCondicion
-from app.schemas import ProductoEdicion, ProductoSalida
+from app.schemas import ProductoDetalle, ProductoEdicion, ProductoSalida, ResenaSalida
 
 router = APIRouter(prefix="/productos", tags=["Catálogo"])
 
@@ -82,12 +82,24 @@ def stock_bajo(db: Session = Depends(get_db)):
     return [a_salida(p, notas) for p in db.scalars(consulta)]
 
 
-@router.get("/{producto_id}", response_model=ProductoSalida)
+@router.get("/{producto_id}", response_model=ProductoDetalle)
 def detalle(producto_id: int, db: Session = Depends(get_db)):
-    p = db.scalar(_consulta_base().where(Producto.id == producto_id))
+    """HU-02: ficha completa con fotos, tráiler, stock y las últimas reseñas."""
+    p = db.scalar(_consulta_base().where(Producto.id == producto_id)
+                  .options(selectinload(Producto.etiquetas), selectinload(Producto.modos), selectinload(Producto.medios)))
     if p is None:
         raise HTTPException(404, "Producto no encontrado.")
-    return a_salida(p, calificaciones(db))
+    ultimas = db.scalars(select(Resena).where(Resena.producto_id == p.id).order_by(Resena.fecha.desc()).limit(6))
+    total = db.scalar(select(func.count()).select_from(Resena).where(Resena.producto_id == p.id))
+    return ProductoDetalle(
+        **a_salida(p, calificaciones(db)).model_dump(),
+        descripcion=p.descripcion, subcategoria=p.subcategoria, incluye_caja=p.incluye_caja,
+        incluye_manual=p.incluye_manual, incluye_disco=p.incluye_disco, color=p.color, origen=p.origen,
+        trailer_url=p.trailer_url, etiquetas=[e.etiqueta for e in p.etiquetas], modos=[m.modo for m in p.modos],
+        fotos=[m.url for m in p.medios if m.tipo.value == "imagen"], monto_reserva=p.monto_reserva, total_resenas=total,
+        resenas=[ResenaSalida(nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
+                              respuesta=r.respuesta) for r in ultimas],
+    )
 
 
 @router.patch("/{producto_id}", response_model=ProductoSalida, dependencies=[Depends(solo_dueno)])
