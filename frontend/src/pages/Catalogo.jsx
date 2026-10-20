@@ -1,0 +1,67 @@
+// HU-01: catálogo con filtros por categoría, género y estado.
+import { useEffect, useState } from 'react'
+import { api } from '../api.js'
+
+const CATEGORIAS = ['PS5', 'PS4', 'PS3', 'PS2', 'Máquinas', 'Mandos', 'PC y periféricos']
+const GENEROS = [['accion', 'Acción'], ['aventura', 'Aventura'], ['deportes', 'Deportes'], ['carreras', 'Carreras'],
+  ['shooter', 'Disparos'], ['pelea', 'Pelea'], ['rol', 'Rol'], ['terror', 'Terror'], ['familiar', 'Familiar']]
+const ESTADOS = [['nuevo', 'Nuevo'], ['usado', 'Usado'], ['reacondicionado', 'Reacondicionado en taller']]
+
+const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
+
+export default function Catalogo() {
+  const [filtros, setFiltros] = useState({ categoria: '', genero: '', estado: '', q: '' })
+  const [productos, setProductos] = useState([])
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const params = new URLSearchParams(Object.entries(filtros).filter(([, v]) => v))
+    api('/productos?' + params).then(setProductos).catch((e) => setError(e.message))
+  }, [filtros])
+
+  const cambiar = (k) => (e) => setFiltros({ ...filtros, [k]: e.target.value })
+  const selector = 'rounded-lg border border-white/15 bg-superficie px-3 py-2 text-sm'
+
+  return (
+    <section>
+      <h1 className="text-2xl font-bold">Catálogo</h1>
+      <p className="mt-1 text-sm text-white/60">Datos de ejemplo cargados desde la base de datos.</p>
+
+      <div className="mt-4 grid gap-2 sm:grid-cols-4">
+        <input placeholder="Buscar..." value={filtros.q} onChange={cambiar('q')} className={selector} />
+        <select value={filtros.categoria} onChange={cambiar('categoria')} className={selector}>
+          <option value="">Todas las categorías</option>
+          {CATEGORIAS.map((c) => <option key={c}>{c}</option>)}
+        </select>
+        <select value={filtros.genero} onChange={cambiar('genero')} className={selector}>
+          <option value="">Todos los géneros</option>
+          {GENEROS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+        </select>
+        <select value={filtros.estado} onChange={cambiar('estado')} className={selector}>
+          <option value="">Cualquier estado</option>
+          {ESTADOS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+        </select>
+      </div>
+
+      {error && <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>}
+      <p className="mt-4 text-sm text-white/60">{productos.length} productos</p>
+
+      <ul className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {productos.map((p) => (
+          <li key={p.id} className="rounded-xl border border-white/10 bg-superficie p-4">
+            <p className="text-xs uppercase tracking-wide text-white/50">{p.categoria} · {p.condicion || 'Nuevo'}</p>
+            <h2 className="mt-1 font-semibold">{p.nombre}</h2>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-lg font-bold">{soles(p.precio_final)}</span>
+              {p.descuento && <span className="text-sm text-white/50 line-through">{soles(p.precio)}</span>}
+              {p.descuento && <span className="rounded bg-rosa px-1.5 text-xs font-semibold text-white">-{p.descuento}%</span>}
+            </div>
+            <p className="mt-2 text-sm text-white/70">
+              {p.es_preventa ? 'Preventa' : p.stock > 0 ? p.stock + ' en stock' : 'Agotado'}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

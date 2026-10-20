@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* Colores del prototipo (Claude Design) */
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --color-fondo: #161826;
+  --color-superficie: #232532;
+  --color-texto: #e9e9ed;
+  --color-rosa: #de1cbb;
+  --color-morado: #5546e4;
+}
+
+body { @apply bg-fondo text-texto font-sans; }
