@@ -38,6 +38,7 @@ def a_salida(p: Producto, notas: dict[int, Decimal]) -> ProductoSalida:
         precio=p.precio, precio_final=final, descuento=o.porcentaje if o else None, stock=p.stock,
         condicion=p.condicion.nombre, grupo_condicion=p.condicion.grupo, generos=[g.id for g in p.generos],
         es_preventa=p.es_preventa, fecha_lanzamiento=p.fecha_lanzamiento, calificacion=notas.get(p.id),
+        trailer_url=p.trailer_url,
     )
 
 
@@ -95,7 +96,7 @@ def detalle(producto_id: int, db: Session = Depends(get_db)):
         **a_salida(p, calificaciones(db)).model_dump(),
         descripcion=p.descripcion, subcategoria=p.subcategoria, incluye_caja=p.incluye_caja,
         incluye_manual=p.incluye_manual, incluye_disco=p.incluye_disco, color=p.color, origen=p.origen,
-        trailer_url=p.trailer_url, etiquetas=[e.etiqueta for e in p.etiquetas], modos=[m.modo for m in p.modos],
+        etiquetas=[e.etiqueta for e in p.etiquetas], modos=[m.modo for m in p.modos],
         fotos=[m.url for m in p.medios if m.tipo.value == "imagen"], monto_reserva=p.monto_reserva, total_resenas=total,
         resenas=[ResenaSalida(nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
                               respuesta=r.respuesta) for r in ultimas],
