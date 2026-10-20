@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.models.enums import GrupoCondicion, ModoJuego, Rol
+from app.models.enums import EstadoReparacion, GrupoCondicion, ModoJuego, Rol
 
 
 class LoginEntrada(BaseModel):
@@ -79,3 +79,45 @@ class ProductoEdicion(BaseModel):
     """Solo el dueño cambia precio; el stock también lo maneja él desde Inventario."""
     precio: Decimal | None = Field(default=None, ge=0)
     stock: int | None = Field(default=None, ge=0)
+    
+
+
+class Opcion(BaseModel):
+    id: int
+    nombre: str
+    precio_desde: Decimal | None = None
+
+
+class OpcionesTaller(BaseModel):
+    servicios: list[Opcion]
+    fallas: list[Opcion]
+
+
+class ReparacionEntrada(BaseModel):
+    """HU-06: lo que la trabajadora llena al recibir un equipo en el mostrador."""
+    cliente_nombre: str = Field(min_length=2, max_length=120)
+    cliente_telefono: str = Field(pattern=r"^9\d{8}$")
+    equipo: str = Field(min_length=2, max_length=80)
+    falla: str = Field(min_length=3, max_length=200)
+    tipo_servicio_id: int | None = None
+    categoria_falla_id: int | None = None
+    diagnostico: str | None = Field(default=None, max_length=200)
+    costo: Decimal = Field(default=Decimal(0), ge=0)
+    precio_acordado: bool = False
+    duracion_estimada: str | None = Field(default=None, max_length=30)
+
+
+class ReparacionSalida(BaseModel):
+    id: int
+    codigo: str
+    cliente: str
+    telefono: str | None
+    equipo: str
+    falla: str
+    servicio: str | None
+    diagnostico: str | None
+    costo: Decimal
+    precio_acordado: bool
+    estado: EstadoReparacion
+    tecnico: str | None
+    fecha_ingreso: date
