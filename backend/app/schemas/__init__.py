@@ -1,7 +1,10 @@
 """Formatos de entrada y salida de la API (lo que viaja en JSON)."""
+from datetime import date
+from decimal import Decimal
+
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.models.enums import Rol
+from app.models.enums import GrupoCondicion, Rol
 
 
 class LoginEntrada(BaseModel):
@@ -28,3 +31,27 @@ class TokenSalida(BaseModel):
     access_token: str
     token_type: str = "bearer"
     usuario: UsuarioSalida
+    
+class ProductoSalida(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    codigo: str
+    nombre: str
+    categoria: str
+    plataforma: str | None
+    precio: Decimal
+    precio_final: Decimal
+    descuento: int | None
+    stock: int
+    condicion: str | None
+    grupo_condicion: GrupoCondicion
+    generos: list[str]
+    es_preventa: bool
+    fecha_lanzamiento: date | None
+    calificacion: Decimal | None
+
+
+class ProductoEdicion(BaseModel):
+    """Solo el dueño cambia precio; el stock también lo maneja él desde Inventario."""
+    precio: Decimal | None = Field(default=None, ge=0)
+    stock: int | None = Field(default=None, ge=0)

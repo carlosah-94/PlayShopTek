@@ -5,7 +5,7 @@ Documentación interactiva: http://localhost:8000/docs
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
-from app.api.routes import auth
+from app.api.routes import auth, productos
 
 from app.config import settings
 from app.database import engine
@@ -36,4 +36,5 @@ def salud():
     return {"api": "ok", "base_de_datos": "ok"}
 
 api.include_router(auth.router)
+api.include_router(productos.router)
 app.include_router(api)
