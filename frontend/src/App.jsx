@@ -1,6 +1,7 @@
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import Catalogo from './pages/Catalogo.jsx'
 import Ficha from './pages/Ficha.jsx'
+import Inventario from './pages/Inventario.jsx'
 import Login from './pages/Login.jsx'
 import Panel from './pages/Panel.jsx'
 import Taller from './pages/Taller.jsx'
@@ -22,6 +23,7 @@ export default function App() {
           <Link to="/" className="hover:text-rosa">Tienda</Link>
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/panel" className="hover:text-rosa">Panel</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/taller" className="hover:text-rosa">Taller</Link>}
+          {sesion && sesion.usuario.rol === 'dueno' && <Link to="/inventario" className="hover:text-rosa">Inventario</Link>}
           {sesion
             ? <button onClick={salir} className="rounded-lg border border-white/20 px-3 py-1.5">Salir ({sesion.usuario.nombre.split(' ')[0]})</button>
             : <Link to="/login" className="rounded-lg bg-rosa px-3 py-1.5 font-semibold text-white">Iniciar sesión</Link>}
@@ -34,6 +36,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/panel" element={<Panel />} />
           <Route path="/taller" element={<Taller />} />
+          <Route path="/inventario" element={<Inventario />} />
         </Routes>
       </main>
     </div>

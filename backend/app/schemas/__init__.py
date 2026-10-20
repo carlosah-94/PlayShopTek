@@ -49,6 +49,7 @@ class ProductoSalida(BaseModel):
     es_preventa: bool
     fecha_lanzamiento: date | None
     calificacion: Decimal | None
+    trailer_url: str | None
 
 class ResenaSalida(BaseModel):
     nombre: str
@@ -67,7 +68,6 @@ class ProductoDetalle(ProductoSalida):
     incluye_disco: bool | None
     color: str | None
     origen: str | None
-    trailer_url: str | None
     etiquetas: list[str]
     modos: list[ModoJuego]
     fotos: list[str]
@@ -79,8 +79,8 @@ class ProductoEdicion(BaseModel):
     """Solo el dueño cambia precio; el stock también lo maneja él desde Inventario."""
     precio: Decimal | None = Field(default=None, ge=0)
     stock: int | None = Field(default=None, ge=0)
+    trailer_url: str | None = Field(default=None, max_length=300)
     
-
 
 class Opcion(BaseModel):
     id: int
