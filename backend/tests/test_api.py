@@ -135,3 +135,21 @@ def test_avanzar_estado_de_reparacion(cliente, h_trabajadora):
     assert r.status_code == 200 and r.json()["pago"] == "yape"
     pasos = cliente.get(f"/api/rastreo/{nueva['codigo']}", params={"celular": "5679"}).json()["historial"]
     assert [p["estado"] for p in pasos] == ["recibido", "diagnosticado", "en_reparacion", "listo_para_recoger", "entregado"]
+    
+
+def test_compra_web_descuenta_stock(cliente, h_cliente, h_trabajadora):
+    """HU-03: Kevin paga con Yape; el precio lo pone el servidor y el stock baja."""
+    p = next(x for x in cliente.get("/api/productos").json() if x["stock"] >= 2 and not x["es_preventa"])
+    compra = {"items": [{"producto_id": p["id"], "cantidad": 1}], "metodo_pago": "yape"}
+    assert cliente.post("/api/ventas", json=compra).status_code == 401                         # sin sesión
+    assert cliente.post("/api/ventas", json=compra, headers=h_trabajadora).status_code == 403  # no es cliente
+    assert cliente.post("/api/ventas", json=compra, headers=h_cliente).status_code == 422      # falta la operación de Yape
+    r = cliente.post("/api/ventas", json={**compra, "numero_operacion": "12345678"}, headers=h_cliente)
+    assert r.status_code == 201, r.text
+    v = r.json()
+    assert v["codigo"].startswith("V-") and v["estado"] == "pagado" and float(v["total"]) == float(p["precio_final"])
+    assert cliente.get(f"/api/productos/{p['id']}").json()["stock"] == p["stock"] - 1
+    assert any(x["codigo"] == v["codigo"] for x in cliente.get("/api/ventas/mias", headers=h_cliente).json())
+    demasiado = {"items": [{"producto_id": p["id"], "cantidad": 5}], "metodo_pago": "tarjeta"}
+    if p["stock"] - 1 < 5:
+        assert cliente.post("/api/ventas", json=demasiado, headers=h_cliente).status_code == 409  # no alcanza el stock

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '../api.js'
+import { agregarAlCarrito } from '../carrito.js'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 const MODOS = { solo: 'Un jugador', local: 'Multijugador local', online: 'En línea' }
@@ -16,6 +17,7 @@ export default function Ficha() {
   const { id } = useParams()
   const [p, setP] = useState(null)
   const [error, setError] = useState('')
+  const [agregado, setAgregado] = useState(false)
 
   useEffect(() => { api('/productos/' + id).then(setP).catch((e) => setError(e.message)) }, [id])
 
@@ -50,6 +52,13 @@ export default function Ficha() {
           </div>
           <p className={p.stock === 0 && !p.es_preventa ? 'text-red-300' : 'text-white/70'}>{disponibilidad}</p>
           {p.es_preventa && p.monto_reserva && <p className="text-sm">Resérvalo con {soles(p.monto_reserva)} y paga el resto al recogerlo.</p>}
+          {!p.es_preventa && p.stock > 0 && (
+            <div className="flex items-center gap-3">
+              <button onClick={() => { agregarAlCarrito(p); setAgregado(true) }}
+                className="rounded-lg bg-rosa px-5 py-2 font-semibold text-white">Agregar al carrito</button>
+              {agregado && <Link to="/carrito" className="text-sm text-rosa">✓ Agregado · ver carrito</Link>}
+            </div>
+          )}
 
           {p.descripcion && <p className="text-white/80">{p.descripcion}</p>}
 

@@ -1,10 +1,11 @@
 """Formatos de entrada y salida de la API (lo que viaja en JSON)."""
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.models.enums import EstadoReparacion, GrupoCondicion, ModoJuego, PagoReparacion, Rol
+from app.models.enums import EstadoReparacion, EstadoVenta, GrupoCondicion, MetodoPago, ModoJuego, PagoReparacion, Rol
 
 
 class LoginEntrada(BaseModel):
@@ -147,3 +148,30 @@ class CambioEstado(BaseModel):
     estado: EstadoReparacion
     precio_acordado: bool | None = None  # se marca cuando el cliente acepta el precio
     pago: PagoReparacion | None = None   # obligatorio al entregar
+    
+
+class ItemCarrito(BaseModel):
+    producto_id: int
+    cantidad: int = Field(ge=1, le=5)  # máximo 5 unidades por producto en una compra web
+
+
+class CompraEntrada(BaseModel):
+    """HU-03: el carrito que manda el cliente. Los precios NO vienen del navegador: los calcula el servidor."""
+    items: list[ItemCarrito] = Field(min_length=1)
+    metodo_pago: Literal["yape", "tarjeta"]  # en la web solo Yape o tarjeta (regla del dueño)
+    numero_operacion: str | None = Field(default=None, pattern=r"^\d{6,12}$")  # el número que muestra Yape al pagar
+
+
+class VentaItemSalida(BaseModel):
+    nombre: str
+    cantidad: int
+    precio_unitario: Decimal
+
+
+class VentaSalida(BaseModel):
+    codigo: str
+    fecha: date
+    estado: EstadoVenta
+    metodo_pago: MetodoPago
+    total: Decimal
+    items: list[VentaItemSalida]
