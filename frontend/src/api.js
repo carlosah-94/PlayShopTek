@@ -17,6 +17,11 @@ export async function api(ruta, { metodo = 'GET', cuerpo } = {}) {
     body: cuerpo ? JSON.stringify(cuerpo) : undefined,
   })
   const datos = await r.json().catch(() => ({}))
-  if (!r.ok) throw new Error(datos.detail || 'Algo salió mal (' + r.status + ')')
+  if (!r.ok) {
+    // FastAPI manda un texto ("Correo o contraseña incorrectos.") o, si el formato no cuadra, una lista de errores
+    const mensaje = typeof datos.detail === 'string' ? datos.detail
+      : datos.detail ? 'Revisa los datos: hay un campo con formato incorrecto.' : 'Algo salió mal (' + r.status + ')'
+    throw new Error(mensaje)
+  }
   return datos
 }

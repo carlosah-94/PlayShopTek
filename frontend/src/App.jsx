@@ -1,17 +1,28 @@
+import { useEffect, useState } from 'react'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
+import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
 import Ficha from './pages/Ficha.jsx'
 import Inventario from './pages/Inventario.jsx'
 import Login from './pages/Login.jsx'
+import MisCompras from './pages/MisCompras.jsx'
 import Panel from './pages/Panel.jsx'
 import Rastreo from './pages/Rastreo.jsx'
 import Taller from './pages/Taller.jsx'
 import { cerrarSesion, leerSesion } from './api.js'
+import { leerCarrito, unidades } from './carrito.js'
 
 export default function App() {
   const sesion = leerSesion()
   const navegar = useNavigate()
   const salir = () => { cerrarSesion(); navegar('/') }
+  // Contador del carrito: se actualiza cada vez que carrito.js avisa un cambio
+  const [enCarrito, setEnCarrito] = useState(unidades(leerCarrito()))
+  useEffect(() => {
+    const actualizar = () => setEnCarrito(unidades(leerCarrito()))
+    window.addEventListener('carrito', actualizar)
+    return () => window.removeEventListener('carrito', actualizar)
+  }, [])
 
   return (
     <div className="min-h-screen">
@@ -23,6 +34,8 @@ export default function App() {
         <nav className="ml-auto flex items-center gap-4 text-sm">
           <Link to="/" className="hover:text-rosa">Tienda</Link>
           <Link to="/rastreo" className="hover:text-rosa">Rastrear reparación</Link>
+          <Link to="/carrito" className="hover:text-rosa">Carrito ({enCarrito})</Link>
+          {sesion && sesion.usuario.rol === 'cliente' && <Link to="/mis-compras" className="hover:text-rosa">Mis compras</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/panel" className="hover:text-rosa">Panel</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/taller" className="hover:text-rosa">Taller</Link>}
           {sesion && sesion.usuario.rol === 'dueno' && <Link to="/inventario" className="hover:text-rosa">Inventario</Link>}
@@ -36,6 +49,8 @@ export default function App() {
           <Route path="/" element={<Catalogo />} />
           <Route path="/producto/:id" element={<Ficha />} />
           <Route path="/rastreo" element={<Rastreo />} />
+          <Route path="/carrito" element={<Carrito />} />
+          <Route path="/mis-compras" element={<MisCompras />} />
           <Route path="/login" element={<Login />} />
           <Route path="/panel" element={<Panel />} />
           <Route path="/taller" element={<Taller />} />

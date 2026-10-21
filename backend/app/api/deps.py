@@ -42,3 +42,4 @@ def requiere_rol(*roles: Rol) -> Callable[[Usuario], Usuario]:
 
 solo_dueno = requiere_rol(Rol.dueno)
 equipo_tienda = requiere_rol(Rol.dueno, Rol.trabajadora)
+solo_cliente = requiere_rol(Rol.cliente)

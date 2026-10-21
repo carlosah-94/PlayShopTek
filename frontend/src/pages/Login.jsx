@@ -1,6 +1,6 @@
 // HU-16: una sola entrada para todos; te lleva a la tienda o al panel según tu cuenta.
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { api, guardarSesion } from '../api.js'
 
 export default function Login() {
@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const navegar = useNavigate()
+  const [params] = useSearchParams()
 
   const entrar = async (e) => {
     e.preventDefault()
@@ -15,7 +16,7 @@ export default function Login() {
     try {
       const datos = await api('/auth/login', { metodo: 'POST', cuerpo: { email, password } })
       guardarSesion(datos)
-      navegar(datos.usuario.rol === 'cliente' ? '/' : '/panel')
+      navegar(params.get('volver') || (datos.usuario.rol === 'cliente' ? '/' : '/panel'))
     } catch (err) {
       setError(err.message)
     }
