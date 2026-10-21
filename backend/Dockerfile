@@ -12,4 +12,5 @@ RUN pip install -r requirements.txt
 COPY . .
 
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# 1) crea/actualiza las tablas  2) carga datos de ejemplo si la base está vacía  3) arranca la API
+CMD ["sh", "-c", "alembic upgrade head && python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
