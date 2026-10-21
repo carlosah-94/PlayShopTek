@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.models.enums import EstadoReparacion, GrupoCondicion, ModoJuego, Rol
+from app.models.enums import EstadoReparacion, GrupoCondicion, ModoJuego, PagoReparacion, Rol
 
 
 class LoginEntrada(BaseModel):
@@ -119,6 +119,7 @@ class ReparacionSalida(BaseModel):
     costo: Decimal
     precio_acordado: bool
     estado: EstadoReparacion
+    pago: PagoReparacion
     tecnico: str | None
     fecha_ingreso: date
     
@@ -140,3 +141,9 @@ class RastreoSalida(BaseModel):
     duracion_estimada: str | None
     fecha_ingreso: date
     historial: list[PasoHistorial]
+    
+class CambioEstado(BaseModel):
+    """HU-08: avanzar la reparación al siguiente paso."""
+    estado: EstadoReparacion
+    precio_acordado: bool | None = None  # se marca cuando el cliente acepta el precio
+    pago: PagoReparacion | None = None   # obligatorio al entregar

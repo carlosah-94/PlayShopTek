@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session, selectinload
 from app.api.deps import equipo_tienda
 from app.database import get_db
 from app.models import CategoriaFalla, Cliente, Empleado, Reparacion, ReparacionHistorial, TipoServicio, Usuario
-from app.models.enums import EstadoReparacion
-from app.schemas import Opcion, OpcionesTaller, ReparacionEntrada, ReparacionSalida
+from app.models.enums import EstadoReparacion, PagoReparacion
+from app.schemas import CambioEstado, Opcion, OpcionesTaller, ReparacionEntrada, ReparacionSalida
 
 router = APIRouter(prefix="/reparaciones", tags=["Taller"], dependencies=[Depends(equipo_tienda)])
 
@@ -18,7 +18,7 @@ def a_salida(r: Reparacion, cliente: Cliente, tecnicos: dict[int, str]) -> Repar
     return ReparacionSalida(
         id=r.id, codigo=r.codigo, cliente=cliente.nombre, telefono=cliente.telefono, equipo=r.equipo, falla=r.falla,
         servicio=r.tipo_servicio.nombre if r.tipo_servicio else None, diagnostico=r.diagnostico, costo=r.costo,
-        precio_acordado=r.precio_acordado, estado=r.estado, tecnico=tecnicos.get(r.tecnico_id), fecha_ingreso=r.fecha_ingreso,
+        precio_acordado=r.precio_acordado, estado=r.estado, pago=r.pago, tecnico=tecnicos.get(r.tecnico_id), fecha_ingreso=r.fecha_ingreso,
     )
 
 
@@ -59,9 +59,9 @@ def en_taller(db: Session = Depends(get_db)):
 def registrar(datos: ReparacionEntrada, db: Session = Depends(get_db), usuario: Usuario = Depends(equipo_tienda)):
     """Registra el equipo recibido. Si el celular ya existe, se usa ese cliente; si no, se crea."""
     if datos.tipo_servicio_id and db.get(TipoServicio, datos.tipo_servicio_id) is None:
-        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Ese servicio no existe.")
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "Ese servicio no existe.")
     if datos.categoria_falla_id and db.get(CategoriaFalla, datos.categoria_falla_id) is None:
-        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Esa categoría de falla no existe.")
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "Esa categoría de falla no existe.")
 
     cliente = db.scalar(select(Cliente).where(Cliente.telefono == datos.cliente_telefono))
     if cliente is None:
@@ -81,3 +81,34 @@ def registrar(datos: ReparacionEntrada, db: Session = Depends(get_db), usuario: 
     db.commit()
     db.refresh(rep)
     return a_salida(rep, cliente, nombres_tecnicos(db))
+
+ORDEN = list(EstadoReparacion)  # recibido -> diagnosticado -> en_reparacion -> listo_para_recoger -> entregado
+
+@router.patch("/{reparacion_id}/estado", response_model=ReparacionSalida)
+def cambiar_estado(reparacion_id: int, cambio: CambioEstado, db: Session = Depends(get_db),
+                   usuario: Usuario = Depends(equipo_tienda)):
+    """Avanza un paso a la vez y deja el cambio en el historial (lo ve el cliente en el rastreo)."""
+    rep = db.get(Reparacion, reparacion_id)
+    if rep is None:
+        raise HTTPException(404, "Reparación no encontrada.")
+    if ORDEN.index(cambio.estado) != ORDEN.index(rep.estado) + 1:
+        raise HTTPException(status.HTTP_409_CONFLICT, f"Solo se puede pasar al siguiente paso después de '{rep.estado.value}'.")
+
+    if cambio.precio_acordado is not None:
+        rep.precio_acordado = cambio.precio_acordado
+    # Regla de la tienda: nunca se repara (ni se cobra) sin que el cliente acepte el precio
+    if cambio.estado == EstadoReparacion.en_reparacion and not rep.precio_acordado:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Primero el cliente debe aceptar el precio.")
+    if cambio.estado == EstadoReparacion.entregado:
+        if cambio.pago in (None, PagoReparacion.pendiente):
+            raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "Indica cómo pagó: Yape, efectivo o transferencia.")
+        rep.pago = cambio.pago
+
+    rep.estado = cambio.estado
+    rep.historial.append(ReparacionHistorial(
+        estado=cambio.estado, cambiado_por_id=usuario.id,
+        aviso_whatsapp=cambio.estado == EstadoReparacion.listo_para_recoger,  # en ese paso se le avisa por WhatsApp
+    ))
+    db.commit()
+    db.refresh(rep)
+    return a_salida(rep, db.get(Cliente, rep.cliente_id), nombres_tecnicos(db))
