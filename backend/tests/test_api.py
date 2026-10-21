@@ -117,3 +117,21 @@ def test_rastreo_pide_codigo_y_celular(cliente):
     assert cliente.get("/api/rastreo/2062", params={"celular": "2445"}).status_code == 200  # sin "R-" también vale
     assert cliente.get("/api/rastreo/R-2062", params={"celular": "0000"}).status_code == 404  # celular de otro
     assert cliente.get("/api/rastreo/R-9999", params={"celular": "2445"}).status_code == 404
+    
+def test_avanzar_estado_de_reparacion(cliente, h_trabajadora):
+    """HU-08: un paso a la vez, sin reparar sin precio aceptado y sin entregar sin pago."""
+    op = cliente.get("/api/reparaciones/opciones", headers=h_trabajadora).json()
+    nueva = cliente.post("/api/reparaciones", headers=h_trabajadora, json={
+        "cliente_nombre": "Prueba Estados", "cliente_telefono": "912345679", "equipo": "PS4 Slim",
+        "falla": "Se apaga sola", "tipo_servicio_id": op["servicios"][0]["id"], "costo": 80}).json()
+    url = f"/api/reparaciones/{nueva['id']}/estado"
+    assert cliente.patch(url, json={"estado": "listo_para_recoger"}, headers=h_trabajadora).status_code == 409  # se salta pasos
+    assert cliente.patch(url, json={"estado": "diagnosticado"}, headers=h_trabajadora).status_code == 200
+    assert cliente.patch(url, json={"estado": "en_reparacion"}, headers=h_trabajadora).status_code == 409  # sin precio aceptado
+    assert cliente.patch(url, json={"estado": "en_reparacion", "precio_acordado": True}, headers=h_trabajadora).status_code == 200
+    assert cliente.patch(url, json={"estado": "listo_para_recoger"}, headers=h_trabajadora).status_code == 200
+    assert cliente.patch(url, json={"estado": "entregado"}, headers=h_trabajadora).status_code == 422  # falta el pago
+    r = cliente.patch(url, json={"estado": "entregado", "pago": "yape"}, headers=h_trabajadora)
+    assert r.status_code == 200 and r.json()["pago"] == "yape"
+    pasos = cliente.get(f"/api/rastreo/{nueva['codigo']}", params={"celular": "5679"}).json()["historial"]
+    assert [p["estado"] for p in pasos] == ["recibido", "diagnosticado", "en_reparacion", "listo_para_recoger", "entregado"]

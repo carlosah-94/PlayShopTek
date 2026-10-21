@@ -1,4 +1,5 @@
 // HU-06: Linda o Ángel registran el equipo que llega al mostrador.
+// HU-08: avanzan su estado y avisan al cliente por WhatsApp cuando está listo.
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { api, leerSesion } from '../api.js'
@@ -6,7 +7,16 @@ import { api, leerSesion } from '../api.js'
 const VACIO = { cliente_nombre: '', cliente_telefono: '', equipo: '', falla: '', tipo_servicio_id: '',
   categoria_falla_id: '', diagnostico: '', costo: '', precio_acordado: false, duracion_estimada: '' }
 const ESTADOS = { recibido: 'Recibido', diagnosticado: 'Diagnosticado', en_reparacion: 'En reparación',
-  listo_para_recoger: 'Listo para recoger' }
+  listo_para_recoger: 'Listo para recoger', entregado: 'Entregado' }
+const ORDEN = Object.keys(ESTADOS)
+
+// Arma el enlace de WhatsApp con el mensaje ya escrito; Linda solo presiona "Enviar"
+function enlaceWhatsApp(r) {
+  const texto = `Hola ${r.cliente.split(' ')[0]}, tu ${r.equipo} ya está listo para recoger en Play Shop Tek ` +
+    `(Av. Revolución 1420, VES). Código: ${r.codigo}. Total: S/ ${Number(r.costo)}. ` +
+    'Horario: lunes a sábado 12:00-20:00, domingo 15:00-20:00.'
+  return `https://wa.me/51${r.telefono}?text=${encodeURIComponent(texto)}`
+}
 
 export default function Taller() {
   const sesion = leerSesion()
@@ -15,6 +25,7 @@ export default function Taller() {
   const [lista, setLista] = useState([])
   const [mensaje, setMensaje] = useState('')
   const [error, setError] = useState('')
+  const [pagos, setPagos] = useState({}) // cómo pagó cada cliente al entregar: { id: 'yape' }
 
   const cargarLista = () => api('/reparaciones').then(setLista).catch((e) => setError(e.message))
   useEffect(() => {
@@ -47,6 +58,30 @@ export default function Taller() {
     } catch (err) {
       setError(err.message)
     }
+  }
+
+  const avanzar = async (r) => {
+    const siguiente = ORDEN[ORDEN.indexOf(r.estado) + 1]
+    const cuerpo = { estado: siguiente }
+    if (siguiente === 'en_reparacion' && !r.precio_acordado) cuerpo.precio_acordado = true
+    if (siguiente === 'entregado') cuerpo.pago = pagos[r.id] || 'efectivo'
+    setError(''); setMensaje('')
+    try {
+      const nuevo = await api(`/reparaciones/${r.id}/estado`, { metodo: 'PATCH', cuerpo })
+      if (siguiente === 'listo_para_recoger') window.open(enlaceWhatsApp(nuevo), '_blank')
+      setMensaje(`${r.codigo}: ${ESTADOS[siguiente]}`)
+      cargarLista()
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
+  // Texto del botón según el paso que sigue
+  const textoBoton = (r) => {
+    const siguiente = ORDEN[ORDEN.indexOf(r.estado) + 1]
+    if (siguiente === 'en_reparacion' && !r.precio_acordado) return `Cliente aceptó S/ ${Number(r.costo)} → En reparación`
+    if (siguiente === 'listo_para_recoger') return 'Listo · avisar por WhatsApp'
+    return '→ ' + ESTADOS[siguiente]
   }
 
   const campo = 'w-full rounded-lg border border-white/15 bg-superficie px-3 py-2 text-sm'
@@ -91,6 +126,20 @@ export default function Taller() {
               <span className="text-white/60">{r.cliente}</span>
               <span className="ml-auto rounded bg-white/10 px-2 py-0.5 text-xs">{ESTADOS[r.estado]}</span>
               <span className="w-full text-white/60">{r.falla}{r.tecnico ? ' · ' + r.tecnico : ''}</span>
+              <div className="flex w-full flex-wrap items-center gap-2 pt-1">
+                {r.estado === 'listo_para_recoger' && (
+                  <>
+                    <a href={enlaceWhatsApp(r)} target="_blank" rel="noreferrer" className="rounded-lg border border-green-500/50 px-3 py-1 text-xs text-green-300">Reenviar WhatsApp</a>
+                    <select value={pagos[r.id] || 'efectivo'} onChange={(e) => setPagos({ ...pagos, [r.id]: e.target.value })}
+                      className="rounded-lg border border-white/15 bg-fondo px-2 py-1 text-xs">
+                      <option value="efectivo">Pagó en efectivo</option>
+                      <option value="yape">Pagó con Yape</option>
+                      <option value="transferencia">Pagó por transferencia BCP</option>
+                    </select>
+                  </>
+                )}
+                <button onClick={() => avanzar(r)} className="ml-auto rounded-lg bg-morado px-3 py-1 text-xs font-semibold text-white">{textoBoton(r)}</button>
+              </div>
             </li>
           ))}
         </ul>
