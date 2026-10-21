@@ -153,3 +153,13 @@ def test_compra_web_descuenta_stock(cliente, h_cliente, h_trabajadora):
     demasiado = {"items": [{"producto_id": p["id"], "cantidad": 5}], "metodo_pago": "tarjeta"}
     if p["stock"] - 1 < 5:
         assert cliente.post("/api/ventas", json=demasiado, headers=h_cliente).status_code == 409  # no alcanza el stock
+        
+
+def test_tablero_solo_para_el_dueno(cliente, h_dueno, h_trabajadora):
+    """HU-13: Ángel ve los indicadores; Linda no (no ve ventas totales)."""
+    assert cliente.get("/api/tablero", headers=h_trabajadora).status_code == 403
+    r = cliente.get("/api/tablero", params={"dias": 30}, headers=h_dueno)
+    assert r.status_code == 200, r.text
+    t = r.json()
+    assert float(t["ventas_total"]) > 0 and t["ventas_cantidad"] > 0
+    assert len(t["semanas"]) == 8 and t["mas_buscados"][0]["busquedas"] >= t["mas_buscados"][-1]["busquedas"]

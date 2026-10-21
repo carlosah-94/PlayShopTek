@@ -8,6 +8,7 @@ import Login from './pages/Login.jsx'
 import MisCompras from './pages/MisCompras.jsx'
 import Panel from './pages/Panel.jsx'
 import Rastreo from './pages/Rastreo.jsx'
+import Tablero from './pages/Tablero.jsx'
 import Taller from './pages/Taller.jsx'
 import { cerrarSesion, leerSesion } from './api.js'
 import { leerCarrito, unidades } from './carrito.js'
@@ -39,6 +40,7 @@ export default function App() {
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/panel" className="hover:text-rosa">Panel</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/taller" className="hover:text-rosa">Taller</Link>}
           {sesion && sesion.usuario.rol === 'dueno' && <Link to="/inventario" className="hover:text-rosa">Inventario</Link>}
+          {sesion && sesion.usuario.rol === 'dueno' && <Link to="/tablero" className="hover:text-rosa">Tablero</Link>}
           {sesion
             ? <button onClick={salir} className="rounded-lg border border-white/20 px-3 py-1.5">Salir ({sesion.usuario.nombre.split(' ')[0]})</button>
             : <Link to="/login" className="rounded-lg bg-rosa px-3 py-1.5 font-semibold text-white">Iniciar sesión</Link>}
@@ -55,6 +57,7 @@ export default function App() {
           <Route path="/panel" element={<Panel />} />
           <Route path="/taller" element={<Taller />} />
           <Route path="/inventario" element={<Inventario />} />
+          <Route path="/tablero" element={<Tablero />} />
         </Routes>
       </main>
     </div>
