@@ -107,3 +107,13 @@ def test_dueno_cambia_trailer(cliente, h_dueno, h_trabajadora):
     r = cliente.patch(f"/api/productos/{p['id']}", json={"trailer_url": url}, headers=h_dueno)
     assert r.status_code == 200 and r.json()["trailer_url"] == url
     cliente.patch(f"/api/productos/{p['id']}", json={"trailer_url": p["trailer_url"] or ""}, headers=h_dueno)
+    
+def test_rastreo_pide_codigo_y_celular(cliente):
+    """HU-07: Kevin rastrea su mando con el código y los 4 últimos dígitos de su celular."""
+    r = cliente.get("/api/rastreo/R-2062", params={"celular": "2445"})
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert d["cliente"] == "Kevin" and d["historial"][0]["estado"] == "recibido"
+    assert cliente.get("/api/rastreo/2062", params={"celular": "2445"}).status_code == 200  # sin "R-" también vale
+    assert cliente.get("/api/rastreo/R-2062", params={"celular": "0000"}).status_code == 404  # celular de otro
+    assert cliente.get("/api/rastreo/R-9999", params={"celular": "2445"}).status_code == 404
