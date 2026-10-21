@@ -175,3 +175,41 @@ class VentaSalida(BaseModel):
     metodo_pago: MetodoPago
     total: Decimal
     items: list[VentaItemSalida]
+    
+
+class Cifra(BaseModel):
+    """Un dato con nombre para las listas del tablero (ej. 'Yape': 52)."""
+    nombre: str
+    valor: Decimal
+
+
+class Semana(BaseModel):
+    semana: date  # lunes de esa semana
+    ventas: Decimal
+    reparaciones: int
+
+
+class Buscado(BaseModel):
+    nombre: str
+    busquedas: int
+    avisos: int  # clientes que pidieron "Avísame cuando llegue"
+    hay_en_tienda: bool
+
+
+class TableroSalida(BaseModel):
+    """HU-13: los indicadores del negocio que ve Ángel."""
+    desde: date
+    hasta: date
+    ventas_total: Decimal
+    ventas_cantidad: int
+    ticket_promedio: Decimal
+    ventas_por_canal: list[Cifra]
+    ventas_por_metodo: list[Cifra]
+    mas_vendidos: list[Cifra]
+    reparaciones_en_taller: int
+    reparaciones_por_semana: Decimal
+    fallas_frecuentes: list[Cifra]
+    calificacion: Decimal | None
+    stock_bajo: int
+    mas_buscados: list[Buscado]
+    semanas: list[Semana]

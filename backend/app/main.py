@@ -6,7 +6,7 @@ from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api.routes import auth, productos, rastreo, reparaciones, ventas
+from app.api.routes import auth, productos, rastreo, reparaciones, tablero, ventas
 from app.config import settings
 from app.database import engine
 
@@ -41,4 +41,5 @@ api.include_router(productos.router)
 api.include_router(reparaciones.router)
 api.include_router(rastreo.router)
 api.include_router(ventas.router)
+api.include_router(tablero.router)
 app.include_router(api)
