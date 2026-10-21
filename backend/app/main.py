@@ -5,7 +5,7 @@ Documentación interactiva: http://localhost:8000/docs
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
-from app.api.routes import auth, productos, reparaciones
+from app.api.routes import auth, productos, rastreo, reparaciones
 
 from app.config import settings
 from app.database import engine
@@ -38,4 +38,5 @@ def salud():
 api.include_router(auth.router)
 api.include_router(productos.router)
 api.include_router(reparaciones.router)
+api.include_router(rastreo.router)
 app.include_router(api)

@@ -1,5 +1,5 @@
 """Formatos de entrada y salida de la API (lo que viaja en JSON)."""
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
@@ -121,3 +121,22 @@ class ReparacionSalida(BaseModel):
     estado: EstadoReparacion
     tecnico: str | None
     fecha_ingreso: date
+    
+class PasoHistorial(BaseModel):
+    estado: EstadoReparacion
+    fecha: datetime
+
+
+class RastreoSalida(BaseModel):
+    """HU-07: lo que el cliente ve de su reparación (sin datos personales de más)."""
+    codigo: str
+    cliente: str  # solo el primer nombre
+    equipo: str
+    falla: str
+    servicio: str | None
+    estado: EstadoReparacion
+    costo: Decimal
+    precio_acordado: bool
+    duracion_estimada: str | None
+    fecha_ingreso: date
+    historial: list[PasoHistorial]
