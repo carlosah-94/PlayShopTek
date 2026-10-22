@@ -223,3 +223,19 @@ class InteresEntrada(BaseModel):
 
 class InteresSalida(BaseModel):
     registrado: bool
+
+
+class NotificacionSalida(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    titulo: str
+    detalle: str | None
+    destino: str | None
+    leida: bool
+    creada_en: datetime
+
+
+class AvisoSalida(BaseModel):
+    producto_id: int | None
+    nombre: str
+    pedido_en: datetime

@@ -1,5 +1,5 @@
-"""HU-01 (catálogo con filtros) y HU-12 (inventario del dueño)."""
-from datetime import date, timedelta
+"""HU-01 (catálogo con filtros), HU-02 (ficha), HU-12 (inventario del dueño) y HU-05 (aviso de llegada)."""
+from datetime import UTC, date, datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import equipo_tienda, solo_dueno
 from app.database import get_db
-from app.models import Categoria, Condicion, Genero, Producto, Resena
+from app.models import AvisoLlegada, Categoria, Condicion, Genero, GrupoInteres, Notificacion, Producto, Resena
 from app.models.enums import GrupoCondicion
 from app.schemas import ProductoDetalle, ProductoEdicion, ProductoSalida, ResenaSalida
 
@@ -109,7 +109,20 @@ def editar(producto_id: int, cambios: ProductoEdicion, db: Session = Depends(get
     p = db.scalar(_consulta_base().where(Producto.id == producto_id))
     if p is None:
         raise HTTPException(404, "Producto no encontrado.")
+    estaba_agotado = p.stock == 0
     for campo, valor in cambios.model_dump(exclude_none=True).items():
         setattr(p, campo, valor)
+    if estaba_agotado and p.stock > 0:
+        avisar_llegada(db, p)
     db.commit()
     return a_salida(p, calificaciones(db))
+
+
+def avisar_llegada(db: Session, p: Producto) -> None:
+    """HU-05: cuando un producto agotado vuelve a tener stock, avisa a quienes pidieron "Avísame"."""
+    grupos = select(GrupoInteres.clave).where(GrupoInteres.producto_id == p.id)
+    pendientes = db.scalars(select(AvisoLlegada).where(AvisoLlegada.grupo_clave.in_(grupos), AvisoLlegada.avisado_en.is_(None)))
+    for aviso in pendientes:
+        db.add(Notificacion(cliente_id=aviso.cliente_id, titulo=f"¡Llegó {p.nombre}!",
+                            detalle="Ya está disponible en la tienda. Quedan pocas unidades.", destino=f"/producto/{p.id}"))
+        aviso.avisado_en = datetime.now(UTC)
