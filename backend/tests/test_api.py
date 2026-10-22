@@ -195,3 +195,24 @@ def test_favoritos_y_avisame_cuando_llegue(cliente, h_cliente, h_dueno):
     assert any(agotado["nombre"] in n["titulo"] for n in avisos)
     assert not any(a["producto_id"] == agotado["id"] for a in cliente.get("/api/mi/avisos", headers=h_cliente).json())
     cliente.patch(f"/api/productos/{agotado['id']}", json={"stock": 0}, headers=h_dueno)  # deja todo como estaba
+
+
+def test_reserva_de_preventa(cliente, h_cliente):
+    """HU-04: Kevin reserva el juego en preventa pagando solo S/ 50; no puede reservarlo dos veces."""
+    preventa = next(p for p in cliente.get("/api/productos").json() if p["es_preventa"])
+    ficha = cliente.get(f"/api/productos/{preventa['id']}").json()
+    reserva = {"producto_id": preventa["id"], "metodo_pago": "tarjeta"}
+    r = cliente.post("/api/ventas/reserva", json=reserva, headers=h_cliente)
+    if ficha["cupos_reserva"] == 0:
+        assert r.status_code == 409
+        return
+    if r.status_code == 409:  # ya la había reservado en una corrida anterior de las pruebas
+        assert "Ya tienes" in r.json()["detail"]
+        return
+    assert r.status_code == 201, r.text
+    v = r.json()
+    assert v["estado"] == "reservado" and float(v["total"]) == float(ficha["monto_reserva"])
+    assert cliente.get(f"/api/productos/{preventa['id']}").json()["cupos_reserva"] == ficha["cupos_reserva"] - 1
+    assert cliente.post("/api/ventas/reserva", json=reserva, headers=h_cliente).status_code == 409  # segunda vez
+    no_preventa = next(p for p in cliente.get("/api/productos").json() if not p["es_preventa"])
+    assert cliente.post("/api/ventas/reserva", json={**reserva, "producto_id": no_preventa["id"]}, headers=h_cliente).status_code == 404

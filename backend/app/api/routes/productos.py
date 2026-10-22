@@ -8,8 +8,10 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import equipo_tienda, solo_dueno
 from app.database import get_db
-from app.models import AvisoLlegada, Categoria, Condicion, Genero, GrupoInteres, Notificacion, Producto, Resena
-from app.models.enums import GrupoCondicion
+from app.models import (
+    AvisoLlegada, Categoria, Condicion, Genero, GrupoInteres, Notificacion, Producto, Resena, Venta, VentaItem,
+)
+from app.models.enums import EstadoVenta, GrupoCondicion
 from app.schemas import ProductoDetalle, ProductoEdicion, ProductoSalida, ResenaSalida
 
 router = APIRouter(prefix="/productos", tags=["Catálogo"])
@@ -41,6 +43,14 @@ def a_salida(p: Producto, notas: dict[int, Decimal]) -> ProductoSalida:
         trailer_url=p.trailer_url,
     )
 
+def cupos_de_reserva(db: Session, p: Producto) -> int | None:
+    """HU-04: cupos de preventa = unidades que llegarán el día del lanzamiento - reservas ya hechas."""
+    if not p.es_preventa or p.stock_lanzamiento is None:
+        return None
+    reservadas = db.scalar(
+        select(func.coalesce(func.sum(VentaItem.cantidad), 0)).join(Venta, Venta.id == VentaItem.venta_id)
+        .where(VentaItem.producto_id == p.id, VentaItem.es_preventa.is_(True), Venta.estado == EstadoVenta.reservado))
+    return max(p.stock_lanzamiento - reservadas, 0)
 
 def _consulta_base():
     return (
@@ -97,7 +107,8 @@ def detalle(producto_id: int, db: Session = Depends(get_db)):
         descripcion=p.descripcion, subcategoria=p.subcategoria, incluye_caja=p.incluye_caja,
         incluye_manual=p.incluye_manual, incluye_disco=p.incluye_disco, color=p.color, origen=p.origen,
         etiquetas=[e.etiqueta for e in p.etiquetas], modos=[m.modo for m in p.modos],
-        fotos=[m.url for m in p.medios if m.tipo.value == "imagen"], monto_reserva=p.monto_reserva, total_resenas=total,
+        fotos=[m.url for m in p.medios if m.tipo.value == "imagen"], monto_reserva=p.monto_reserva,
+        cupos_reserva=cupos_de_reserva(db, p), total_resenas=total,
         resenas=[ResenaSalida(nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
                               respuesta=r.respuesta) for r in ultimas],
     )
