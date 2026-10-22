@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, leerSesion } from '../api.js'
 import { agregarAlCarrito } from '../carrito.js'
+import ReservaPreventa from '../components/ReservaPreventa.jsx'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 const MODOS = { solo: 'Un jugador', local: 'Multijugador local', online: 'En línea' }
@@ -71,7 +72,7 @@ export default function Ficha() {
             {p.descuento && <span className="rounded bg-rosa px-1.5 text-sm font-semibold text-white">-{p.descuento}%</span>}
           </div>
           <p className={p.stock === 0 && !p.es_preventa ? 'text-red-300' : 'text-white/70'}>{disponibilidad}</p>
-          {p.es_preventa && p.monto_reserva && <p className="text-sm">Resérvalo con {soles(p.monto_reserva)} y paga el resto al recogerlo.</p>}
+          {p.es_preventa && p.monto_reserva && <ReservaPreventa p={p} />}
           {!p.es_preventa && p.stock > 0 && (
             <div className="flex items-center gap-3">
               <button onClick={() => { agregarAlCarrito(p); setAgregado(true) }}

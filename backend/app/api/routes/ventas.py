@@ -1,4 +1,4 @@
-"""HU-03: el cliente paga su carrito con Yape o tarjeta y lo recoge en la tienda."""
+"""HU-03: el cliente paga su carrito con Yape o tarjeta y lo recoge en la tienda. HU-04: reserva de preventa."""
 from datetime import date
 from decimal import ROUND_HALF_UP, Decimal
 
@@ -7,11 +7,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import solo_cliente
-from app.api.routes.productos import oferta_vigente
+from app.api.routes.productos import cupos_de_reserva, oferta_vigente
 from app.database import get_db
 from app.models import Cliente, Producto, Usuario, Venta, VentaItem
 from app.models.enums import Canal, EstadoVenta, MetodoPago
-from app.schemas import CompraEntrada, VentaItemSalida, VentaSalida
+from app.schemas import CompraEntrada, ReservaEntrada, VentaItemSalida, VentaSalida
 
 router = APIRouter(prefix="/ventas", tags=["Compras"])
 
@@ -78,6 +78,32 @@ def comprar(datos: CompraEntrada, db: Session = Depends(get_db), usuario: Usuari
     db.refresh(venta)
     return a_salida(venta)
 
+@router.post("/reserva", response_model=VentaSalida, status_code=status.HTTP_201_CREATED)
+def reservar(datos: ReservaEntrada, db: Session = Depends(get_db), usuario: Usuario = Depends(solo_cliente)):
+    """HU-04: paga solo la reserva (ej. S/ 50) y el resto al recoger el día del lanzamiento."""
+    if datos.metodo_pago == "yape" and not datos.numero_operacion:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "Escribe el número de operación que te mostró Yape.")
+    cliente = cliente_de(usuario, db)
+    p = db.scalar(select(Producto).where(Producto.id == datos.producto_id, Producto.activo.is_(True)).with_for_update())
+    if p is None or not p.es_preventa or not p.monto_reserva:
+        raise HTTPException(404, "Ese producto no está en preventa.")
+    ya_reservo = db.scalar(select(Venta.id).join(VentaItem).where(
+        Venta.cliente_id == cliente.id, Venta.estado == EstadoVenta.reservado, VentaItem.producto_id == p.id))
+    if ya_reservo:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Ya tienes una reserva de este juego.")
+    if cupos_de_reserva(db, p) == 0:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Se acabaron los cupos de reserva para el lanzamiento.")
+
+    venta = Venta(
+        codigo=siguiente_codigo(db), cliente_id=cliente.id, canal=Canal.web, metodo_pago=MetodoPago(datos.metodo_pago),
+        numero_operacion=datos.numero_operacion if datos.metodo_pago == "yape" else None,
+        estado=EstadoVenta.reservado, total=p.monto_reserva, fecha=date.today(),
+        items=[VentaItem(producto_id=p.id, nombre_producto=p.nombre, precio_unitario=p.monto_reserva, cantidad=1, es_preventa=True)],
+    )
+    db.add(venta)
+    db.commit()
+    db.refresh(venta)
+    return a_salida(venta)
 
 @router.get("/mias", response_model=list[VentaSalida])
 def mis_compras(db: Session = Depends(get_db), usuario: Usuario = Depends(solo_cliente)):

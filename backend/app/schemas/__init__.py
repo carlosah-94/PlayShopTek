@@ -73,6 +73,7 @@ class ProductoDetalle(ProductoSalida):
     modos: list[ModoJuego]
     fotos: list[str]
     monto_reserva: Decimal | None
+    cupos_reserva: int | None  # HU-04: cuántas reservas quedan antes del lanzamiento
     total_resenas: int
     resenas: list[ResenaSalida]
 
@@ -239,3 +240,10 @@ class AvisoSalida(BaseModel):
     producto_id: int | None
     nombre: str
     pedido_en: datetime
+
+
+class ReservaEntrada(BaseModel):
+    """HU-04: reservar un juego en preventa pagando solo la reserva (S/ 50)."""
+    producto_id: int
+    metodo_pago: Literal["yape", "tarjeta"]
+    numero_operacion: str | None = Field(default=None, pattern=r"^\d{6,12}$")
