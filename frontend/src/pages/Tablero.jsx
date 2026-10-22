@@ -40,10 +40,23 @@ export default function Tablero() {
   const [dias, setDias] = useState(30)
   const [t, setT] = useState(null)
   const [error, setError] = useState('')
+  const [ia, setIa] = useState(null) // resultado del agrupamiento con IA
+  const [agrupando, setAgrupando] = useState(false)
 
-  useEffect(() => {
-    if (sesion?.usuario.rol === 'dueno') api('/tablero?dias=' + dias).then(setT).catch((e) => setError(e.message))
-  }, [dias])
+  const cargar = () => api('/tablero?dias=' + dias).then(setT).catch((e) => setError(e.message))
+  useEffect(() => { if (sesion?.usuario.rol === 'dueno') cargar() }, [dias])
+
+  const agruparConIA = async () => {
+    setAgrupando(true)
+    try {
+      setIa(await api('/ia/agrupar-busquedas', { metodo: 'POST' }))
+      await cargar() // vuelve a pedir el tablero: "Lo más buscado" ya cuenta los grupos nuevos
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setAgrupando(false)
+    }
+  }
 
   if (sesion?.usuario.rol !== 'dueno') return <Navigate to="/login" />
   if (error) return <p className="text-red-300">{error}</p>
@@ -95,7 +108,21 @@ export default function Tablero() {
       </div>
 
       <div className="rounded-xl border border-white/10 bg-superficie p-4">
-        <h2 className="font-semibold">Lo más buscado por los clientes</h2>
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="font-semibold">Lo más buscado por los clientes</h2>
+          <button onClick={agruparConIA} disabled={agrupando}
+            className="ml-auto rounded-lg bg-morado px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
+            {agrupando ? 'Agrupando...' : '✨ Agrupar búsquedas parecidas con IA'}
+          </button>
+        </div>
+        {ia?.algoritmo_elegido && (
+          <p className="mt-2 rounded-lg bg-morado/15 p-2 text-xs text-white/80">
+            Ganó <b>{ia.algoritmo_elegido}</b> · K-Means ({ia.kmeans.parametro}) silueta {ia.kmeans.silueta}
+            {ia.dbscan && <> · DBSCAN ({ia.dbscan.parametro}) silueta {ia.dbscan.silueta}</>}
+            {ia.ari_vs_grupos_manuales !== null && <> · coincide con los grupos hechos a mano: ARI {ia.ari_vs_grupos_manuales}</>}
+            {' · '}{ia.busquedas_agrupadas} búsquedas nuevas agrupadas, {ia.grupos_nuevos} grupos nuevos.
+          </p>
+        )}
         <table className="mt-2 w-full text-sm">
           <thead className="text-left text-white/50"><tr><th className="py-1">Búsqueda</th><th>Veces</th><th>Pidieron "Avísame"</th><th>¿Lo tenemos?</th></tr></thead>
           <tbody className="divide-y divide-white/10">

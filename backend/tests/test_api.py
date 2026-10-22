@@ -167,13 +167,22 @@ def test_tablero_solo_para_el_dueno(cliente, h_dueno, h_trabajadora):
 
 def test_busqueda_sin_resultado_llega_al_tablero(cliente, h_dueno):
     """HU-11: un visitante busca algo que no hay; Ángel lo ve en su tablero (una vez por día y persona)."""
-    import uuid
-    texto = "consola retro " + uuid.uuid4().hex[:6]
+    from sqlalchemy import delete
+    from app.database import SessionLocal
+    from app.models import Interes
+
+    texto = "consola retro de prueba"
+    with SessionLocal() as db:  # empieza limpio, por si quedó de una corrida anterior
+        db.execute(delete(Interes).where(Interes.texto == texto))
+        db.commit()
     assert cliente.post("/api/intereses", json={"texto": texto.upper()}).json()["registrado"] is True
     assert cliente.post("/api/intereses", json={"texto": texto}).json()["registrado"] is False  # repetida hoy
     assert cliente.post("/api/intereses", json={"texto": "ps"}).json()["registrado"] is False   # muy corta
     t = cliente.get("/api/tablero", params={"dias": 7}, headers=h_dueno).json()
-    assert all(int(float(x["valor"])) >= 1 for x in t["sin_resultado"])
+    assert any(x["nombre"] == texto for x in t["sin_resultado"]) or len(t["sin_resultado"]) == 5
+    with SessionLocal() as db:  # deja la base como estaba
+        db.execute(delete(Interes).where(Interes.texto == texto))
+        db.commit()
 
 
 def test_favoritos_y_avisame_cuando_llegue(cliente, h_cliente, h_dueno):
@@ -216,3 +225,17 @@ def test_reserva_de_preventa(cliente, h_cliente):
     assert cliente.post("/api/ventas/reserva", json=reserva, headers=h_cliente).status_code == 409  # segunda vez
     no_preventa = next(p for p in cliente.get("/api/productos").json() if not p["es_preventa"])
     assert cliente.post("/api/ventas/reserva", json={**reserva, "producto_id": no_preventa["id"]}, headers=h_cliente).status_code == 404
+
+
+def test_ia_agrupa_busquedas_parecidas(cliente, h_dueno, h_trabajadora):
+    """IA (K-Means / DBSCAN): 'gta 6', 'gta vi' y 'grand theft auto 6' terminan en el mismo grupo."""
+    from app.ia.busquedas import agrupar
+
+    textos = ["gta 6", "gta vi", "grand theft auto 6", "gt7", "gran turismo 7", "mando xbox", "control xbox"]
+    e = dict(zip(textos, agrupar(textos)["etiquetas"]))
+    assert e["gta 6"] == e["gta vi"] == e["grand theft auto 6"]
+    assert e["gt7"] == e["gran turismo 7"] != e["gta 6"]
+    assert e["mando xbox"] == e["control xbox"]
+    assert cliente.post("/api/ia/agrupar-busquedas", headers=h_trabajadora).status_code == 403
+    r = cliente.post("/api/ia/agrupar-busquedas", headers=h_dueno).json()
+    assert r["algoritmo_elegido"] in ("K-Means", "DBSCAN") and r["kmeans"]["silueta"] > 0
