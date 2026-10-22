@@ -108,6 +108,7 @@ export default function Tablero() {
           </tbody>
         </table>
       </div>
+      <Ranking titulo="Buscaron y no encontraron (texto exacto)" filas={t.sin_resultado} formato={(v) => v + ' veces'} />
     </section>
   )
 }

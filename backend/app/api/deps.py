@@ -28,6 +28,16 @@ def usuario_actual(
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Cuenta no disponible.")
     return usuario
 
+def usuario_opcional(
+    cred: HTTPAuthorizationCredentials | None = Depends(bearer), db: Session = Depends(get_db)
+) -> Usuario | None:
+    """Para páginas públicas: si hay sesión, dice quién es; si no (o venció), devuelve None sin error."""
+    if cred is None:
+        return None
+    try:
+        return db.get(Usuario, int(leer_token(cred.credentials)["sub"]))
+    except jwt.PyJWTError:
+        return None
 
 def requiere_rol(*roles: Rol) -> Callable[[Usuario], Usuario]:
     """Ej.: Depends(requiere_rol(Rol.dueno)) -> solo Ángel."""

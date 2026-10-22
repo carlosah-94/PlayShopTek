@@ -64,6 +64,12 @@ def tablero(dias: int = Query(30, ge=7, le=365, description="Período: últimos 
         buscados.append(Buscado(nombre=g.nombre, busquedas=n, avisos=avisos.get(g.clave, 0),
                                 hay_en_tienda=bool(p and (p.stock > 0 or p.es_preventa))))
 
+    # HU-11: lo que buscaron y no encontraron (texto tal cual, agrupado por igualdad)
+    sin_resultado = db.execute(
+        select(Interes.texto, func.count()).where(Interes.fecha >= desde, Interes.tuvo_resultados.is_(False))
+        .group_by(Interes.texto).order_by(func.count().desc()).limit(5)
+    ).all()
+    
     # Últimas 8 semanas, de lunes a domingo, para el gráfico
     lunes = hoy - timedelta(days=hoy.weekday())
     semanas = []
@@ -83,5 +89,5 @@ def tablero(dias: int = Query(30, ge=7, le=365, description="Período: últimos 
         reparaciones_en_taller=en_taller, reparaciones_por_semana=redondear(ultimas_4_semanas / 4),
         fallas_frecuentes=[Cifra(nombre=n, valor=c) for n, c in fallas],
         calificacion=redondear(calificacion) if calificacion else None, stock_bajo=stock_bajo,
-        mas_buscados=buscados, semanas=semanas,
+        mas_buscados=buscados, sin_resultado=[Cifra(nombre=t, valor=n) for t, n in sin_resultado], semanas=semanas,
     )

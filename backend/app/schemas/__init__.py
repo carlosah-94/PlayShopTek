@@ -212,4 +212,14 @@ class TableroSalida(BaseModel):
     calificacion: Decimal | None
     stock_bajo: int
     mas_buscados: list[Buscado]
+    sin_resultado: list[Cifra]  # HU-11: lo que buscaron y no encontraron
     semanas: list[Semana]
+
+
+class InteresEntrada(BaseModel):
+    """HU-11: lo que el cliente buscó y no encontró."""
+    texto: str = Field(min_length=2, max_length=80)
+
+
+class InteresSalida(BaseModel):
+    registrado: bool

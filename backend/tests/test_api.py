@@ -163,3 +163,14 @@ def test_tablero_solo_para_el_dueno(cliente, h_dueno, h_trabajadora):
     t = r.json()
     assert float(t["ventas_total"]) > 0 and t["ventas_cantidad"] > 0
     assert len(t["semanas"]) == 8 and t["mas_buscados"][0]["busquedas"] >= t["mas_buscados"][-1]["busquedas"]
+    
+
+def test_busqueda_sin_resultado_llega_al_tablero(cliente, h_dueno):
+    """HU-11: un visitante busca algo que no hay; Ángel lo ve en su tablero (una vez por día y persona)."""
+    import uuid
+    texto = "consola retro " + uuid.uuid4().hex[:6]
+    assert cliente.post("/api/intereses", json={"texto": texto.upper()}).json()["registrado"] is True
+    assert cliente.post("/api/intereses", json={"texto": texto}).json()["registrado"] is False  # repetida hoy
+    assert cliente.post("/api/intereses", json={"texto": "ps"}).json()["registrado"] is False   # muy corta
+    t = cliente.get("/api/tablero", params={"dias": 7}, headers=h_dueno).json()
+    assert all(int(float(x["valor"])) >= 1 for x in t["sin_resultado"])

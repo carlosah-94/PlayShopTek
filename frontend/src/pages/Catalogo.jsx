@@ -20,6 +20,15 @@ export default function Catalogo() {
     api('/productos?' + params).then(setProductos).catch((e) => setError(e.message))
   }, [filtros])
 
+  // HU-11: si la búsqueda no trae nada, se avisa a la tienda. Espera 1.5 s sin escribir
+  // para no guardar cada letra ("g", "gt", "gta"...) sino la búsqueda completa.
+  useEffect(() => {
+    const texto = filtros.q.trim()
+    if (texto.length < 3 || productos.length > 0) return
+    const espera = setTimeout(() => api('/intereses', { metodo: 'POST', cuerpo: { texto } }).catch(() => {}), 1500)
+    return () => clearTimeout(espera)
+  }, [productos, filtros.q])
+
   const cambiar = (k) => (e) => setFiltros({ ...filtros, [k]: e.target.value })
   const selector = 'rounded-lg border border-white/15 bg-superficie px-3 py-2 text-sm'
 
@@ -46,6 +55,12 @@ export default function Catalogo() {
 
       {error && <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>}
       <p className="mt-4 text-sm text-white/60">{productos.length} productos</p>
+      {productos.length === 0 && filtros.q.trim().length >= 3 && (
+        <p className="mt-2 rounded-lg border border-white/15 p-3 text-sm">
+          No tenemos "{filtros.q.trim()}" por ahora. Le avisamos a la tienda que lo estás buscando;
+          también puedes preguntar por WhatsApp.
+        </p>
+      )}
 
       <ul className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {productos.map((p) => (
