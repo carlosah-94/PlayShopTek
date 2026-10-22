@@ -1,11 +1,21 @@
+# API
 fastapi==0.143.0
 uvicorn[standard]==0.54.0
+# Base de datos
 SQLAlchemy==2.1.4
 alembic==1.20.0
 psycopg[binary]==3.3.6
+# Configuración y validación
 pydantic[email]==2.14.1
 pydantic-settings==2.15.0
+# Seguridad (contraseñas y tokens)
 PyJWT==2.15.1
 bcrypt==5.0.0
+# Inteligencia artificial
+pandas==3.0.6
+numpy==2.4.6
+scikit-learn==1.8.0
+joblib==1.5.3
+# Pruebas
 pytest==9.1.1
 httpx==0.28.1
