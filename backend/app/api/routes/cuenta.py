@@ -1,0 +1,98 @@
+"""HU-05: favoritos, "Avísame cuando llegue" y notificaciones del cliente."""
+from fastapi import APIRouter, Depends, HTTPException, Response, status
+from sqlalchemy import select, update
+from sqlalchemy.orm import Session
+
+from app.api.deps import solo_cliente
+from app.api.routes.productos import _consulta_base, a_salida, calificaciones
+from app.database import get_db
+from app.models import AvisoLlegada, Cliente, Favorito, GrupoInteres, Notificacion, Producto, Usuario
+from app.schemas import AvisoSalida, NotificacionSalida, ProductoSalida
+
+router = APIRouter(prefix="/mi", tags=["Mi cuenta"])
+
+
+def mi_cliente(usuario: Usuario = Depends(solo_cliente), db: Session = Depends(get_db)) -> Cliente:
+    cliente = db.scalar(select(Cliente).where(Cliente.usuario_id == usuario.id))
+    if cliente is None:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Tu cuenta no tiene datos de cliente.")
+    return cliente
+
+
+def producto_o_404(db: Session, producto_id: int) -> Producto:
+    p = db.get(Producto, producto_id)
+    if p is None or not p.activo:
+        raise HTTPException(404, "Producto no encontrado.")
+    return p
+
+
+# ── Favoritos ────────────────────────────────────────────────────────
+@router.get("/favoritos", response_model=list[ProductoSalida])
+def favoritos(cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    ids = select(Favorito.producto_id).where(Favorito.cliente_id == cliente.id)
+    notas = calificaciones(db)
+    return [a_salida(p, notas) for p in db.scalars(_consulta_base().where(Producto.id.in_(ids)))]
+
+
+@router.put("/favoritos/{producto_id}", status_code=status.HTTP_204_NO_CONTENT)
+def guardar_favorito(producto_id: int, cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    """PUT: si ya estaba guardado, no pasa nada (se puede llamar dos veces sin duplicar)."""
+    producto_o_404(db, producto_id)
+    if db.get(Favorito, (cliente.id, producto_id)) is None:
+        db.add(Favorito(cliente_id=cliente.id, producto_id=producto_id))
+        db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.delete("/favoritos/{producto_id}", status_code=status.HTTP_204_NO_CONTENT)
+def quitar_favorito(producto_id: int, cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    fav = db.get(Favorito, (cliente.id, producto_id))
+    if fav:
+        db.delete(fav)
+        db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+# ── Avísame cuando llegue ───────────────────────────────────────────
+@router.get("/avisos", response_model=list[AvisoSalida])
+def mis_avisos(cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    """Los "Avísame" que todavía esperan (aún no llega el producto)."""
+    filas = db.execute(select(AvisoLlegada, GrupoInteres).join(GrupoInteres, GrupoInteres.clave == AvisoLlegada.grupo_clave)
+                       .where(AvisoLlegada.cliente_id == cliente.id, AvisoLlegada.avisado_en.is_(None))
+                       .order_by(AvisoLlegada.creado_en.desc()))
+    return [AvisoSalida(producto_id=g.producto_id, nombre=g.nombre, pedido_en=a.creado_en) for a, g in filas]
+
+
+@router.post("/avisos/{producto_id}", status_code=status.HTTP_201_CREATED, response_model=AvisoSalida)
+def pedir_aviso(producto_id: int, cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    p = producto_o_404(db, producto_id)
+    if p.stock > 0 or p.es_preventa:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Este producto ya está disponible.")
+    # Cada producto tiene su "grupo de interés" (el mismo que usa el tablero en "Lo más buscado")
+    grupo = db.scalar(select(GrupoInteres).where(GrupoInteres.producto_id == p.id))
+    if grupo is None:
+        grupo = GrupoInteres(clave=f"p:{p.codigo}", nombre=p.nombre, producto_id=p.id)
+        db.add(grupo)
+        db.flush()
+    aviso = db.scalar(select(AvisoLlegada).where(AvisoLlegada.cliente_id == cliente.id, AvisoLlegada.grupo_clave == grupo.clave,
+                                                 AvisoLlegada.avisado_en.is_(None)))
+    if aviso is None:
+        aviso = AvisoLlegada(cliente_id=cliente.id, grupo_clave=grupo.clave)
+        db.add(aviso)
+        db.commit()
+        db.refresh(aviso)
+    return AvisoSalida(producto_id=p.id, nombre=p.nombre, pedido_en=aviso.creado_en)
+
+
+# ── Notificaciones ──────────────────────────────────────────────────
+@router.get("/notificaciones", response_model=list[NotificacionSalida])
+def notificaciones(cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    return db.scalars(select(Notificacion).where(Notificacion.cliente_id == cliente.id)
+                      .order_by(Notificacion.creada_en.desc()).limit(20)).all()
+
+
+@router.post("/notificaciones/leidas", status_code=status.HTTP_204_NO_CONTENT)
+def marcar_leidas(cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    db.execute(update(Notificacion).where(Notificacion.cliente_id == cliente.id).values(leida=True))
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

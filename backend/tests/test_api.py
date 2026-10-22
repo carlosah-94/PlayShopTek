@@ -174,3 +174,24 @@ def test_busqueda_sin_resultado_llega_al_tablero(cliente, h_dueno):
     assert cliente.post("/api/intereses", json={"texto": "ps"}).json()["registrado"] is False   # muy corta
     t = cliente.get("/api/tablero", params={"dias": 7}, headers=h_dueno).json()
     assert all(int(float(x["valor"])) >= 1 for x in t["sin_resultado"])
+
+
+def test_favoritos_y_avisame_cuando_llegue(cliente, h_cliente, h_dueno):
+    """HU-05: Kevin guarda un favorito y pide aviso de un agotado; cuando Ángel repone, le llega la notificación."""
+    productos = cliente.get("/api/productos").json()
+    disponible = next(p for p in productos if p["stock"] > 0)
+    assert cliente.put(f"/api/mi/favoritos/{disponible['id']}", headers=h_cliente).status_code == 204
+    assert cliente.put(f"/api/mi/favoritos/{disponible['id']}", headers=h_cliente).status_code == 204  # no duplica
+    assert any(f["id"] == disponible["id"] for f in cliente.get("/api/mi/favoritos", headers=h_cliente).json())
+    assert cliente.delete(f"/api/mi/favoritos/{disponible['id']}", headers=h_cliente).status_code == 204
+
+    assert cliente.post(f"/api/mi/avisos/{disponible['id']}", headers=h_cliente).status_code == 409  # hay stock
+    agotado = next(p for p in productos if p["stock"] == 0 and not p["es_preventa"])
+    assert cliente.post(f"/api/mi/avisos/{agotado['id']}", headers=h_cliente).status_code == 201
+    assert any(a["producto_id"] == agotado["id"] for a in cliente.get("/api/mi/avisos", headers=h_cliente).json())
+
+    cliente.patch(f"/api/productos/{agotado['id']}", json={"stock": 3}, headers=h_dueno)  # Ángel repone
+    avisos = cliente.get("/api/mi/notificaciones", headers=h_cliente).json()
+    assert any(agotado["nombre"] in n["titulo"] for n in avisos)
+    assert not any(a["producto_id"] == agotado["id"] for a in cliente.get("/api/mi/avisos", headers=h_cliente).json())
+    cliente.patch(f"/api/productos/{agotado['id']}", json={"stock": 0}, headers=h_dueno)  # deja todo como estaba

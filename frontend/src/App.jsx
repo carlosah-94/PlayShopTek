@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
+import Favoritos from './pages/Favoritos.jsx'
 import Ficha from './pages/Ficha.jsx'
 import Inventario from './pages/Inventario.jsx'
 import Login from './pages/Login.jsx'
@@ -37,6 +38,7 @@ export default function App() {
           <Link to="/rastreo" className="hover:text-rosa">Rastrear reparación</Link>
           <Link to="/carrito" className="hover:text-rosa">Carrito ({enCarrito})</Link>
           {sesion && sesion.usuario.rol === 'cliente' && <Link to="/mis-compras" className="hover:text-rosa">Mis compras</Link>}
+          {sesion && sesion.usuario.rol === 'cliente' && <Link to="/favoritos" className="hover:text-rosa">Favoritos</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/panel" className="hover:text-rosa">Panel</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/taller" className="hover:text-rosa">Taller</Link>}
           {sesion && sesion.usuario.rol === 'dueno' && <Link to="/inventario" className="hover:text-rosa">Inventario</Link>}
@@ -53,6 +55,7 @@ export default function App() {
           <Route path="/rastreo" element={<Rastreo />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/mis-compras" element={<MisCompras />} />
+          <Route path="/favoritos" element={<Favoritos />} />
           <Route path="/login" element={<Login />} />
           <Route path="/panel" element={<Panel />} />
           <Route path="/taller" element={<Taller />} />

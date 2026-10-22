@@ -1,7 +1,7 @@
 // HU-02: ficha del producto con fotos, tráiler, precio, stock y reseñas.
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { api } from '../api.js'
+import { api, leerSesion } from '../api.js'
 import { agregarAlCarrito } from '../carrito.js'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
@@ -18,8 +18,28 @@ export default function Ficha() {
   const [p, setP] = useState(null)
   const [error, setError] = useState('')
   const [agregado, setAgregado] = useState(false)
+  const [esFavorito, setEsFavorito] = useState(false)
+  const [aviso, setAviso] = useState('')
+  const esCliente = leerSesion()?.usuario.rol === 'cliente'
 
   useEffect(() => { api('/productos/' + id).then(setP).catch((e) => setError(e.message)) }, [id])
+  // HU-05: ¿ya lo tengo en favoritos?
+  useEffect(() => {
+    if (esCliente) api('/mi/favoritos').then((fs) => setEsFavorito(fs.some((f) => f.id === Number(id)))).catch(() => {})
+  }, [id])
+
+  const alternarFavorito = async () => {
+    await api('/mi/favoritos/' + id, { metodo: esFavorito ? 'DELETE' : 'PUT' })
+    setEsFavorito(!esFavorito)
+  }
+  const pedirAviso = async () => {
+    try {
+      await api('/mi/avisos/' + id, { metodo: 'POST' })
+      setAviso('Listo: te avisaremos apenas llegue.')
+    } catch (err) {
+      setAviso(err.message)
+    }
+  }
 
   if (error) return <p className="rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>
   if (!p) return <p className="text-white/60">Cargando...</p>
@@ -58,6 +78,24 @@ export default function Ficha() {
                 className="rounded-lg bg-rosa px-5 py-2 font-semibold text-white">Agregar al carrito</button>
               {agregado && <Link to="/carrito" className="text-sm text-rosa">✓ Agregado · ver carrito</Link>}
             </div>
+          )}
+
+          {/* HU-05: favoritos y "Avísame cuando llegue" (solo con cuenta de cliente) */}
+          {esCliente ? (
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <button onClick={alternarFavorito} className="rounded-lg border border-white/20 px-4 py-2">
+                {esFavorito ? '♥ En tus favoritos' : '♡ Guardar en favoritos'}
+              </button>
+              {p.stock === 0 && !p.es_preventa && !aviso && (
+                <button onClick={pedirAviso} className="rounded-lg border border-rosa px-4 py-2 text-rosa">Avísame cuando llegue</button>
+              )}
+              {aviso && <span className="text-green-300">{aviso}</span>}
+            </div>
+          ) : (
+            <p className="text-sm text-white/50">
+              <Link to={'/login?volver=/producto/' + id} className="text-rosa">Inicia sesión</Link> para guardar favoritos
+              {p.stock === 0 && !p.es_preventa ? ' o pedir que te avisemos cuando llegue' : ''}.
+            </p>
           )}
 
           {p.descripcion && <p className="text-white/80">{p.descripcion}</p>}
