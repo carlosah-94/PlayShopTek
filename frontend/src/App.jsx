@@ -6,10 +6,12 @@ import Catalogo from './pages/Catalogo.jsx'
 import Favoritos from './pages/Favoritos.jsx'
 import Ficha from './pages/Ficha.jsx'
 import Inventario from './pages/Inventario.jsx'
+import LibroReclamaciones from './pages/LibroReclamaciones.jsx'
 import Login from './pages/Login.jsx'
 import MisCompras from './pages/MisCompras.jsx'
 import Panel from './pages/Panel.jsx'
 import Rastreo from './pages/Rastreo.jsx'
+import Reclamos from './pages/Reclamos.jsx'
 import Tablero from './pages/Tablero.jsx'
 import Taller from './pages/Taller.jsx'
 import { cerrarSesion, leerSesion } from './api.js'
@@ -42,6 +44,7 @@ export default function App() {
           {sesion && sesion.usuario.rol === 'cliente' && <Link to="/favoritos" className="hover:text-rosa">Favoritos</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/panel" className="hover:text-rosa">Panel</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/taller" className="hover:text-rosa">Taller</Link>}
+          {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/reclamos" className="hover:text-rosa">Reclamos</Link>}
           {sesion && sesion.usuario.rol === 'dueno' && <Link to="/inventario" className="hover:text-rosa">Inventario</Link>}
           {sesion && sesion.usuario.rol === 'dueno' && <Link to="/tablero" className="hover:text-rosa">Tablero</Link>}
           {sesion
@@ -62,8 +65,14 @@ export default function App() {
           <Route path="/taller" element={<Taller />} />
           <Route path="/inventario" element={<Inventario />} />
           <Route path="/tablero" element={<Tablero />} />
+          <Route path="/libro-de-reclamaciones" element={<LibroReclamaciones />} />
+          <Route path="/reclamos" element={<Reclamos />} />
         </Routes>
       </main>
+      {/* La ley pide que el Libro de Reclamaciones se vea en la página principal */}
+      <footer className="border-t border-white/10 px-4 py-4 text-center text-sm text-white/60 sm:px-8">
+        <Link to="/libro-de-reclamaciones" className="hover:text-rosa">📕 Libro de Reclamaciones</Link>
+      </footer>
       <Asistente />
     </div>
   )

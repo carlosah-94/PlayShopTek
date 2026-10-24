@@ -284,3 +284,25 @@ def test_asistente_agrega_al_carrito_y_navega(cliente):
     assert agotado["acciones"] == [] and "agotado" in agotado["respuesta"]
     assert decir("llevame al carrito")["acciones"][0]["destino"] == "/carrito"
     assert decir("quiero ver mis compras")["acciones"][0]["destino"] == "/mis-compras"
+
+def test_libro_de_reclamaciones(cliente, h_dueno, h_trabajadora, h_cliente):
+    """HU-18: cualquiera registra un reclamo con código y plazo; el equipo lo ve y solo el dueño responde."""
+    hoja = {"tipo": "reclamo", "nombre": "Prueba Reclamo", "correo": "prueba@demo.pe", "telefono": "912345678",
+            "bien_contratado": "Mando DualSense", "monto_reclamado": "279.00",
+            "detalle": "El mando llegó con el botón X hundido.", "pedido_cliente": "Cambio del mando."}
+    r = cliente.post("/api/reclamos", json=hoja)
+    assert r.status_code == 201, r.text
+    reclamo = r.json()
+    assert reclamo["codigo"].startswith("LR-") and reclamo["estado"] == "pendiente"
+    assert reclamo["fecha_limite"] > reclamo["fecha"]  # 15 días hábiles después
+    assert cliente.post("/api/reclamos", json={**hoja, "correo": "no-es-correo"}).status_code == 422
+
+    assert cliente.get("/api/reclamos", headers=h_cliente).status_code == 403  # el cliente no ve la lista
+    lista = cliente.get("/api/reclamos", headers=h_trabajadora).json()
+    assert any(x["codigo"] == reclamo["codigo"] for x in lista)
+
+    respuesta = {"respuesta": "Coordinamos el cambio del mando en la tienda."}
+    url = f"/api/reclamos/{reclamo['id']}/respuesta"
+    assert cliente.patch(url, json=respuesta, headers=h_trabajadora).status_code == 403  # solo el dueño responde
+    r = cliente.patch(url, json=respuesta, headers=h_dueno)
+    assert r.status_code == 200 and r.json()["estado"] == "respondido"
