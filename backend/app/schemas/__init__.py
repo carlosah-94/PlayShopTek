@@ -32,7 +32,7 @@ class TokenSalida(BaseModel):
     access_token: str
     token_type: str = "bearer"
     usuario: UsuarioSalida
-    
+
 class ProductoSalida(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
@@ -82,7 +82,7 @@ class ProductoEdicion(BaseModel):
     precio: Decimal | None = Field(default=None, ge=0)
     stock: int | None = Field(default=None, ge=0)
     trailer_url: str | None = Field(default=None, max_length=300)
-    
+
 
 class Opcion(BaseModel):
     id: int
@@ -124,7 +124,7 @@ class ReparacionSalida(BaseModel):
     pago: PagoReparacion
     tecnico: str | None
     fecha_ingreso: date
-    
+
 class PasoHistorial(BaseModel):
     estado: EstadoReparacion
     fecha: datetime
@@ -143,13 +143,13 @@ class RastreoSalida(BaseModel):
     duracion_estimada: str | None
     fecha_ingreso: date
     historial: list[PasoHistorial]
-    
+
 class CambioEstado(BaseModel):
     """HU-08: avanzar la reparación al siguiente paso."""
     estado: EstadoReparacion
     precio_acordado: bool | None = None  # se marca cuando el cliente acepta el precio
     pago: PagoReparacion | None = None   # obligatorio al entregar
-    
+
 
 class ItemCarrito(BaseModel):
     producto_id: int
@@ -176,7 +176,7 @@ class VentaSalida(BaseModel):
     metodo_pago: MetodoPago
     total: Decimal
     items: list[VentaItemSalida]
-    
+
 
 class Cifra(BaseModel):
     """Un dato con nombre para las listas del tablero (ej. 'Yape': 52)."""
@@ -247,3 +247,23 @@ class ReservaEntrada(BaseModel):
     producto_id: int
     metodo_pago: Literal["yape", "tarjeta"]
     numero_operacion: str | None = Field(default=None, pattern=r"^\d{6,12}$")
+
+
+class AsistenteEntrada(BaseModel):
+    """HU-09: lo que el cliente le escribe al asistente."""
+    mensaje: str = Field(min_length=1, max_length=300)
+    sesion: str = Field(min_length=8, max_length=40)  # id al azar del navegador para agrupar la conversación
+
+
+class AccionAsistente(BaseModel):
+    tipo: Literal["ir", "whatsapp"]  # 'ir' abre una página de la tienda; 'whatsapp' abre el chat del asesor
+    etiqueta: str
+    destino: str
+
+
+class AsistenteSalida(BaseModel):
+    intencion: str
+    confianza: float
+    respuesta: str
+    productos: list[ProductoSalida] = []
+    acciones: list[AccionAsistente] = []

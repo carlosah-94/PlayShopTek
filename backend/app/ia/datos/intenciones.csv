@@ -1,0 +1,261 @@
+texto,intencion
+hola,saludo
+holaa buenas tardes,saludo
+buenos dias,saludo
+buenas noches,saludo
+hola que tal,saludo
+hey,saludo
+hola amigo,saludo
+saludos,saludo
+gracias,saludo
+muchas gracias,saludo
+ok gracias,saludo
+listo gracias por la info,saludo
+chau,saludo
+hasta luego,saludo
+que tal como estas,saludo
+buenas,saludo
+gracias crack,saludo
+perfecto gracias,saludo
+hola hay alguien,saludo
+oye hola,saludo
+tienen gta 5 para ps4,buscar_producto
+tienen el gta v,buscar_producto
+cuanto cuesta el mando dualsense,buscar_producto
+precio de la ps5,buscar_producto
+cuanto esta la play 5,buscar_producto
+tienen fifa 26,buscar_producto
+hay god of war ragnarok,buscar_producto
+venden juegos de ps2,buscar_producto
+busco un mando para ps4,buscar_producto
+tienen spiderman 2,buscar_producto
+cuanto cuesta la ps4 slim,buscar_producto
+quiero comprar un control de ps3,buscar_producto
+tienen call of duty black ops 7,buscar_producto
+hay stock del mortal kombat 1,buscar_producto
+tienen minecraft para play 4,buscar_producto
+precio del resident evil 4,buscar_producto
+venden audifonos gamer,buscar_producto
+tienen teclado mecanico,buscar_producto
+cuanto vale el monitor de 144hz,buscar_producto
+tienen gran turismo 7,buscar_producto
+busco el gta san andreas,buscar_producto
+quiero el the last of us 2,buscar_producto
+tienen consolas ps3,buscar_producto
+hay mouse logitech,buscar_producto
+me interesa la ps5 pro,buscar_producto
+tienen gta 6,buscar_producto
+que juegos de ps5 tienen,buscar_producto
+hay ofertas en juegos,buscar_producto
+mi mando no carga,reparacion
+reparan mandos,reparacion
+mi control tiene drift,reparacion
+el stick se mueve solo,reparacion
+mi ps4 no enciende,reparacion
+mi play se apaga sola,reparacion
+la consola se calienta mucho,reparacion
+cuanto cobran por arreglar un mando,reparacion
+hacen mantenimiento de consolas,reparacion
+mi ps5 no lee los discos,reparacion
+un boton de mi mando no funciona,reparacion
+reparan pc,reparacion
+mi ps3 tiene luz amarilla,reparacion
+limpian consolas,reparacion
+cuanto demora la reparacion de un mando,reparacion
+se me mojo el control,reparacion
+mi dualsense no conecta,reparacion
+quiero repotenciar mi pc,reparacion
+la play hace mucho ruido,reparacion
+cambian la bateria del mando,reparacion
+el lector no funciona,reparacion
+arreglan consolas ps2,reparacion
+como va mi reparacion,rastreo
+ya esta listo mi mando,rastreo
+quiero saber el estado de mi equipo,rastreo
+mi codigo es r-2062,rastreo
+deje mi ps4 hace una semana como va,rastreo
+cuando puedo recoger mi consola,rastreo
+rastrear mi reparacion,rastreo
+ya terminaron de arreglar mi control,rastreo
+en que estado esta mi play,rastreo
+tengo el codigo r 2053,rastreo
+quiero ver el avance de mi reparacion,rastreo
+ya puedo ir por mi equipo,rastreo
+como se si ya esta mi mando,rastreo
+seguimiento de mi equipo,rastreo
+mi reparacion ya esta lista,rastreo
+deje un mando el lunes,rastreo
+estado de reparacion,rastreo
+ya repararon mi pc,rastreo
+codigo de seguimiento,rastreo
+cuanto falta para mi consola,rastreo
+a que hora abren,horario_ubicacion
+a que hora cierran,horario_ubicacion
+abren los domingos,horario_ubicacion
+donde queda la tienda,horario_ubicacion
+cual es la direccion,horario_ubicacion
+horario de atencion,horario_ubicacion
+estan abiertos hoy,horario_ubicacion
+abren en la mañana,horario_ubicacion
+donde estan ubicados,horario_ubicacion
+como llego a la tienda,horario_ubicacion
+queda cerca del tren,horario_ubicacion
+atienden feriados,horario_ubicacion
+hasta que hora atienden,horario_ubicacion
+en que distrito estan,horario_ubicacion
+tienen local fisico,horario_ubicacion
+puedo ir el sabado,horario_ubicacion
+a que hora abren el domingo,horario_ubicacion
+la tienda esta en villa el salvador,horario_ubicacion
+ubicacion por favor,horario_ubicacion
+mandame la direccion,horario_ubicacion
+aceptan yape,pagos_entrega
+puedo pagar con tarjeta,pagos_entrega
+aceptan plin,pagos_entrega
+pago en efectivo,pagos_entrega
+hacen delivery,pagos_entrega
+envian a domicilio,pagos_entrega
+como pago por la web,pagos_entrega
+puedo pagar al recoger,pagos_entrega
+aceptan transferencia bcp,pagos_entrega
+hacen envios a provincia,pagos_entrega
+metodos de pago,pagos_entrega
+puedo pagar en cuotas,pagos_entrega
+llevan el pedido a mi casa,pagos_entrega
+como reservo una preventa,pagos_entrega
+cuanto es la reserva,pagos_entrega
+puedo separar un juego,pagos_entrega
+aceptan visa,pagos_entrega
+el pago es seguro,pagos_entrega
+como recojo mi compra,pagos_entrega
+cobran por envio,pagos_entrega
+quiero hablar con alguien,asesor
+pasame con un asesor,asesor
+quiero hablar con una persona,asesor
+tienen whatsapp,asesor
+cual es su numero,asesor
+quiero hablar con el dueño,asesor
+me pueden llamar,asesor
+necesito ayuda de una persona,asesor
+atencion humana,asesor
+numero de contacto,asesor
+quiero hablar con angel,asesor
+con quien hablo,asesor
+dame un telefono,asesor
+quiero un asesor,asesor
+no me sirve el bot,asesor
+hablar con soporte,asesor
+quiero cotizar con alguien,asesor
+me comunico por whatsapp,asesor
+tienen celular,asesor
+contacto de la tienda,asesor
+buen dia,saludo
+hola buen dia como estan,saludo
+alo,saludo
+holi,saludo
+que tal buenas,saludo
+gracias por responder,saludo
+mil gracias,saludo
+genial gracias,saludo
+ya entendi gracias,saludo
+nos vemos,saludo
+adios,saludo
+hola tienda,saludo
+hola play shop tek,saludo
+buenas tardes amigo,saludo
+ok listo,saludo
+tienen el fifa,buscar_producto
+precio del god of war 3,buscar_producto
+tienen uncharted,buscar_producto
+venden la ps3 super slim,buscar_producto
+cuanto sale el dualshock 4,buscar_producto
+tienen mandos genericos,buscar_producto
+hay juegos de futbol,buscar_producto
+tienen el pes 2019,buscar_producto
+precio del ssd de 1tb,buscar_producto
+tienen memoria ram 16gb,buscar_producto
+el mando edge esta disponible,buscar_producto
+hay ps2 con mandos,buscar_producto
+quiero un juego de terror,buscar_producto
+tienen onimusha,buscar_producto
+cuanto cuesta el minecraft,buscar_producto
+tienen juegos usados,buscar_producto
+precio de la play 4 pro,buscar_producto
+hay audifonos hyperx,buscar_producto
+tienen el winning eleven,buscar_producto
+tienen shadow of the colossus,buscar_producto
+mi mando tiene un boton pegado,reparacion
+la consola no da imagen,reparacion
+el hdmi de mi ps4 se malogro,reparacion
+mi pc se reinicia sola,reparacion
+la play 3 no lee discos,reparacion
+quiero que revisen mi consola,reparacion
+mi control se descarga rapido,reparacion
+el gatillo del mando no funciona,reparacion
+arreglan el drift del dualsense,reparacion
+cuanto cuesta el mantenimiento,reparacion
+mi ps2 no prende,reparacion
+se malogro mi mando,reparacion
+reparan placas de pc,reparacion
+la play suena como avion,reparacion
+mi consola se cuelga,reparacion
+quiero saber si ya esta mi ps5,rastreo
+me dieron el codigo r 2044,rastreo
+r-2061,rastreo
+el numero de mi reparacion es r2052,rastreo
+avance de mi mando,rastreo
+cuando estara listo mi equipo,rastreo
+ya diagnosticaron mi consola,rastreo
+mi control ya esta reparado,rastreo
+consultar mi reparacion,rastreo
+deje mi pc para mantenimiento como va,rastreo
+ya lo puedo recoger,rastreo
+como reviso mi codigo,rastreo
+que paso con mi play,rastreo
+mi equipo sigue en el taller,rastreo
+ya esta mi reparacion,rastreo
+atienden el domingo en la tarde,horario_ubicacion
+que dias atienden,horario_ubicacion
+cual es su horario,horario_ubicacion
+en que avenida estan,horario_ubicacion
+la tienda abre a las 12,horario_ubicacion
+abren hoy lunes,horario_ubicacion
+mandame la ubicacion en el mapa,horario_ubicacion
+como llego desde el tren,horario_ubicacion
+estan en la av revolucion,horario_ubicacion
+puedo pasar en la noche,horario_ubicacion
+a que hora puedo ir,horario_ubicacion
+donde los encuentro,horario_ubicacion
+direccion de la tienda,horario_ubicacion
+cierran a las 8,horario_ubicacion
+abren temprano,horario_ubicacion
+yapeo y recojo,pagos_entrega
+se puede pagar con debito,pagos_entrega
+aceptan mastercard,pagos_entrega
+pagan contra entrega,pagos_entrega
+hacen envio por olva,pagos_entrega
+como funciona la preventa,pagos_entrega
+puedo apartar un producto,pagos_entrega
+la compra es para recoger,pagos_entrega
+tengo que pagar todo adelantado,pagos_entrega
+el numero de yape cual es,pagos_entrega
+pago con transferencia,pagos_entrega
+envian por delivery a surco,pagos_entrega
+como compro en la web,pagos_entrega
+hay que pagar la reserva,pagos_entrega
+reciben efectivo,pagos_entrega
+quiero conversar con un humano,asesor
+me puedes pasar con linda,asesor
+whatsapp de la tienda,asesor
+dame el numero del dueño,asesor
+prefiero hablar con alguien real,asesor
+llamame por favor,asesor
+necesito un vendedor,asesor
+pasame con soporte tecnico,asesor
+quiero negociar el precio,asesor
+eres un robot,asesor
+quiero hablar por telefono,asesor
+asesor por favor,asesor
+mejor hablo con una persona,asesor
+como los contacto,asesor
+escribirles al whatsapp,asesor
