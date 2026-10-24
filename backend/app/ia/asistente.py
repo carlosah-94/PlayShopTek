@@ -92,8 +92,12 @@ _cache: dict = {}
 
 def _cargar():
     if "modelo" not in _cache:
-        if not MODELO.exists():  # en la nube el disco se borra al reiniciar: se vuelve a entrenar (tarda 1 s)
-            entrenar(guardar=True)
+        if not MODELO.exists():
+            # Respaldo: la imagen de Docker ya trae el modelo entrenado (ver Dockerfile). Si faltara,
+            # se entrena solo el SVM, sin las comparaciones, para no hacer esperar al cliente.
+            MODELO.parent.mkdir(exist_ok=True)
+            df = pd.read_csv(DATOS)
+            joblib.dump({"modelo": _nuevo_modelo("SVM").fit(df["texto"], df["intencion"]), "reporte": None}, MODELO)
         _cache.update(joblib.load(MODELO))
     return _cache["modelo"]
 
