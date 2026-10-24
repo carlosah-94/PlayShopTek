@@ -274,3 +274,38 @@ class AsistenteSalida(BaseModel):
     respuesta: str
     productos: list[ProductoSalida] = []
     acciones: list[AccionAsistente] = []
+
+class ReclamoEntrada(BaseModel):
+    """HU-18: hoja del Libro de Reclamaciones (Ley N.º 29571). La llena el cliente desde la web."""
+    tipo: Literal["reclamo", "queja"]  # reclamo = el producto o servicio; queja = la atención
+    nombre: str = Field(min_length=3, max_length=120)
+    correo: EmailStr
+    telefono: str | None = Field(default=None, pattern=r"^9\d{8}$")
+    documento: str | None = Field(default=None, pattern=r"^\d{8,12}$")  # DNI o carné de extranjería
+    domicilio: str | None = Field(default=None, max_length=200)
+    bien_contratado: str | None = Field(default=None, max_length=160)  # producto o servicio
+    monto_reclamado: Decimal | None = Field(default=None, ge=0)
+    detalle: str = Field(min_length=10, max_length=2000)
+    pedido_cliente: str | None = Field(default=None, max_length=1000)
+
+
+class ReclamoSalida(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    codigo: str
+    tipo: str
+    nombre: str
+    correo: str
+    telefono: str | None
+    bien_contratado: str | None
+    monto_reclamado: Decimal | None
+    detalle: str
+    pedido_cliente: str | None
+    estado: str
+    fecha: date
+    fecha_limite: date | None
+    respuesta: str | None
+
+
+class RespuestaReclamo(BaseModel):
+    respuesta: str = Field(min_length=10, max_length=2000)
