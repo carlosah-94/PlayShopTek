@@ -108,6 +108,7 @@ def test_dueno_cambia_trailer(cliente, h_dueno, h_trabajadora):
     assert r.status_code == 200 and r.json()["trailer_url"] == url
     cliente.patch(f"/api/productos/{p['id']}", json={"trailer_url": p["trailer_url"] or ""}, headers=h_dueno)
 
+
 def test_rastreo_pide_codigo_y_celular(cliente):
     """HU-07: Kevin rastrea su mando con el código y los 4 últimos dígitos de su celular."""
     r = cliente.get("/api/rastreo/R-2062", params={"celular": "2445"})
@@ -117,6 +118,7 @@ def test_rastreo_pide_codigo_y_celular(cliente):
     assert cliente.get("/api/rastreo/2062", params={"celular": "2445"}).status_code == 200  # sin "R-" también vale
     assert cliente.get("/api/rastreo/R-2062", params={"celular": "0000"}).status_code == 404  # celular de otro
     assert cliente.get("/api/rastreo/R-9999", params={"celular": "2445"}).status_code == 404
+
 
 def test_avanzar_estado_de_reparacion(cliente, h_trabajadora):
     """HU-08: un paso a la vez, sin reparar sin precio aceptado y sin entregar sin pago."""
@@ -227,6 +229,7 @@ def test_reserva_de_preventa(cliente, h_cliente):
     assert cliente.post("/api/ventas/reserva", json={**reserva, "producto_id": no_preventa["id"]}, headers=h_cliente).status_code == 404
 
 
+
 def test_ia_agrupa_busquedas_parecidas(cliente, h_dueno, h_trabajadora):
     """IA (K-Means / DBSCAN): 'gta 6', 'gta vi' y 'grand theft auto 6' terminan en el mismo grupo."""
     from app.ia.busquedas import agrupar
@@ -264,3 +267,20 @@ def test_modelo_del_asistente_supera_la_meta():
     r = entrenar(guardar=False)
     assert r["algoritmo_elegido"] in ("SVM", "Regresión logística")
     assert r["resultados"][r["algoritmo_elegido"]]["exactitud_validacion"] >= 0.80
+
+
+def test_asistente_agrega_al_carrito_y_navega(cliente):
+    """HU-10: el asistente agrega al carrito (por nombre o "agrégalo") y lleva a una sección."""
+    def decir(mensaje, ultimo=None):
+        cuerpo = {"mensaje": mensaje, "sesion": "prueba-pytest", "ultimo_producto_id": ultimo}
+        return cliente.post("/api/asistente", json=cuerpo).json()
+
+    r = decir("agrega el fifa 26 al carrito")
+    assert r["intencion"] == "agregar_carrito" and r["acciones"][0]["tipo"] == "agregar"
+    assert r["acciones"][0]["producto_id"] == r["productos"][0]["id"]
+    gta = decir("tienen el gta 5 pa la play 4?")["productos"][0]
+    assert decir("agregalo al carrito", ultimo=gta["id"])["acciones"][0]["producto_id"] == gta["id"]
+    agotado = decir("agrega el gran turismo 7")
+    assert agotado["acciones"] == [] and "agotado" in agotado["respuesta"]
+    assert decir("llevame al carrito")["acciones"][0]["destino"] == "/carrito"
+    assert decir("quiero ver mis compras")["acciones"][0]["destino"] == "/mis-compras"

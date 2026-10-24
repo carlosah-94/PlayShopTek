@@ -1,4 +1,7 @@
-"""HU-09: asistente del chat. La IA decide QUÉ quiere el cliente; este archivo decide QUÉ responder."""
+"""HU-09 y HU-10: asistente del chat. La IA decide QUÉ quiere el cliente; este archivo decide QUÉ responder.
+
+HU-10 agrega dos intenciones que hacen algo en la tienda: llevar a una sección y agregar al carrito.
+"""
 import re
 from datetime import date
 
@@ -10,7 +13,7 @@ from app.api.deps import usuario_opcional
 from app.api.routes.productos import _consulta_base, a_salida, calificaciones
 from app.database import get_db
 from app.ia.asistente import clasificar, limpiar
-from app.models import ChatbotMensaje, Cliente, Interes, Usuario
+from app.models import ChatbotMensaje, Cliente, Interes, Producto, Usuario
 from app.models.enums import OrigenInteres
 from app.schemas import AccionAsistente, AsistenteEntrada, AsistenteSalida
 
@@ -32,12 +35,26 @@ RESPUESTAS = {
                      "En la tienda aceptamos efectivo, Yape y transferencia BCP. Las preventas se reservan con S/ 50.",
     "asesor": "Claro, te paso con un asesor por WhatsApp:",
     "no_entendi": "No estoy seguro de haberte entendido. ¿Te paso con un asesor por WhatsApp?",
+    "navegar": "¿A qué sección quieres ir?",
+    "agregar_carrito": "¿Qué producto quieres agregar? Dime su nombre, por ejemplo “agrega el FIFA 26”.",
 }
+
+# HU-10: palabra que dice el cliente -> sección de la tienda (se revisan en este orden)
+SECCIONES = [
+    (("pagar", "carrito"), "/carrito", "Carrito"),
+    (("compras", "pedidos", "historial"), "/mis-compras", "Mis compras"),
+    (("favorito",), "/favoritos", "Favoritos"),
+    (("rastre", "reparacion"), "/rastreo", "Rastrear reparación"),
+    (("sesion", "cuenta", "login", "registr", "entrar"), "/login", "Iniciar sesión"),
+    (("catalogo", "tienda", "inicio", "principal", "productos"), "/", "Tienda"),
+]
 
 # Palabras que no ayudan a encontrar el producto ("¿tienen el gta 5 para ps4?" -> "gta 5")
 VACIAS = set("""a al algo algun alguna aun busco cual cuales cuanto cuanta cuesta cuestan de del dame disponible el
 en es esta estan hay info juego juegos la las lo los me mi muestrame para pa por precio precios que quiero
-sale stock su tienen tiene un una unos venden vende ver y o consola consolas comprar vale valen""".split())
+sale stock su tienen tiene un una unos venden vende ver y o consola consolas comprar vale valen
+agrega agregalo agregame agregar agrego anade anadelo anadir pon ponlo mete echalo carrito si ok dale ese eso
+llevo llevarme separalo dos uno compro""".split())
 ROMANOS = {"ii": "2", "iii": "3", "iv": "4", "v": "5", "vi": "6", "vii": "7"}
 SINONIMOS = [(r"\bgrand theft auto\b", "gta"), (r"\bcall of duty\b", "cod"), (r"\bcontrol(es)?\b", "mando"),
              (r"\bplaystation\b", "ps"), (r"\bplay\b", "ps"), (r"\bps (\d)\b", r"ps\1"), (r"\bspider man\b", "spiderman")]
@@ -99,6 +116,28 @@ def conversar(datos: AsistenteEntrada, db: Session = Depends(get_db), usuario: U
                 db.add(Interes(texto=texto, origen=OrigenInteres.chatbot, cliente_id=cliente_id,
                                tuvo_resultados=False, fecha=date.today()))
             acciones = ASESORES
+    elif intencion == "navegar":
+        t = limpiar(datos.mensaje)
+        destino = next(((ruta, nombre) for claves, ruta, nombre in SECCIONES if any(c in t for c in claves)), None)
+        if destino:
+            respuesta = f"Te llevo a {destino[1]}."
+            acciones = [AccionAsistente(tipo="ir", etiqueta=destino[1], destino=destino[0])]
+        else:
+            acciones = [AccionAsistente(tipo="ir", etiqueta=nombre, destino=ruta) for _, ruta, nombre in SECCIONES[:4]]
+    elif intencion == "agregar_carrito":
+        # Si nombra el producto se busca; si dice "agrégalo", se usa el último que mostró el chat
+        encontrados = buscar_productos(db, datos.mensaje, limite=1)
+        if not encontrados and datos.ultimo_producto_id:
+            p = db.scalar(_consulta_base().where(Producto.id == datos.ultimo_producto_id))
+            encontrados = [a_salida(p, calificaciones(db))] if p else []
+        if encontrados:
+            p = encontrados[0]
+            productos = encontrados
+            if p.stock > 0:
+                respuesta = f"Listo, agregué {p.nombre} a tu carrito."
+                acciones = [AccionAsistente(tipo="agregar", etiqueta="Ver carrito", destino="/carrito", producto_id=p.id)]
+            else:
+                respuesta = f"{p.nombre} está agotado. Puedes pedir que te avisemos cuando llegue desde su ficha."
     elif intencion == "rastreo":
         acciones = [AccionAsistente(tipo="ir", etiqueta="Rastrear mi reparación", destino="/rastreo")]
     elif intencion in ("asesor", "no_entendi", "reparacion"):

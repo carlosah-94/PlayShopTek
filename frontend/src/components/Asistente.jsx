@@ -1,8 +1,10 @@
 // HU-09: burbuja de chat en la esquina. El backend clasifica el mensaje con IA y devuelve
 // la respuesta, los productos encontrados (con imagen y precio) y botones de acción.
+// HU-10: el chat también agrega productos al carrito y lleva al cliente a una sección.
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../api.js'
+import { agregarAlCarrito } from '../carrito.js'
 
 // Un id al azar por navegador para agrupar los mensajes de una misma conversación
 function idDeSesion() {
@@ -11,7 +13,7 @@ function idDeSesion() {
   return id
 }
 
-const BIENVENIDA = { autor: 'bot', texto: '¡Hola! Pregúntame por un juego, el taller, el horario o cómo pagar.' }
+const BIENVENIDA = { autor: 'bot', texto: '¡Hola! Pregúntame por un juego, el taller o el horario. También puedo agregarlo a tu carrito.' }
 
 export default function Asistente() {
   const [abierto, setAbierto] = useState(false)
@@ -19,6 +21,8 @@ export default function Asistente() {
   const [texto, setTexto] = useState('')
   const [pensando, setPensando] = useState(false)
   const final = useRef(null)
+  const ultimoProducto = useRef(null) // el último producto que mostró el chat, para entender "agrégalo"
+  const navegar = useNavigate()
 
   // Cada vez que llega un mensaje, baja hasta el último
   useEffect(() => { final.current?.scrollIntoView({ behavior: 'smooth' }) }, [mensajes, abierto])
@@ -31,8 +35,16 @@ export default function Asistente() {
     setTexto('')
     setPensando(true)
     try {
-      const r = await api('/asistente', { metodo: 'POST', cuerpo: { mensaje, sesion: idDeSesion() } })
+      const r = await api('/asistente', {
+        metodo: 'POST', cuerpo: { mensaje, sesion: idDeSesion(), ultimo_producto_id: ultimoProducto.current },
+      })
+      if (r.productos.length > 0) ultimoProducto.current = r.productos[0].id
+      // HU-10: si el asistente decidió agregar un producto, se pone en el carrito del navegador
+      const agregar = r.acciones.find((a) => a.tipo === 'agregar')
+      if (agregar) agregarAlCarrito(r.productos.find((p) => p.id === agregar.producto_id))
       setMensajes((m) => [...m, { autor: 'bot', texto: r.respuesta, productos: r.productos, acciones: r.acciones }])
+      // HU-10: si pidió ir a una sección concreta, lo lleva solo
+      if (r.intencion === 'navegar' && r.acciones.length === 1) navegar(r.acciones[0].destino)
     } catch {
       setMensajes((m) => [...m, { autor: 'bot', texto: 'Ups, no pude responder. Intenta de nuevo en un momento.' }])
     } finally {
@@ -66,18 +78,23 @@ export default function Asistente() {
               (m.autor === 'cliente' ? 'bg-rosa text-white' : 'bg-fondo')}>{m.texto}</p>
 
             {m.productos?.map((p) => (
-              <Link key={p.id} to={'/producto/' + p.id} onClick={() => setAbierto(false)}
-                className="mt-2 flex items-center gap-3 rounded-xl border border-white/10 bg-fondo p-2 hover:border-rosa">
-                <img src="/logo.jpg" alt="" className="h-12 w-12 rounded-lg object-cover" />
-                <div className="min-w-0 text-sm">
-                  <p className="truncate font-semibold">{p.nombre}</p>
-                  <p>
-                    <span className="font-bold">S/ {Number(p.precio_final).toLocaleString('es-PE')}</span>
-                    {p.descuento && <span className="ml-2 text-xs text-white/50 line-through">S/ {Number(p.precio).toLocaleString('es-PE')}</span>}
-                  </p>
-                  <p className="text-xs text-white/60">{p.stock > 0 ? p.stock + ' en stock' : 'Agotado'}</p>
-                </div>
-              </Link>
+              <div key={p.id} className="mt-2 flex items-center gap-3 rounded-xl border border-white/10 bg-fondo p-2">
+                <Link to={'/producto/' + p.id} onClick={() => setAbierto(false)} className="flex min-w-0 flex-1 items-center gap-3 hover:text-rosa">
+                  <img src="/logo.jpg" alt="" className="h-12 w-12 rounded-lg object-cover" />
+                  <div className="min-w-0 text-sm">
+                    <p className="truncate font-semibold">{p.nombre}</p>
+                    <p>
+                      <span className="font-bold">S/ {Number(p.precio_final).toLocaleString('es-PE')}</span>
+                      {p.descuento && <span className="ml-2 text-xs text-white/50 line-through">S/ {Number(p.precio).toLocaleString('es-PE')}</span>}
+                    </p>
+                    <p className="text-xs text-white/60">{p.stock > 0 ? p.stock + ' en stock' : 'Agotado'}</p>
+                  </div>
+                </Link>
+                {p.stock > 0 && (
+                  <button onClick={() => agregarAlCarrito(p)} aria-label={'Agregar ' + p.nombre + ' al carrito'}
+                    className="rounded-lg bg-rosa px-2 py-1 text-xs font-semibold text-white">+ Carrito</button>
+                )}
+              </div>
             ))}
 
             {m.acciones?.length > 0 && (

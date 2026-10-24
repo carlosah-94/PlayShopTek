@@ -33,6 +33,7 @@ class TokenSalida(BaseModel):
     token_type: str = "bearer"
     usuario: UsuarioSalida
 
+
 class ProductoSalida(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
@@ -51,6 +52,7 @@ class ProductoSalida(BaseModel):
     fecha_lanzamiento: date | None
     calificacion: Decimal | None
     trailer_url: str | None
+
 
 class ResenaSalida(BaseModel):
     nombre: str
@@ -76,6 +78,7 @@ class ProductoDetalle(ProductoSalida):
     cupos_reserva: int | None  # HU-04: cuántas reservas quedan antes del lanzamiento
     total_resenas: int
     resenas: list[ResenaSalida]
+
 
 class ProductoEdicion(BaseModel):
     """Solo el dueño cambia precio; el stock también lo maneja él desde Inventario."""
@@ -125,6 +128,7 @@ class ReparacionSalida(BaseModel):
     tecnico: str | None
     fecha_ingreso: date
 
+
 class PasoHistorial(BaseModel):
     estado: EstadoReparacion
     fecha: datetime
@@ -143,6 +147,7 @@ class RastreoSalida(BaseModel):
     duracion_estimada: str | None
     fecha_ingreso: date
     historial: list[PasoHistorial]
+
 
 class CambioEstado(BaseModel):
     """HU-08: avanzar la reparación al siguiente paso."""
@@ -253,12 +258,14 @@ class AsistenteEntrada(BaseModel):
     """HU-09: lo que el cliente le escribe al asistente."""
     mensaje: str = Field(min_length=1, max_length=300)
     sesion: str = Field(min_length=8, max_length=40)  # id al azar del navegador para agrupar la conversación
+    ultimo_producto_id: int | None = None  # HU-10: el último producto que mostró el chat ("agrégalo")
 
 
 class AccionAsistente(BaseModel):
-    tipo: Literal["ir", "whatsapp"]  # 'ir' abre una página de la tienda; 'whatsapp' abre el chat del asesor
+    tipo: Literal["ir", "whatsapp", "agregar"]  # ir a una página, abrir WhatsApp o agregar al carrito (HU-10)
     etiqueta: str
     destino: str
+    producto_id: int | None = None
 
 
 class AsistenteSalida(BaseModel):
