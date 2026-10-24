@@ -115,6 +115,8 @@ if __name__ == "__main__":
     from app.ia.asistente import clasificar, entrenar
 
     r = entrenar(guardar=True)
+    pd.set_option("display.width", 200)
+    pd.set_option("display.max_columns", None)
     print(f"Ejemplos: {r['ejemplos']} · Intenciones: {len(r['intenciones'])}")
     for algoritmo, m in r["resultados"].items():
         print(f"  {algoritmo:20} validación cruzada {m['exactitud_validacion']:.3f} · "
