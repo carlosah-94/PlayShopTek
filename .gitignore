@@ -16,3 +16,5 @@ ml/datos/reales/
 .DS_Store
 Thumbs.db
 .vscode/
+# Modelo del asistente: se entrena solo al arrancar si no existe
+backend/app/ia/modelos/*.joblib

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
+import Asistente from './components/Asistente.jsx'
 import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
 import Favoritos from './pages/Favoritos.jsx'
@@ -63,6 +64,7 @@ export default function App() {
           <Route path="/tablero" element={<Tablero />} />
         </Routes>
       </main>
+      <Asistente />
     </div>
   )
 }

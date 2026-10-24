@@ -107,7 +107,7 @@ def test_dueno_cambia_trailer(cliente, h_dueno, h_trabajadora):
     r = cliente.patch(f"/api/productos/{p['id']}", json={"trailer_url": url}, headers=h_dueno)
     assert r.status_code == 200 and r.json()["trailer_url"] == url
     cliente.patch(f"/api/productos/{p['id']}", json={"trailer_url": p["trailer_url"] or ""}, headers=h_dueno)
-    
+
 def test_rastreo_pide_codigo_y_celular(cliente):
     """HU-07: Kevin rastrea su mando con el código y los 4 últimos dígitos de su celular."""
     r = cliente.get("/api/rastreo/R-2062", params={"celular": "2445"})
@@ -117,7 +117,7 @@ def test_rastreo_pide_codigo_y_celular(cliente):
     assert cliente.get("/api/rastreo/2062", params={"celular": "2445"}).status_code == 200  # sin "R-" también vale
     assert cliente.get("/api/rastreo/R-2062", params={"celular": "0000"}).status_code == 404  # celular de otro
     assert cliente.get("/api/rastreo/R-9999", params={"celular": "2445"}).status_code == 404
-    
+
 def test_avanzar_estado_de_reparacion(cliente, h_trabajadora):
     """HU-08: un paso a la vez, sin reparar sin precio aceptado y sin entregar sin pago."""
     op = cliente.get("/api/reparaciones/opciones", headers=h_trabajadora).json()
@@ -135,7 +135,7 @@ def test_avanzar_estado_de_reparacion(cliente, h_trabajadora):
     assert r.status_code == 200 and r.json()["pago"] == "yape"
     pasos = cliente.get(f"/api/rastreo/{nueva['codigo']}", params={"celular": "5679"}).json()["historial"]
     assert [p["estado"] for p in pasos] == ["recibido", "diagnosticado", "en_reparacion", "listo_para_recoger", "entregado"]
-    
+
 
 def test_compra_web_descuenta_stock(cliente, h_cliente, h_trabajadora):
     """HU-03: Kevin paga con Yape; el precio lo pone el servidor y el stock baja."""
@@ -153,7 +153,7 @@ def test_compra_web_descuenta_stock(cliente, h_cliente, h_trabajadora):
     demasiado = {"items": [{"producto_id": p["id"], "cantidad": 5}], "metodo_pago": "tarjeta"}
     if p["stock"] - 1 < 5:
         assert cliente.post("/api/ventas", json=demasiado, headers=h_cliente).status_code == 409  # no alcanza el stock
-        
+
 
 def test_tablero_solo_para_el_dueno(cliente, h_dueno, h_trabajadora):
     """HU-13: Ángel ve los indicadores; Linda no (no ve ventas totales)."""
@@ -163,7 +163,7 @@ def test_tablero_solo_para_el_dueno(cliente, h_dueno, h_trabajadora):
     t = r.json()
     assert float(t["ventas_total"]) > 0 and t["ventas_cantidad"] > 0
     assert len(t["semanas"]) == 8 and t["mas_buscados"][0]["busquedas"] >= t["mas_buscados"][-1]["busquedas"]
-    
+
 
 def test_busqueda_sin_resultado_llega_al_tablero(cliente, h_dueno):
     """HU-11: un visitante busca algo que no hay; Ángel lo ve en su tablero (una vez por día y persona)."""
@@ -239,3 +239,28 @@ def test_ia_agrupa_busquedas_parecidas(cliente, h_dueno, h_trabajadora):
     assert cliente.post("/api/ia/agrupar-busquedas", headers=h_trabajadora).status_code == 403
     r = cliente.post("/api/ia/agrupar-busquedas", headers=h_dueno).json()
     assert r["algoritmo_elegido"] in ("K-Means", "DBSCAN") and r["kmeans"]["silueta"] > 0
+
+
+def test_asistente_entiende_y_muestra_productos(cliente):
+    """HU-09: el asistente detecta la intención y muestra el producto con su precio dentro del chat."""
+    def decir(mensaje):
+        r = cliente.post("/api/asistente", json={"mensaje": mensaje, "sesion": "prueba-pytest"})
+        assert r.status_code == 200, r.text
+        return r.json()
+
+    r = decir("tienen el gta 5 pa la play 4?")
+    assert r["intencion"] == "buscar_producto"
+    assert [p["nombre"] for p in r["productos"]] == ["GTA V (PS4)"] and float(r["productos"][0]["precio_final"]) > 0
+    assert decir("mi mando tiene drift")["intencion"] == "reparacion"
+    assert decir("a que hora abren el domingo")["intencion"] == "horario_ubicacion"
+    assert any(a["destino"] == "/rastreo" for a in decir("como va mi reparacion")["acciones"])
+    assert decir("xqzt wvbn")["intencion"] == "no_entendi"  # sin sentido -> lo deriva a un asesor
+
+
+def test_modelo_del_asistente_supera_la_meta():
+    """IA (SVM vs regresión logística): la exactitud con ejemplos no vistos supera el 80 %."""
+    from app.ia.asistente import entrenar
+
+    r = entrenar(guardar=False)
+    assert r["algoritmo_elegido"] in ("SVM", "Regresión logística")
+    assert r["resultados"][r["algoritmo_elegido"]]["exactitud_validacion"] >= 0.80
