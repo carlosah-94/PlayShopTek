@@ -55,13 +55,30 @@ class ProductoSalida(BaseModel):
 
 
 class ResenaSalida(BaseModel):
+    id: int | None = None
     nombre: str
     estrellas: int
     texto: str
     fecha: date
     respuesta: str | None
+    verificada: bool = False  # HU-17: la escribió alguien que compró el producto
 
 
+class ResenaEntrada(BaseModel):
+    """HU-17: lo que manda el cliente para opinar de un producto que compró."""
+    estrellas: int = Field(ge=1, le=5)
+    texto: str = Field(min_length=10, max_length=600)
+    nombre_publico: str | None = Field(default=None, max_length=60)  # si no lo pone, se usa su nombre de pila
+
+
+class RespuestaResena(BaseModel):
+    respuesta: str = Field(min_length=5, max_length=600)
+
+
+class PuedoOpinar(BaseModel):
+    puede: bool
+    motivo: Literal["no_compraste", "ya_opinaste"] | None = None
+    
 class ProductoDetalle(ProductoSalida):
     """HU-02: lo mismo del catálogo + lo que solo se ve en la ficha."""
     descripcion: str | None
