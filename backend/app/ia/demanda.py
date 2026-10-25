@@ -131,7 +131,8 @@ def _completar(df: pd.DataFrame) -> pd.DataFrame:
 
 def _nuevo_modelo(algoritmo: str):
     if algoritmo == "Árbol de decisión":
-        return DecisionTreeRegressor(max_depth=6, min_samples_leaf=30, random_state=0)
+        # criterion="absolute_error": en cada hoja usa la MEDIANA, así minimiza justo el error que medimos (MAE)
+        return DecisionTreeRegressor(criterion="absolute_error", max_depth=6, min_samples_leaf=30, random_state=0)
     return LinearRegression()
 
 
