@@ -14,6 +14,7 @@ import Rastreo from './pages/Rastreo.jsx'
 import Reclamos from './pages/Reclamos.jsx'
 import Tablero from './pages/Tablero.jsx'
 import Taller from './pages/Taller.jsx'
+import VentaTienda from './pages/VentaTienda.jsx'
 import { cerrarSesion, leerSesion } from './api.js'
 import { leerCarrito, unidades } from './carrito.js'
 
@@ -44,6 +45,7 @@ export default function App() {
           {sesion && sesion.usuario.rol === 'cliente' && <Link to="/favoritos" className="hover:text-rosa">Favoritos</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/panel" className="hover:text-rosa">Panel</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/taller" className="hover:text-rosa">Taller</Link>}
+          {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/vender" className="hover:text-rosa">Vender</Link>}
           {sesion && sesion.usuario.rol !== 'cliente' && <Link to="/reclamos" className="hover:text-rosa">Reclamos</Link>}
           {sesion && sesion.usuario.rol === 'dueno' && <Link to="/inventario" className="hover:text-rosa">Inventario</Link>}
           {sesion && sesion.usuario.rol === 'dueno' && <Link to="/tablero" className="hover:text-rosa">Tablero</Link>}
@@ -63,6 +65,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/panel" element={<Panel />} />
           <Route path="/taller" element={<Taller />} />
+          <Route path="/vender" element={<VentaTienda />} />
           <Route path="/inventario" element={<Inventario />} />
           <Route path="/tablero" element={<Tablero />} />
           <Route path="/libro-de-reclamaciones" element={<LibroReclamaciones />} />

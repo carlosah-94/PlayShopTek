@@ -318,3 +318,26 @@ def test_resumen_inteligente(cliente, h_dueno, h_trabajadora):
     assert elegido <= m["resultados"]["Sin IA (promedio de 4 semanas)"]["mae_prueba"] * 1.1  # al menos tan bueno como adivinar
     assert all(x["pedir"] > 0 for x in r.json()["reponer"])
     assert len(o["sugeridas"]) <= 5 and o["ganancia_con_ofertas"] >= o["ganancia_sin_ofertas"]
+
+
+def test_venta_en_tienda_y_por_whatsapp(cliente, h_trabajadora, h_cliente):
+    """HU-15: Linda registra ventas del mostrador y de WhatsApp; se descuenta el stock y el cliente la ve."""
+    p = next(x for x in cliente.get("/api/productos").json() if x["stock"] >= 3 and not x["es_preventa"])
+    venta = {"canal": "tienda", "metodo_pago": "efectivo", "items": [{"producto_id": p["id"], "cantidad": 1}],
+             "cliente_nombre": "Kevin", "cliente_telefono": "987112445"}
+    assert cliente.post("/api/ventas/tienda", json=venta, headers=h_cliente).status_code == 403  # solo el equipo
+    whatsapp_efectivo = {**venta, "canal": "whatsapp"}
+    assert cliente.post("/api/ventas/tienda", json=whatsapp_efectivo, headers=h_trabajadora).status_code == 422
+
+    r = cliente.post("/api/ventas/tienda", json=venta, headers=h_trabajadora)
+    assert r.status_code == 201, r.text
+    v = r.json()
+    assert v["canal"] == "tienda" and v["estado"] == "entregado" and v["registrada_por"].startswith("Linda")
+    assert cliente.get(f"/api/productos/{p['id']}").json()["stock"] == p["stock"] - 1
+    assert any(x["codigo"] == v["codigo"] for x in cliente.get("/api/ventas/mias", headers=h_cliente).json())
+
+    sin_celular = {"canal": "whatsapp", "metodo_pago": "yape", "numero_operacion": "123456",
+                   "items": [{"producto_id": p["id"], "cantidad": 1}]}
+    r = cliente.post("/api/ventas/tienda", json=sin_celular, headers=h_trabajadora).json()
+    assert r["cliente"] == "Cliente de mostrador" and r["estado"] == "pagado"
+    assert cliente.get("/api/ventas/tienda", headers=h_trabajadora).json()[0]["codigo"] == r["codigo"]
