@@ -1,4 +1,6 @@
 // HU-02: ficha del producto con fotos, tráiler, precio, stock y reseñas.
+// HU-17: reseñas verificadas: solo opina quien compró; la tienda puede responder.
+
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, leerSesion } from '../api.js'
@@ -22,9 +24,18 @@ export default function Ficha() {
   const [esFavorito, setEsFavorito] = useState(false)
   const [aviso, setAviso] = useState('')
   const [parecidos, setParecidos] = useState([])
+  const [puedo, setPuedo] = useState(null) // HU-17: ¿este cliente puede opinar?
+  const [nueva, setNueva] = useState({ estrellas: 5, texto: '' })
+  const [respuestas, setRespuestas] = useState({}) // lo que escribe la tienda en cada reseña: { id: 'texto' }
+  const [errorResena, setErrorResena] = useState('')
   const esCliente = leerSesion()?.usuario.rol === 'cliente'
+  const esEquipo = ['dueno', 'trabajadora'].includes(leerSesion()?.usuario.rol)
 
-  useEffect(() => { api('/productos/' + id).then(setP).catch((e) => setError(e.message)) }, [id])
+    const cargar = () => api('/productos/' + id).then(setP).catch((e) => setError(e.message))
+  useEffect(() => { cargar() }, [id])
+  // HU-17: el servidor dice si compró este producto y si ya opinó
+  useEffect(() => { if (esCliente) api('/productos/' + id + '/puedo-opinar').then(setPuedo).catch(() => setPuedo(null)) }, [id])
+
   // IA · KNN: los 4 productos más parecidos a este
   useEffect(() => { api('/productos/' + id + '/parecidos').then(setParecidos).catch(() => setParecidos([])) }, [id])
   // HU-05: ¿ya lo tengo en favoritos?
@@ -43,6 +54,23 @@ export default function Ficha() {
     } catch (err) {
       setAviso(err.message)
     }
+  }
+  const opinar = async (e) => {
+    e.preventDefault()
+    setErrorResena('')
+    try {
+      await api('/productos/' + id + '/resenas', { metodo: 'POST', cuerpo: { ...nueva, estrellas: Number(nueva.estrellas) } })
+      setPuedo({ puede: false, motivo: 'ya_opinaste' })
+      setNueva({ estrellas: 5, texto: '' })
+      cargar()
+    } catch (err) {
+      setErrorResena(err.message)
+    }
+  }
+  const responder = async (resenaId) => {
+    await api('/resenas/' + resenaId + '/respuesta', { metodo: 'PATCH', cuerpo: { respuesta: respuestas[resenaId] } })
+    setRespuestas({ ...respuestas, [resenaId]: '' })
+    cargar()
   }
 
   if (error) return <p className="rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>
@@ -114,18 +142,55 @@ export default function Ficha() {
         </div>
       </div>
 
-      <section>
+            <section>
         <h2 className="text-lg font-semibold">Reseñas</h2>
+
+        {/* HU-17: formulario solo para quien compró este producto */}
+        {esCliente && puedo?.puede && (
+          <form onSubmit={opinar} className="mt-3 space-y-2 rounded-xl border border-rosa/40 bg-superficie p-4 text-sm">
+            <p className="font-semibold">Compraste este producto: cuéntanos qué te pareció</p>
+            <div className="flex gap-2">
+              <select value={nueva.estrellas} onChange={(e) => setNueva({ ...nueva, estrellas: e.target.value })}
+                className="rounded-lg border border-white/15 bg-fondo px-2 py-2">
+                {[5, 4, 3, 2, 1].map((n) => <option key={n} value={n}>{'★'.repeat(n)}</option>)}
+              </select>
+              <input placeholder="Tu opinión (mínimo 10 letras)" value={nueva.texto} minLength={10} required
+                onChange={(e) => setNueva({ ...nueva, texto: e.target.value })}
+                className="flex-1 rounded-lg border border-white/15 bg-fondo px-3 py-2" />
+              <button className="rounded-lg bg-rosa px-4 py-2 font-semibold text-white">Publicar</button>
+            </div>
+            {errorResena && <p className="text-red-300">{errorResena}</p>}
+          </form>
+        )}
+        {esCliente && puedo?.motivo === 'ya_opinaste' && <p className="mt-2 text-sm text-green-300">✓ Ya dejaste tu reseña. ¡Gracias!</p>}
+        {esCliente && puedo?.motivo === 'no_compraste' && (
+          <p className="mt-2 text-sm text-white/50">Solo pueden opinar quienes compraron este producto (en la web o en la tienda con su celular).</p>
+        )}
+
         <ul className="mt-2 grid gap-3 sm:grid-cols-2">
           {p.resenas.map((r, i) => (
-            <li key={i} className="rounded-xl border border-white/10 bg-superficie p-4 text-sm">
-              <p className="font-semibold">{r.nombre} <span className="text-rosa">{'★'.repeat(r.estrellas)}</span></p>
+            <li key={r.id ?? i} className="rounded-xl border border-white/10 bg-superficie p-4 text-sm">
+              <p className="font-semibold">
+                {r.nombre} <span className="text-rosa">{'★'.repeat(r.estrellas)}</span>
+                {r.verificada && <span className="ml-2 rounded bg-green-500/15 px-1.5 text-xs font-normal text-green-300">✓ Compra verificada</span>}
+              </p>
               <p className="mt-1 text-white/80">{r.texto}</p>
               {r.respuesta && <p className="mt-2 border-l-2 border-morado pl-2 text-white/60">Tienda: {r.respuesta}</p>}
+              {/* La tienda responde las reseñas que aún no tienen respuesta */}
+              {esEquipo && !r.respuesta && r.id && (
+                <div className="mt-2 flex gap-2">
+                  <input placeholder="Responder como tienda" value={respuestas[r.id] || ''}
+                    onChange={(e) => setRespuestas({ ...respuestas, [r.id]: e.target.value })}
+                    className="flex-1 rounded-lg border border-white/15 bg-fondo px-2 py-1" />
+                  <button onClick={() => responder(r.id)} disabled={(respuestas[r.id] || '').length < 5}
+                    className="rounded-lg border border-rosa px-3 py-1 text-rosa disabled:opacity-40">Responder</button>
+                </div>
+              )}
             </li>
           ))}
         </ul>
       </section>
+
       {parecidos.length > 0 && (
         <section>
           <h2 className="text-lg font-semibold">También te puede gustar</h2>

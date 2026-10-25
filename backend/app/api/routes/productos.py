@@ -101,7 +101,7 @@ def detalle(producto_id: int, db: Session = Depends(get_db)):
                   .options(selectinload(Producto.etiquetas), selectinload(Producto.modos), selectinload(Producto.medios)))
     if p is None:
         raise HTTPException(404, "Producto no encontrado.")
-    ultimas = db.scalars(select(Resena).where(Resena.producto_id == p.id).order_by(Resena.fecha.desc()).limit(6))
+    ultimas = db.scalars(select(Resena).where(Resena.producto_id == p.id).order_by(Resena.fecha.desc(), Resena.id.desc()).limit(6))
     total = db.scalar(select(func.count()).select_from(Resena).where(Resena.producto_id == p.id))
     return ProductoDetalle(
         **a_salida(p, calificaciones(db)).model_dump(),
@@ -110,8 +110,9 @@ def detalle(producto_id: int, db: Session = Depends(get_db)):
         etiquetas=[e.etiqueta for e in p.etiquetas], modos=[m.modo for m in p.modos],
         fotos=[m.url for m in p.medios if m.tipo.value == "imagen"], monto_reserva=p.monto_reserva,
         cupos_reserva=cupos_de_reserva(db, p), total_resenas=total,
-        resenas=[ResenaSalida(nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
-                              respuesta=r.respuesta) for r in ultimas],
+        resenas=[ResenaSalida(id=r.id, nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
+                              respuesta=r.respuesta, verificada=r.venta_id is not None) for r in ultimas],
+
     )
 
 

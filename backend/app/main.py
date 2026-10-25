@@ -6,7 +6,10 @@ from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api.routes import asistente, auth, cuenta, ia, intereses, productos, rastreo, reclamos, reparaciones, tablero, ventas
+from app.api.routes import (
+    asistente, auth, cuenta, ia, intereses, productos, rastreo, reclamos, reparaciones, resenas, tablero, ventas,
+)
+
 from app.config import settings
 from app.database import engine
 
@@ -47,4 +50,6 @@ api.include_router(cuenta.router)
 api.include_router(ia.router)
 api.include_router(asistente.router)
 api.include_router(reclamos.router)
+api.include_router(resenas.router)
+
 app.include_router(api)
