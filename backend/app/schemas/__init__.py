@@ -183,6 +183,22 @@ class VentaSalida(BaseModel):
     items: list[VentaItemSalida]
 
 
+class VentaTiendaEntrada(BaseModel):
+    """HU-15: venta que registra Linda o Ángel en el mostrador o por WhatsApp."""
+    canal: Literal["tienda", "whatsapp"]
+    metodo_pago: Literal["efectivo", "yape", "transferencia"]  # por WhatsApp solo Yape (se revisa en la ruta)
+    items: list[ItemCarrito] = Field(min_length=1)
+    cliente_nombre: str | None = Field(default=None, max_length=120)
+    cliente_telefono: str | None = Field(default=None, pattern=r"^9\d{8}$")  # opcional: el cliente puede no darlo
+    numero_operacion: str | None = Field(default=None, pattern=r"^\d{6,12}$")
+
+
+class VentaTiendaSalida(VentaSalida):
+    canal: str
+    cliente: str
+    registrada_por: str | None
+
+
 class Cifra(BaseModel):
     """Un dato con nombre para las listas del tablero (ej. 'Yape': 52)."""
     nombre: str
