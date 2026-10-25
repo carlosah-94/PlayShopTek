@@ -306,3 +306,14 @@ def test_libro_de_reclamaciones(cliente, h_dueno, h_trabajadora, h_cliente):
     assert cliente.patch(url, json=respuesta, headers=h_trabajadora).status_code == 403  # solo el dueño responde
     r = cliente.patch(url, json=respuesta, headers=h_dueno)
     assert r.status_code == 200 and r.json()["estado"] == "respondido"
+    
+
+def test_resumen_inteligente(cliente, h_dueno, h_trabajadora):
+    assert cliente.get("/api/ia/resumen", headers=h_trabajadora).status_code == 403  # solo Ángel
+    r = cliente.get("/api/ia/resumen", headers=h_dueno)
+    assert r.status_code == 200
+    m, o = r.json()["modelo"], r.json()["ofertas"]
+    elegido = m["resultados"][m["algoritmo_elegido"]]["mae_prueba"]
+    assert elegido <= m["resultados"]["Sin IA (promedio de 4 semanas)"]["mae_prueba"] * 1.1  # al menos tan bueno como adivinar
+    assert all(x["pedir"] > 0 for x in r.json()["reponer"])
+    assert len(o["sugeridas"]) <= 5 and o["ganancia_con_ofertas"] >= o["ganancia_sin_ofertas"]

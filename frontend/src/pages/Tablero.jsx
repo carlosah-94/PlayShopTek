@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { api, leerSesion } from '../api.js'
+import ResumenIA from '../components/ResumenIA.jsx'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE', { maximumFractionDigits: 0 })
 const diaMes = (iso) => new Date(iso + 'T12:00').toLocaleDateString('es-PE', { day: 'numeric', month: 'short' })
@@ -136,6 +137,7 @@ export default function Tablero() {
         </table>
       </div>
       <Ranking titulo="Buscaron y no encontraron (texto exacto)" filas={t.sin_resultado} formato={(v) => v + ' veces'} />
+      <ResumenIA />
     </section>
   )
 }
