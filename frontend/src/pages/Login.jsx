@@ -30,7 +30,10 @@ export default function Login() {
       <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} className={campo} required />
       {error && <p className="text-sm text-red-300">{error}</p>}
       <button className="w-full rounded-lg bg-rosa py-2 font-semibold text-white">Entrar</button>
-      <p className="text-xs text-white/50">Prueba: angel@playshoptek.pe / tienda123 · linda@playshoptek.pe / tienda123 · cliente@demo.pe / demo123</p>
+      {/* Solo en la PC del programador (npm run dev); en la web publicada no aparece */}
+      {import.meta.env.DEV && (
+        <p className="text-xs text-white/50">Prueba: angel@playshoptek.pe / tienda123 · linda@playshoptek.pe / tienda123 · cliente@demo.pe / demo123</p>
+      )}
     </form>
   )
 }
