@@ -21,9 +21,12 @@ export default function Ficha() {
   const [agregado, setAgregado] = useState(false)
   const [esFavorito, setEsFavorito] = useState(false)
   const [aviso, setAviso] = useState('')
+  const [parecidos, setParecidos] = useState([])
   const esCliente = leerSesion()?.usuario.rol === 'cliente'
 
   useEffect(() => { api('/productos/' + id).then(setP).catch((e) => setError(e.message)) }, [id])
+  // IA · KNN: los 4 productos más parecidos a este
+  useEffect(() => { api('/productos/' + id + '/parecidos').then(setParecidos).catch(() => setParecidos([])) }, [id])
   // HU-05: ¿ya lo tengo en favoritos?
   useEffect(() => {
     if (esCliente) api('/mi/favoritos').then((fs) => setEsFavorito(fs.some((f) => f.id === Number(id)))).catch(() => {})
@@ -123,6 +126,26 @@ export default function Ficha() {
           ))}
         </ul>
       </section>
+      {parecidos.length > 0 && (
+        <section>
+          <h2 className="text-lg font-semibold">También te puede gustar</h2>
+          <ul className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {parecidos.map((x) => (
+              <li key={x.id}>
+                <Link to={'/producto/' + x.id} className="block rounded-xl border border-white/10 bg-superficie p-4 text-sm hover:border-rosa">
+                  <p className="text-xs text-white/50">{x.categoria}</p>
+                  <p className="font-semibold">{x.nombre}</p>
+                  <p className="mt-1">
+                    {soles(x.precio_final)}
+                    {x.descuento && <span className="ml-2 rounded bg-rosa px-1.5 text-xs text-white">-{x.descuento}%</span>}
+                  </p>
+                  <p className={x.stock > 0 ? 'text-xs text-white/60' : 'text-xs text-red-300'}>{x.stock > 0 ? x.stock + ' en stock' : 'Agotado'}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </article>
   )
 }

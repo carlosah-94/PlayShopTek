@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import equipo_tienda, solo_dueno
 from app.database import get_db
+from app.ia.parecidos import parecidos
 from app.models import (
     AvisoLlegada, Categoria, Condicion, Genero, GrupoInteres, Notificacion, Producto, Resena, Venta, VentaItem,
 )
@@ -112,6 +113,15 @@ def detalle(producto_id: int, db: Session = Depends(get_db)):
         resenas=[ResenaSalida(nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
                               respuesta=r.respuesta) for r in ultimas],
     )
+
+
+@router.get("/{producto_id}/parecidos", response_model=list[ProductoSalida])
+def productos_parecidos(producto_id: int, db: Session = Depends(get_db)):
+    """KNN: los 4 productos más parecidos, para la sección "También te puede gustar" de la ficha."""
+    ids = parecidos(db, producto_id)
+    por_id = {p.id: p for p in db.scalars(_consulta_base().where(Producto.id.in_(ids)))}
+    notas = calificaciones(db)
+    return [a_salida(por_id[i], notas) for i in ids if i in por_id]
 
 
 @router.patch("/{producto_id}", response_model=ProductoSalida, dependencies=[Depends(solo_dueno)])
