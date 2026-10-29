@@ -1,0 +1,8 @@
+# TT-03: los buscadores pueden revisar toda la tienda, menos las pantallas internas del equipo
+User-agent: *
+Disallow: /panel
+Disallow: /taller
+Disallow: /vender
+Disallow: /inventario
+Disallow: /tablero
+Disallow: /reclamos

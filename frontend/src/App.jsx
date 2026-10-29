@@ -54,7 +54,8 @@ export default function App() {
             : <Link to="/login" className="rounded-lg bg-rosa px-3 py-1.5 font-semibold text-white">Iniciar sesión</Link>}
         </nav>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-8">
+      {/* TT-03: alto mínimo para que el pie de página no "salte" mientras carga el catálogo */}
+      <main className="mx-auto min-h-[75vh] max-w-6xl px-4 py-6 sm:px-8">
         <Routes>
           <Route path="/" element={<Catalogo />} />
           <Route path="/producto/:id" element={<Ficha />} />
