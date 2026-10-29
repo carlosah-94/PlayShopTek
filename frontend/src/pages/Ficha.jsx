@@ -9,10 +9,28 @@ import ReservaPreventa from '../components/ReservaPreventa.jsx'
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 const MODOS = { solo: 'Un jugador', local: 'Multijugador local', online: 'En línea' }
 
-// "https://www.youtube.com/watch?v=ABC" -> "https://www.youtube-nocookie.com/embed/ABC"
-function videoIncrustado(url) {
+// "https://www.youtube.com/watch?v=ABC" -> "ABC" (el código del video)
+function idDeYoutube(url) {
   const id = url && url.match(/(?:v=|youtu\.be\/)([\w-]{11})/)
-  return id ? 'https://www.youtube-nocookie.com/embed/' + id[1] : null
+  return id ? id[1] : null
+}
+
+// TT-03: primero se muestra solo la miniatura; el reproductor de YouTube (y su cookie) carga recién al hacer clic
+function Trailer({ id, nombre }) {
+  const [ver, setVer] = useState(false)
+  if (ver) {
+    return <iframe src={'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1'} title={'Tráiler de ' + nombre}
+      className="aspect-video w-full rounded-xl" allow="autoplay; encrypted-media" allowFullScreen />
+  }
+  return (
+    <button type="button" onClick={() => setVer(true)} aria-label={'Ver tráiler de ' + nombre}
+      className="relative block aspect-video w-full overflow-hidden rounded-xl">
+      <img src={'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg'} alt="" className="h-full w-full object-cover" />
+      <span className="absolute inset-0 grid place-items-center">
+        <span className="rounded-2xl bg-red-600 px-6 py-3 text-2xl text-white">▶</span>
+      </span>
+    </button>
+  )
 }
 
 export default function Ficha() {
@@ -75,7 +93,7 @@ export default function Ficha() {
   if (error) return <p className="rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>
   if (!p) return <p className="text-white/60">Cargando...</p>
 
-  const video = videoIncrustado(p.trailer_url)
+  const video = idDeYoutube(p.trailer_url)
   const incluye = [p.incluye_caja && 'Caja', p.incluye_manual && 'Manual', p.incluye_disco && 'Disco'].filter(Boolean)
   const disponibilidad = p.es_preventa ? 'Preventa' : p.stock > 0 ? p.stock + ' en stock' : 'Agotado'
 
@@ -88,7 +106,7 @@ export default function Ficha() {
           {p.fotos.length
             ? <img src={p.fotos[0]} alt={p.nombre} className="aspect-[4/3] w-full rounded-xl object-cover" />
             : <div className="grid aspect-[4/3] place-items-center rounded-xl bg-superficie text-white/60">Foto pendiente</div>}
-          {video && <iframe src={video} title={'Tráiler de ' + p.nombre} className="aspect-video w-full rounded-xl" allowFullScreen />}
+          {video && <Trailer key={video} id={video} nombre={p.nombre} />}
         </div>
 
         <div className="space-y-4">
