@@ -18,3 +18,5 @@ Thumbs.db
 .vscode/
 # Modelo del asistente: se entrena solo al arrancar si no existe
 backend/app/ia/modelos/*.joblib
+# Reportes de Locust (TT-02): se guardan en la carpeta Av03, no en el repositorio
+backend/pruebas_carga/reporte_*.html
