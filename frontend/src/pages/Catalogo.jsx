@@ -14,10 +14,12 @@ export default function Catalogo() {
   const [filtros, setFiltros] = useState({ categoria: '', genero: '', estado: '', q: '' })
   const [productos, setProductos] = useState([])
   const [error, setError] = useState('')
+  const [cargando, setCargando] = useState(true) // TT-03: mientras llega la respuesta del servidor
 
   useEffect(() => {
     const params = new URLSearchParams(Object.entries(filtros).filter(([, v]) => v))
-    api('/productos?' + params).then(setProductos).catch((e) => setError(e.message))
+    setCargando(true)
+    api('/productos?' + params).then(setProductos).catch((e) => setError(e.message)).finally(() => setCargando(false))
   }, [filtros])
 
   // HU-11: si la búsqueda no trae nada, se avisa a la tienda. Espera 1.5 s sin escribir
@@ -39,23 +41,26 @@ export default function Catalogo() {
 
       <div className="mt-4 grid gap-2 sm:grid-cols-4">
         <input placeholder="Buscar..." value={filtros.q} onChange={cambiar('q')} className={selector} />
-        <select value={filtros.categoria} onChange={cambiar('categoria')} className={selector}>
+        <select aria-label="Categoría" value={filtros.categoria} onChange={cambiar('categoria')} className={selector}>
           <option value="">Todas las categorías</option>
           {CATEGORIAS.map((c) => <option key={c}>{c}</option>)}
         </select>
-        <select value={filtros.genero} onChange={cambiar('genero')} className={selector}>
+        <select aria-label="Género" value={filtros.genero} onChange={cambiar('genero')} className={selector}>
           <option value="">Todos los géneros</option>
           {GENEROS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
         </select>
-        <select value={filtros.estado} onChange={cambiar('estado')} className={selector}>
+        <select aria-label="Estado" value={filtros.estado} onChange={cambiar('estado')} className={selector}>
           <option value="">Cualquier estado</option>
           {ESTADOS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
         </select>
       </div>
 
       {error && <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>}
-      <p className="mt-4 text-sm text-white/60">{productos.length} productos</p>
-      {productos.length === 0 && filtros.q.trim().length >= 3 && (
+      {/* TT-03: el servidor gratuito se "duerme"; mientras despierta se avisa en lugar de mostrar "0 productos" */}
+      {cargando
+        ? <p className="mt-4 text-sm text-white/60">Cargando catálogo… La primera visita del día puede tardar hasta 1 minuto mientras el servidor despierta.</p>
+        : <p className="mt-4 text-sm text-white/60">{productos.length} productos</p>}
+      {!cargando && productos.length === 0 && filtros.q.trim().length >= 3 && (
         <p className="mt-2 rounded-lg border border-white/15 p-3 text-sm">
           No tenemos "{filtros.q.trim()}" por ahora. Le avisamos a la tienda que lo estás buscando;
           también puedes preguntar por WhatsApp.

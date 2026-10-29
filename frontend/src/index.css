@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* Colores del prototipo (Claude Design) */
@@ -7,8 +6,13 @@
   --color-fondo: #161826;
   --color-superficie: #232532;
   --color-texto: #e9e9ed;
-  --color-rosa: #de1cbb;
+  --color-rosa: #cc19ab; /* TT-03: un poco más oscuro para que el texto blanco encima se lea bien (contraste 4.9:1) */
   --color-morado: #5546e4;
 }
 
+/* TT-03: reserva el espacio de la barra de desplazamiento, así la página no se corre de lado al cargar */
+html { scrollbar-gutter: stable; }
 body { @apply bg-fondo text-texto font-sans; }
+
+/* TT-03: el texto rosa sobre el fondo oscuro usa un tono más claro, así también se lee bien (contraste 6.2:1) */
+.text-rosa { color: #f15fd5; }

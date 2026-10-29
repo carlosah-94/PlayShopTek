@@ -6,15 +6,16 @@ IA 3 · Regresión (aprendizaje SUPERVISADO): predecir cuántas unidades se vend
   2. Se comparan Árbol de decisión y Regresión lineal. Se elige con validación en el tiempo
      (siempre se entrena con el pasado y se prueba con semanas posteriores) y se mide con
      el MAE: cuántas unidades se equivoca en promedio.
-  3. Con la predicción se calcula qué reponer: lo que se venderá en 2 semanas menos el stock.
+  3. Con la predicción se calcula qué reponer: lo que se venderá en 4 semanas menos el stock.
 
 IA 4 · Búsqueda local (Hill Climbing): elegir qué ofertas poner para ganar más.
   Prueba una combinación de ofertas, cambia una cosa a la vez y se queda con el cambio si
   la ganancia sube, como subir un cerro a ciegas: siempre das el paso que más sube.
 
 IMPORTANTE: la web recién empezó a registrar ventas, así que el historial de ventas EN TIENDA
-es SIMULADO con los supuestos de abajo (se ajustan con lo que diga Ángel). Las ventas reales
-que guarda la web se suman encima. Cuando Ángel entregue su historial, se reemplaza la simulación.
+es SIMULADO con los supuestos de abajo, ajustados con lo que respondió Ángel. Él no entrega
+cantidades por protección de sus datos, así que se usan sus patrones (qué se vende más y cuándo).
+Las ventas reales que guarda el sistema (web y tienda, HU-15) se suman encima.
 
 Uso:  python -m app.ia.demanda   (muestra el reporte)
 """
@@ -33,24 +34,30 @@ from sqlalchemy.orm import Session, selectinload
 from app.models import GrupoInteres, Interes, Producto, Venta, VentaItem
 from app.models.enums import EstadoVenta
 
-# ── Supuestos del historial simulado (se ajustan con las respuestas de Ángel) ─────────
+# ── Supuestos del historial simulado, ajustados con las respuestas de Ángel ───────────
 SEMANAS_HISTORIAL = 52
 VENTA_BASE = {"PS5": 1.6, "PS4": 1.2, "PS3": 0.9, "PS2": 0.6, "Máquinas": 0.5, "Mandos": 1.8,
               "PC y periféricos": 0.7}  # unidades por semana de un producto normal
-SENSIBILIDAD_OFERTA = {"PS5": 6, "PS4": 7, "PS3": 8, "PS2": 8, "Máquinas": 2, "Mandos": 4, "PC y periféricos": 3}
-TEMPORADA = {12: 1.8, 7: 1.4, 1: 0.8, 3: 0.8}  # Navidad, gratificación de julio, gastos de enero y marzo
-FACTOR_PAGO = 1.3  # semanas con quincena o fin de mes
+# "Lo que más se vende: las PS3 y PS4, y sus mandos (originales y genéricos)"
+MAS_VENDIDOS = {("Máquinas", "PS3"), ("Máquinas", "PS4"), ("Mandos", "PS3"), ("Mandos", "PS4")}
+FACTOR_MAS_VENDIDOS = 2.0
+# "No siempre que pongo una oferta se vende": la mitad de las ofertas no mueve las ventas
+SENSIBILIDAD_OFERTA = {"PS5": 3, "PS4": 3.5, "PS3": 4, "PS2": 4, "Máquinas": 1, "Mandos": 2, "PC y periféricos": 1.5}
+PROB_OFERTA_FUNCIONA = 0.5
+TEMPORADA = {12: 2.0}  # "Diciembre es el único mes que realmente se vende"
+FACTOR_FIN_DE_MES = 1.4  # "Se vende más los fines de semana y sobre todo a fin de mes"
 
 # ── Reglas del negocio ────────────────────────────────────────────────────────────────
 MARGEN = {"nuevo": 0.25, "usado": 0.5, "reacondicionado": 0.4}  # parte del precio que es ganancia
-SEMANAS_COBERTURA = 2   # tener stock para 2 semanas, lo que tarda en llegar un pedido
+SEMANAS_COBERTURA = 4   # "Pido por mayor con 1 mes de anticipación": el stock debe durar hasta que llegue
+# "Si no ven el producto en la tienda, el 95 % de los clientes se va": por eso importa no quedarse sin stock
 NIVELES_OFERTA = [0, 10, 15, 20, 25]
 MAX_OFERTAS = 5         # para que la tienda no parezca estar siempre en remate
 CANIBALIZACION = 0.15   # 2 ofertas de la misma categoría se quitan clientes entre sí
 
 CATEGORIAS = list(VENTA_BASE)
 CONDICIONES = list(MARGEN)
-COLUMNAS = (["precio_log", "descuento", "mes", "semana_de_pago", "venta_anterior", "promedio_4", "promedio_12"]
+COLUMNAS = (["precio_log", "descuento", "mes", "fin_de_mes", "venta_anterior", "promedio_4", "promedio_12"]
             + [f"cat_{c}" for c in CATEGORIAS] + [f"cond_{c}" for c in CONDICIONES])
 
 
@@ -58,10 +65,10 @@ def _lunes(d: date) -> date:
     return d - timedelta(days=d.weekday())
 
 
-def _es_semana_de_pago(lunes: date) -> bool:
-    """¿En esa semana cae un 15 o un fin de mes? Son los días en que la gente cobra."""
+def _es_fin_de_mes(lunes: date) -> bool:
+    """¿En esa semana termina el mes? Es cuando la gente cobra y más se vende."""
     dias = [lunes + timedelta(days=i) for i in range(7)]
-    return any(d.day == 15 or (d + timedelta(days=1)).month != d.month for d in dias)
+    return any((d + timedelta(days=1)).month != d.month for d in dias)
 
 
 def _oferta_en(p: Producto, lunes: date) -> int:
@@ -93,15 +100,16 @@ def historial(db: Session, productos: list[Producto]) -> pd.DataFrame:
     for p in productos:
         azar = np.random.default_rng(p.id)  # mismo producto -> misma simulación siempre
         cat, cond = p.categoria.nombre, p.condicion.grupo.value
-        popularidad = azar.uniform(0.5, 2.0)
+        popularidad = azar.uniform(0.5, 2.0) * (FACTOR_MAS_VENDIDOS if (cat, p.plataforma) in MAS_VENDIDOS else 1.0)
         tendencia = {"PS5": 0.006, "PS3": -0.004, "PS2": -0.004}.get(cat, 0.0)
         for i, lunes in enumerate(semanas):
             descuento = _oferta_en(p, lunes)
             if not descuento and azar.random() < 0.08:  # a veces hubo ofertas en la tienda
                 descuento = int(azar.choice(NIVELES_OFERTA[1:]))
             ritmo = (VENTA_BASE[cat] * popularidad * TEMPORADA.get((lunes + timedelta(days=3)).month, 1.0)
-                     * (FACTOR_PAGO if _es_semana_de_pago(lunes) else 1.0) * (1 + tendencia) ** i
-                     * (1 + SENSIBILIDAD_OFERTA[cat] * descuento / 100))
+                     * (FACTOR_FIN_DE_MES if _es_fin_de_mes(lunes) else 1.0) * (1 + tendencia) ** i)
+            if descuento and azar.random() < PROB_OFERTA_FUNCIONA:
+                ritmo *= 1 + SENSIBILIDAD_OFERTA[cat] * descuento / 100
             unidades = azar.poisson(ritmo) + int(reales.get((p.id, lunes), 0))
             filas.append({"producto_id": p.id, "semana": lunes, "categoria": cat, "condicion": cond,
                           "precio": float(p.precio), "descuento": descuento, "unidades": unidades})
@@ -121,7 +129,7 @@ def caracteristicas(df: pd.DataFrame) -> pd.DataFrame:
 def _completar(df: pd.DataFrame) -> pd.DataFrame:
     df["precio_log"] = np.log(df["precio"])  # S/ 30 vs S/ 60 pesa igual que S/ 1000 vs S/ 2000
     df["mes"] = df["semana"].map(lambda d: (d + timedelta(days=3)).month)
-    df["semana_de_pago"] = df["semana"].map(_es_semana_de_pago).astype(int)
+    df["fin_de_mes"] = df["semana"].map(_es_fin_de_mes).astype(int)
     for c in CATEGORIAS:
         df[f"cat_{c}"] = (df["categoria"] == c).astype(int)
     for c in CONDICIONES:

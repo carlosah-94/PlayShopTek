@@ -1,6 +1,5 @@
 // HU-02: ficha del producto con fotos, tráiler, precio, stock y reseñas.
 // HU-17: reseñas verificadas: solo opina quien compró; la tienda puede responder.
-
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, leerSesion } from '../api.js'
@@ -10,10 +9,10 @@ import ReservaPreventa from '../components/ReservaPreventa.jsx'
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 const MODOS = { solo: 'Un jugador', local: 'Multijugador local', online: 'En línea' }
 
-// "https://www.youtube.com/watch?v=ABC" -> "https://www.youtube.com/embed/ABC"
+// "https://www.youtube.com/watch?v=ABC" -> "https://www.youtube-nocookie.com/embed/ABC"
 function videoIncrustado(url) {
   const id = url && url.match(/(?:v=|youtu\.be\/)([\w-]{11})/)
-  return id ? 'https://www.youtube.com/embed/' + id[1] : null
+  return id ? 'https://www.youtube-nocookie.com/embed/' + id[1] : null
 }
 
 export default function Ficha() {
@@ -31,11 +30,10 @@ export default function Ficha() {
   const esCliente = leerSesion()?.usuario.rol === 'cliente'
   const esEquipo = ['dueno', 'trabajadora'].includes(leerSesion()?.usuario.rol)
 
-    const cargar = () => api('/productos/' + id).then(setP).catch((e) => setError(e.message))
+  const cargar = () => api('/productos/' + id).then(setP).catch((e) => setError(e.message))
   useEffect(() => { cargar() }, [id])
   // HU-17: el servidor dice si compró este producto y si ya opinó
   useEffect(() => { if (esCliente) api('/productos/' + id + '/puedo-opinar').then(setPuedo).catch(() => setPuedo(null)) }, [id])
-
   // IA · KNN: los 4 productos más parecidos a este
   useEffect(() => { api('/productos/' + id + '/parecidos').then(setParecidos).catch(() => setParecidos([])) }, [id])
   // HU-05: ¿ya lo tengo en favoritos?
@@ -55,6 +53,7 @@ export default function Ficha() {
       setAviso(err.message)
     }
   }
+
   const opinar = async (e) => {
     e.preventDefault()
     setErrorResena('')
@@ -88,7 +87,7 @@ export default function Ficha() {
         <div className="space-y-3">
           {p.fotos.length
             ? <img src={p.fotos[0]} alt={p.nombre} className="aspect-[4/3] w-full rounded-xl object-cover" />
-            : <div className="grid aspect-[4/3] place-items-center rounded-xl bg-superficie text-white/40">Foto pendiente</div>}
+            : <div className="grid aspect-[4/3] place-items-center rounded-xl bg-superficie text-white/60">Foto pendiente</div>}
           {video && <iframe src={video} title={'Tráiler de ' + p.nombre} className="aspect-video w-full rounded-xl" allowFullScreen />}
         </div>
 
@@ -125,7 +124,7 @@ export default function Ficha() {
             </div>
           ) : (
             <p className="text-sm text-white/50">
-              <Link to={'/login?volver=/producto/' + id} className="text-rosa">Inicia sesión</Link> para guardar favoritos
+              <Link to={'/login?volver=/producto/' + id} className="text-rosa underline">Inicia sesión</Link> para guardar favoritos
               {p.stock === 0 && !p.es_preventa ? ' o pedir que te avisemos cuando llegue' : ''}.
             </p>
           )}
@@ -142,7 +141,7 @@ export default function Ficha() {
         </div>
       </div>
 
-            <section>
+      <section>
         <h2 className="text-lg font-semibold">Reseñas</h2>
 
         {/* HU-17: formulario solo para quien compró este producto */}

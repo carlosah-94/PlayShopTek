@@ -43,7 +43,7 @@ export default function ResumenIA() {
           <div className="grid gap-4 lg:grid-cols-2">
             <div className={caja}>
               <h3 className="font-semibold">Qué reponer</h3>
-              <p className="text-xs text-white/50">Lo que se venderá en 2 semanas menos lo que hay en stock</p>
+              <p className="text-xs text-white/50">Lo que se venderá en 4 semanas (lo que tarda un pedido) menos lo que hay en stock</p>
               <table className="mt-2 w-full text-sm">
                 <thead className="text-left text-white/50"><tr><th className="py-1">Producto</th><th>Stock</th><th>Venderá/sem.</th><th>Pedir</th></tr></thead>
                 <tbody className="divide-y divide-white/10">
@@ -55,7 +55,7 @@ export default function ResumenIA() {
                   ))}
                 </tbody>
               </table>
-              {r.reponer.length === 0 && <p className="mt-2 text-sm text-white/60">El stock alcanza para las próximas 2 semanas.</p>}
+              {r.reponer.length === 0 && <p className="mt-2 text-sm text-white/60">El stock alcanza para las próximas 4 semanas.</p>}
             </div>
 
             <div className={caja}>

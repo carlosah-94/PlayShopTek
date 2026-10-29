@@ -78,7 +78,8 @@ class RespuestaResena(BaseModel):
 class PuedoOpinar(BaseModel):
     puede: bool
     motivo: Literal["no_compraste", "ya_opinaste"] | None = None
-    
+
+
 class ProductoDetalle(ProductoSalida):
     """HU-02: lo mismo del catálogo + lo que solo se ve en la ficha."""
     descripcion: str | None

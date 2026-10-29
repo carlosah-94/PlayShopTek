@@ -112,7 +112,6 @@ def detalle(producto_id: int, db: Session = Depends(get_db)):
         cupos_reserva=cupos_de_reserva(db, p), total_resenas=total,
         resenas=[ResenaSalida(id=r.id, nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
                               respuesta=r.respuesta, verificada=r.venta_id is not None) for r in ultimas],
-
     )
 
 
