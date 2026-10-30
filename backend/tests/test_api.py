@@ -360,3 +360,22 @@ def test_ofertas_traen_cuando_terminan(cliente):
     assert en_oferta and all(p["oferta_termina"] for p in en_oferta)
     assert all(datetime.fromisoformat(p["oferta_termina"]) > datetime.now(UTC) for p in en_oferta)  # aún no vence
     assert all(p["oferta_termina"] is None for p in productos if not p["descuento"])
+
+
+def test_pagina_de_inicio(cliente, h_cliente):
+    """HU-22: la página de inicio trae 4 recomendados que se pueden comprar, 4 servicios con su tiempo y 3 reseñas."""
+    r = cliente.get("/api/inicio")
+    assert r.status_code == 200, r.text
+    datos = r.json()
+    assert len(datos["recomendados"]) == 4 and not datos["personalizado"]
+    assert all(p["stock"] > 0 and not p["es_preventa"] for p in datos["recomendados"])
+    assert len(datos["servicios"]) == 4 and all(s["tiempo"] for s in datos["servicios"])
+    resenas = datos["resenas"]
+    assert len(resenas) == 3 and all(x["estrellas"] == 5 for x in resenas)
+    assert len({x["sobre"] for x in resenas}) == 3  # cada una habla de algo distinto
+    # Con cuenta de cliente no le recomienda lo que ya compró
+    mias = cliente.get("/api/ventas/mias", headers=h_cliente).json()
+    comprados = {i["nombre"] for v in mias if v["estado"] in ("pagado", "listo_para_recoger", "entregado") for i in v["items"]}
+    con_cuenta = cliente.get("/api/inicio", headers=h_cliente).json()
+    assert con_cuenta["personalizado"] and len(con_cuenta["recomendados"]) == 4
+    assert not comprados & {p["nombre"] for p in con_cuenta["recomendados"]}

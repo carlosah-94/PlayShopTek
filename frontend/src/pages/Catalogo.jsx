@@ -1,8 +1,9 @@
 // HU-01: catálogo con filtros por categoría, género y estado.
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { api, leerSesion } from '../api.js'
+import { useSearchParams } from 'react-router-dom'
+import { api } from '../api.js'
 import TarjetaProducto from '../components/TarjetaProducto.jsx'
+import { useFavoritos } from '../favoritos.js'
 
 const CATEGORIAS = ['PS5', 'PS4', 'PS3', 'PS2', 'Máquinas', 'Mandos', 'PC y periféricos']
 const GENEROS = [['accion', 'Acción'], ['aventura', 'Aventura'], ['deportes', 'Deportes'], ['carreras', 'Carreras'],
@@ -18,21 +19,8 @@ export default function Catalogo() {
   const [productos, setProductos] = useState([])
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(true) // TT-03: mientras llega la respuesta del servidor
-  // HU-21: el corazón de favoritos solo funciona con cuenta de cliente; sin cuenta lleva a iniciar sesión
-  const esCliente = leerSesion()?.usuario.rol === 'cliente'
-  const navegar = useNavigate()
-  const [favoritos, setFavoritos] = useState(new Set())
-  useEffect(() => {
-    if (esCliente) api('/mi/favoritos').then((fs) => setFavoritos(new Set(fs.map((f) => f.id)))).catch(() => {})
-  }, [])
-  const alternarFavorito = async (p) => {
-    if (!esCliente) return navegar('/login')
-    const es = favoritos.has(p.id)
-    await api('/mi/favoritos/' + p.id, { metodo: es ? 'DELETE' : 'PUT' })
-    const nuevo = new Set(favoritos)
-    if (es) nuevo.delete(p.id); else nuevo.add(p.id)
-    setFavoritos(nuevo)
-  }
+  // HU-21: corazón de favoritos (HU-22: la lógica se movió a favoritos.js para usarla también en Inicio)
+  const [favoritos, alternarFavorito] = useFavoritos()
 
   // Si se busca otra vez desde la cabecera estando ya en el catálogo, se actualizan los filtros
   useEffect(() => {

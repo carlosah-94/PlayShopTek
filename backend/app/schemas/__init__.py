@@ -66,6 +66,28 @@ class ResenaSalida(BaseModel):
     verificada: bool = False  # HU-17: la escribió alguien que compró el producto
 
 
+class ServicioInicio(BaseModel):
+    """HU-22: un servicio del taller con su tiempo, para la página de inicio."""
+    nombre: str
+    tiempo: str | None
+    icono: str | None
+
+
+class ResenaInicio(BaseModel):
+    """HU-22: reseña destacada de la página de inicio, con el producto o servicio del que habla."""
+    nombre: str
+    estrellas: int
+    texto: str
+    sobre: str
+
+
+class InicioSalida(BaseModel):
+    recomendados: list[ProductoSalida]
+    personalizado: bool  # True si los recomendados se basan en las compras del cliente
+    servicios: list[ServicioInicio]
+    resenas: list[ResenaInicio]
+
+
 class ResenaEntrada(BaseModel):
     """HU-17: lo que manda el cliente para opinar de un producto que compró."""
     estrellas: int = Field(ge=1, le=5)
