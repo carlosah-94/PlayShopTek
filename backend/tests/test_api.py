@@ -350,3 +350,13 @@ def test_fotos_de_los_productos(cliente):
     ficha = cliente.get(f"/api/productos/{productos[0]['id']}").json()
     assert ficha["fotos"][0] == productos[0]["foto"] and 1 <= len(ficha["fotos"]) <= 4
     assert not any(p["nombre"].startswith("Winning Eleven") for p in productos)  # retirado del catálogo
+
+
+def test_ofertas_traen_cuando_terminan(cliente):
+    """HU-23: cada producto en oferta trae la fecha en que termina (para el contador); sin oferta, nada."""
+    from datetime import UTC, datetime
+    productos = cliente.get("/api/productos").json()
+    en_oferta = [p for p in productos if p["descuento"]]
+    assert en_oferta and all(p["oferta_termina"] for p in en_oferta)
+    assert all(datetime.fromisoformat(p["oferta_termina"]) > datetime.now(UTC) for p in en_oferta)  # aún no vence
+    assert all(p["oferta_termina"] is None for p in productos if not p["descuento"])

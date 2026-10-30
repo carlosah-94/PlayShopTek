@@ -1,6 +1,6 @@
 """HU-01 (catálogo con filtros), HU-02 (ficha), HU-12 (inventario del dueño) y HU-05 (aviso de llegada)."""
 import json
-from datetime import UTC, date, datetime, timedelta
+from datetime import UTC, date, datetime, time, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
@@ -38,6 +38,12 @@ def oferta_vigente(p: Producto, hoy: date | None = None):
     return None
 
 
+def fin_de_oferta(o) -> datetime:
+    """HU-23: momento exacto en que termina la oferta (inicio + días, a la medianoche del servidor).
+    Es el mismo corte que usa oferta_vigente, así el contador y el precio cambian a la vez."""
+    return datetime.combine(o.fecha_inicio + timedelta(days=o.dias), time(), tzinfo=UTC)
+
+
 def calificaciones(db: Session) -> dict[int, Decimal]:
     """Promedio de estrellas por producto, calculado de sus reseñas (no se guarda aparte)."""
     filas = db.execute(select(Resena.producto_id, func.avg(Resena.estrellas))
@@ -54,6 +60,7 @@ def a_salida(p: Producto, notas: dict[int, Decimal]) -> ProductoSalida:
         condicion=p.condicion.nombre, grupo_condicion=p.condicion.grupo, generos=[g.id for g in p.generos],
         es_preventa=p.es_preventa, fecha_lanzamiento=p.fecha_lanzamiento, calificacion=notas.get(p.id),
         trailer_url=p.trailer_url, foto=next(iter(fotos_de(p)), None),
+        oferta_termina=fin_de_oferta(o) if o else None,
     )
 
 def cupos_de_reserva(db: Session, p: Producto) -> int | None:

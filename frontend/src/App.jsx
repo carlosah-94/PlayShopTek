@@ -10,6 +10,7 @@ import Inventario from './pages/Inventario.jsx'
 import LibroReclamaciones from './pages/LibroReclamaciones.jsx'
 import Login from './pages/Login.jsx'
 import MisCompras from './pages/MisCompras.jsx'
+import Ofertas from './pages/Ofertas.jsx'
 import Panel from './pages/Panel.jsx'
 import Rastreo from './pages/Rastreo.jsx'
 import Reclamos from './pages/Reclamos.jsx'
@@ -61,6 +62,7 @@ export default function App() {
           <nav className="flex gap-4 text-sm">
             <NavLink to="/" end className={enlace}>Inicio</NavLink>
             <NavLink to="/catalogo" className={enlace}>Catálogo</NavLink>
+            <NavLink to="/ofertas" className={enlace}>⚡ Ofertas</NavLink>
             <NavLink to="/rastreo" className={enlace}>Reparaciones</NavLink>
           </nav>
           <form onSubmit={enviarBusqueda} role="search" className="order-last flex w-full items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 lg:order-none lg:w-auto lg:flex-1">
@@ -114,6 +116,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Catalogo />} />
           <Route path="/catalogo" element={<Catalogo />} />
+          <Route path="/ofertas" element={<Ofertas />} />
           <Route path="/producto/:id" element={<Ficha />} />
           <Route path="/rastreo" element={<Rastreo />} />
           <Route path="/carrito" element={<Carrito />} />
