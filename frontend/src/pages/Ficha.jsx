@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import { api, leerSesion } from '../api.js'
 import { agregarAlCarrito } from '../carrito.js'
 import ReservaPreventa from '../components/ReservaPreventa.jsx'
+import TarjetaProducto from '../components/TarjetaProducto.jsx'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 const MODOS = { solo: 'Un jugador', local: 'Multijugador local', online: 'En línea' }
@@ -45,11 +46,12 @@ export default function Ficha() {
   const [nueva, setNueva] = useState({ estrellas: 5, texto: '' })
   const [respuestas, setRespuestas] = useState({}) // lo que escribe la tienda en cada reseña: { id: 'texto' }
   const [errorResena, setErrorResena] = useState('')
+  const [fotoActual, setFotoActual] = useState(0) // HU-21: qué foto de la galería se ve en grande
   const esCliente = leerSesion()?.usuario.rol === 'cliente'
   const esEquipo = ['dueno', 'trabajadora'].includes(leerSesion()?.usuario.rol)
 
   const cargar = () => api('/productos/' + id).then(setP).catch((e) => setError(e.message))
-  useEffect(() => { cargar() }, [id])
+  useEffect(() => { cargar(); setFotoActual(0) }, [id])
   // HU-17: el servidor dice si compró este producto y si ya opinó
   useEffect(() => { if (esCliente) api('/productos/' + id + '/puedo-opinar').then(setPuedo).catch(() => setPuedo(null)) }, [id])
   // IA · KNN: los 4 productos más parecidos a este
@@ -103,9 +105,20 @@ export default function Ficha() {
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-3">
+          {/* HU-21: galería: la foto grande y, debajo, las miniaturas para cambiarla */}
           {p.fotos.length
-            ? <img src={p.fotos[0]} alt={p.nombre} className="aspect-[4/3] w-full rounded-xl object-cover" />
+            ? <img src={p.fotos[fotoActual]} alt={p.nombre} width="600" height="600" className="aspect-square w-full rounded-xl bg-superficie object-contain" />
             : <div className="grid aspect-[4/3] place-items-center rounded-xl bg-superficie text-tinta/60">Foto pendiente</div>}
+          {p.fotos.length > 1 && (
+            <div className="flex gap-2">
+              {p.fotos.map((f, i) => (
+                <button key={f} type="button" onClick={() => setFotoActual(i)} aria-label={'Ver foto ' + (i + 1)}
+                  className={'h-16 w-16 overflow-hidden rounded-lg border-2 ' + (i === fotoActual ? 'border-rosa' : 'border-transparent')}>
+                  <img src={f} alt="" loading="lazy" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
           {video && <Trailer key={video} id={video} nombre={p.nombre} />}
         </div>
 
@@ -211,20 +224,8 @@ export default function Ficha() {
       {parecidos.length > 0 && (
         <section>
           <h2 className="text-lg font-semibold">También te puede gustar</h2>
-          <ul className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {parecidos.map((x) => (
-              <li key={x.id}>
-                <Link to={'/producto/' + x.id} className="block rounded-xl border border-tinta/10 bg-superficie p-4 text-sm hover:border-rosa">
-                  <p className="text-xs text-tinta/60">{x.categoria}</p>
-                  <p className="font-semibold">{x.nombre}</p>
-                  <p className="mt-1">
-                    {soles(x.precio_final)}
-                    {x.descuento && <span className="ml-2 rounded bg-rosa px-1.5 text-xs text-white">-{x.descuento}%</span>}
-                  </p>
-                  <p className={x.stock > 0 ? 'text-xs text-tinta/60' : 'text-xs text-error'}>{x.stock > 0 ? x.stock + ' en stock' : 'Agotado'}</p>
-                </Link>
-              </li>
-            ))}
+          <ul className="mt-3 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {parecidos.map((x) => <li key={x.id}><TarjetaProducto p={x} /></li>)}
           </ul>
         </section>
       )}

@@ -341,3 +341,12 @@ def test_venta_en_tienda_y_por_whatsapp(cliente, h_trabajadora, h_cliente):
     r = cliente.post("/api/ventas/tienda", json=sin_celular, headers=h_trabajadora).json()
     assert r["cliente"] == "Cliente de mostrador" and r["estado"] == "pagado"
     assert cliente.get("/api/ventas/tienda", headers=h_trabajadora).json()[0]["codigo"] == r["codigo"]
+
+
+def test_fotos_de_los_productos(cliente):
+    """HU-21: cada producto del catálogo tiene foto; la ficha trae la galería con la principal primero."""
+    productos = cliente.get("/api/productos").json()
+    assert all(p["foto"] and p["foto"].startswith("/productos/") for p in productos)
+    ficha = cliente.get(f"/api/productos/{productos[0]['id']}").json()
+    assert ficha["fotos"][0] == productos[0]["foto"] and 1 <= len(ficha["fotos"]) <= 4
+    assert not any(p["nombre"].startswith("Winning Eleven") for p in productos)  # retirado del catálogo

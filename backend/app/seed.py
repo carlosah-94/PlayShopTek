@@ -180,6 +180,8 @@ def cargar(db) -> None:
     db.add(pref)
 
     # ── Productos ────────────────────────────────────────────────────
+    # HU-21: productos que la tienda ya no vende. Quedan en la base (por su historial) pero no salen en el catálogo
+    retirados = {"p35"}  # Winning Eleven 10 (PS2)
     productos: dict[str, Producto] = {}
     por_nombre: dict[str, Producto] = {}
     for p in DATOS["productos"]:
@@ -193,7 +195,7 @@ def cargar(db) -> None:
             es_preventa=bool(p.get("preventa")),
             fecha_lanzamiento=fecha(p["lanzamiento"]) if p.get("lanzamiento") else None,
             monto_reserva=Decimal(p["reserva"]) if p.get("reserva") else None,
-            stock_lanzamiento=p.get("stockLanz"),
+            stock_lanzamiento=p.get("stockLanz"), activo=p["id"] not in retirados,
         )
         prod.generos = [generos[g] for g in p.get("generos", []) if g in generos]
         prod.etiquetas = [ProductoEtiqueta(etiqueta=t) for t in dict.fromkeys(p.get("tags", []))]
