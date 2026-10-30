@@ -6,6 +6,7 @@ import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
 import Favoritos from './pages/Favoritos.jsx'
 import Ficha from './pages/Ficha.jsx'
+import Inicio from './pages/Inicio.jsx'
 import Inventario from './pages/Inventario.jsx'
 import LibroReclamaciones from './pages/LibroReclamaciones.jsx'
 import Login from './pages/Login.jsx'
@@ -114,7 +115,7 @@ export default function App() {
       {/* TT-03: alto mínimo para que el pie de página no "salte" mientras carga el catálogo */}
       <main className="mx-auto min-h-[75vh] max-w-6xl px-4 py-6 sm:px-8">
         <Routes>
-          <Route path="/" element={<Catalogo />} />
+          <Route path="/" element={<Inicio />} />
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/ofertas" element={<Ofertas />} />
           <Route path="/producto/:id" element={<Ficha />} />

@@ -22,9 +22,10 @@ export default function TarjetaProducto({ p, favorito = false, onFavorito }) {
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-tinta/10 bg-superficie shadow-sm transition hover:shadow-lg">
       <div className="relative">
         <Link to={'/producto/' + p.id} tabIndex={-1}>
+          {/* HU-22: foto cuadrada, así las consolas (fotos anchas) no dejan tanto espacio en blanco arriba y abajo */}
           {p.foto
-            ? <img src={p.foto} alt={p.nombre} loading="lazy" width="300" height="375" className="aspect-[4/5] w-full bg-white object-contain p-2" />
-            : <div className="grid aspect-[4/5] place-items-center bg-tinta/5 text-sm text-tinta/60">Foto pendiente</div>}
+            ? <img src={p.foto} alt={p.nombre} loading="lazy" width="300" height="300" className="aspect-square w-full bg-white object-contain p-2" />
+            : <div className="grid aspect-square place-items-center bg-tinta/5 text-sm text-tinta/60">Foto pendiente</div>}
         </Link>
         {p.descuento && <span className="absolute left-2 top-2 rounded-full bg-rosa px-2 py-0.5 text-xs font-semibold text-white">-{p.descuento}%</span>}
         {onFavorito && (

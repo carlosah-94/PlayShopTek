@@ -10,10 +10,14 @@ export const ordenarOfertas = (productos) => productos
   .filter((p) => p.descuento && p.oferta_termina && faltan(p) > 0)
   .sort((a, b) => new Date(a.oferta_termina) - new Date(b.oferta_termina))
 
-export default function SeccionOfertas() {
+// HU-22: si la página ya trajo los productos (Inicio), se los pasa y no se vuelven a pedir al servidor
+export default function SeccionOfertas({ productos }) {
   const [ofertas, setOfertas] = useState([])
   const carrusel = useRef(null)
-  useEffect(() => { api('/productos').then((ps) => setOfertas(ordenarOfertas(ps))).catch(() => {}) }, [])
+  useEffect(() => {
+    if (productos) setOfertas(ordenarOfertas(productos))
+    else api('/productos').then((ps) => setOfertas(ordenarOfertas(ps))).catch(() => {})
+  }, [productos])
   const quitar = (p) => setOfertas((os) => os.filter((o) => o.id !== p.id)) // cuando su contador llega a cero
   // Las flechas mueven el carrusel el ancho de una tarjeta
   const mover = (lado) => carrusel.current?.scrollBy({ left: lado * carrusel.current.clientWidth * 0.9, behavior: 'smooth' })
