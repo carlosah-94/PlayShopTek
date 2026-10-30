@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { agregarAlCarrito } from '../carrito.js'
+import { urlImagen } from '../api.js'
 import Icono from './Iconos.jsx'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
@@ -40,7 +41,7 @@ export default function TarjetaOferta({ p, onTermina }) {
       {/* HU-22: en celular la foto se limita a 14 rem de alto para que la oferta no ocupe toda la pantalla */}
       <Link to={'/producto/' + p.id} tabIndex={-1} className="relative block bg-white">
         {p.foto
-          ? <img src={p.foto} alt={p.nombre} loading="lazy" width="240" height="300" className="mx-auto aspect-[4/5] h-56 w-auto object-contain p-2 sm:h-full sm:w-full" />
+          ? <img src={urlImagen(p.foto)} alt={p.nombre} loading="lazy" width="240" height="300" className="mx-auto aspect-[4/5] h-56 w-auto object-contain p-2 sm:h-full sm:w-full" />
           : <div className="grid aspect-[4/5] place-items-center text-sm text-[#5c5096]">Foto pendiente</div>}
         <span className="absolute left-2 top-2 rounded-full bg-rosa px-2 py-0.5 text-sm font-semibold text-white">-{p.descuento}%</span>
       </Link>

@@ -2,7 +2,7 @@
 // HU-17: reseñas verificadas: solo opina quien compró; la tienda puede responder.
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { api, leerSesion } from '../api.js'
+import { api, leerSesion, urlImagen } from '../api.js'
 import { agregarAlCarrito } from '../carrito.js'
 import ReservaPreventa from '../components/ReservaPreventa.jsx'
 import TarjetaProducto from '../components/TarjetaProducto.jsx'
@@ -107,14 +107,14 @@ export default function Ficha() {
         <div className="space-y-3">
           {/* HU-21: galería: la foto grande y, debajo, las miniaturas para cambiarla */}
           {p.fotos.length
-            ? <img src={p.fotos[fotoActual]} alt={p.nombre} width="600" height="600" className="aspect-square w-full rounded-xl bg-superficie object-contain" />
+            ? <img src={urlImagen(p.fotos[fotoActual])} alt={p.nombre} width="600" height="600" className="aspect-square w-full rounded-xl bg-superficie object-contain" />
             : <div className="grid aspect-[4/3] place-items-center rounded-xl bg-superficie text-tinta/60">Foto pendiente</div>}
           {p.fotos.length > 1 && (
             <div className="flex gap-2">
               {p.fotos.map((f, i) => (
                 <button key={f} type="button" onClick={() => setFotoActual(i)} aria-label={'Ver foto ' + (i + 1)}
                   className={'h-16 w-16 overflow-hidden rounded-lg border-2 ' + (i === fotoActual ? 'border-rosa' : 'border-transparent')}>
-                  <img src={f} alt="" loading="lazy" className="h-full w-full object-cover" />
+                  <img src={urlImagen(f)} alt="" loading="lazy" className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>

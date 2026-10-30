@@ -4,7 +4,7 @@ Cada archivo de esta carpeta es un grupo de tablas. Al importarlos aquí,
 Alembic los encuentra todos de una sola vez.
 """
 from app.models.catalogo import (  # noqa: F401
-    Banner, Categoria, Condicion, Genero, Oferta, Producto, ProductoEtiqueta, ProductoMedio, ProductoModo,
+    Banner, Categoria, Condicion, Genero, Imagen, Oferta, Producto, ProductoEtiqueta, ProductoMedio, ProductoModo,
 )
 from app.models.confianza import Reclamo, Resena  # noqa: F401
 from app.models.ia import ChatbotMensaje  # noqa: F401

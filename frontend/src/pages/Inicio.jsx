@@ -2,7 +2,7 @@
 // (ofertas y servicio técnico), recomendados, ofertas con contador, servicios del taller y reseñas de clientes.
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api, leerSesion } from '../api.js'
+import { api, leerSesion, urlImagen } from '../api.js'
 import Icono from '../components/Iconos.jsx'
 import SeccionOfertas, { ordenarOfertas } from '../components/SeccionOfertas.jsx'
 import TarjetaProducto from '../components/TarjetaProducto.jsx'
@@ -17,7 +17,7 @@ const CATEGORIAS = [
   ['PC y periféricos', 'PC y periféricos', 'pc'],
 ]
 
-// Fotos de la tienda (frontend/public/inicio). Cada una lleva a una parte de la tienda
+// Fotos de la tienda (frontend/public/inicio). Se muestran mientras llegan los banners que Ángel maneja en el panel (HU-24)
 const DIAPOSITIVAS = [
   { foto: '/inicio/carrusel-1.webp', titulo: 'PlayStation 5 nuevas y selladas', texto: 'Con boleta y garantía. Te ayudamos a configurarla.', enlace: '/catalogo?categoria=M%C3%A1quinas', boton: 'Ver consolas', alt: 'Dos consolas PlayStation 5 con sus mandos' },
   { foto: '/inicio/carrusel-2.webp', titulo: 'Visítanos en Villa El Salvador', texto: 'Av. Revolución 1420 · Lunes a sábado 12:00–20:00', enlace: '/rastreo', boton: 'Rastrea tu reparación', alt: 'Fachada de la tienda Play Shop Tek en Villa El Salvador' },
@@ -25,13 +25,29 @@ const DIAPOSITIVAS = [
   { foto: '/inicio/carrusel-4.webp', titulo: 'Juegos físicos para tu colección', texto: 'Sepáralos por la web y recógelos el mismo día.', enlace: '/catalogo?categoria=PS5', boton: 'Juegos PS5', alt: 'PlayStation 5 Slim con un juego en disco y un mando' },
 ]
 
+// HU-24: a dónde lleva cada banner y qué dice su botón (Ángel lo elige en "Banners de inicio")
+const CATEGORIA = ['PS5', 'PS4', 'PS3', 'PS2', 'Máquinas', 'Mandos', 'PC y periféricos']
+function destino(d) {
+  if (d === 'ofertas') return ['/ofertas', 'Ver ofertas']
+  if (d === 'reparaciones') return ['/#servicio', 'Ver reparaciones']
+  if (d === 'catalogo') return ['/catalogo', 'Ver catálogo']
+  if (d === 'tienda') return ['/rastreo', 'Rastrea tu reparación']
+  if (CATEGORIA.includes(d)) return ['/catalogo?categoria=' + encodeURIComponent(d), /^PS\d$/.test(d) ? 'Juegos ' + d : 'Ver ' + d.toLowerCase()]
+  return [null, null]
+}
+const aDiapositiva = (b) => {
+  const [enlace, boton] = destino(b.destino)
+  return { foto: urlImagen(b.imagen_url), fotoMovil: urlImagen(b.imagen_movil_url), titulo: b.titulo, texto: b.subtitulo,
+    alt: b.texto_alternativo || '', enlace, boton, conTexto: b.con_texto }
+}
+
 // Ícono de cada servicio del taller (el servidor manda el nombre del ícono del prototipo)
 const ICONO_SERVICIO = { 'ph ph-game-controller': 'mando', 'ph ph-wrench': 'llave', 'ph ph-disc': 'disco', 'ph ph-plug': 'enchufe' }
 
-function Carrusel() {
+function Carrusel({ diapositivas }) {
   const [actual, setActual] = useState(0)
   const [pausado, setPausado] = useState(false)
-  const total = DIAPOSITIVAS.length
+  const total = diapositivas.length
   const ir = (n) => setActual((n + total) % total)
 
   // Cambia sola cada 5 segundos, menos cuando el mouse o el teclado está encima (para poder leer)
@@ -41,24 +57,34 @@ function Carrusel() {
     return () => clearInterval(reloj)
   }, [pausado, total])
 
-  const d = DIAPOSITIVAS[actual]
+  const d = diapositivas[Math.min(actual, total - 1)] || {}
   return (
     <section aria-roledescription="carrusel" aria-label="Novedades de la tienda"
       onMouseEnter={() => setPausado(true)} onMouseLeave={() => setPausado(false)}
       onFocus={() => setPausado(true)} onBlur={() => setPausado(false)}
       className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-noche shadow-lg lg:aspect-auto lg:h-full lg:min-h-[420px]">
-      {DIAPOSITIVAS.map((x, i) => (
-        <img key={x.foto} src={x.foto} alt={i === actual ? x.alt : ''} aria-hidden={i !== actual}
-          width="1200" height="680" fetchPriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'}
-          className={'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ' + (i === actual ? 'opacity-100' : 'opacity-0')} />
+      {diapositivas.map((x, i) => (
+        // HU-24: si Ángel subió una foto cuadrada para celular, se usa en pantallas chicas
+        <picture key={x.foto + i}>
+          {x.fotoMovil && <source media="(max-width: 640px)" srcSet={x.fotoMovil} />}
+          <img src={x.foto} alt={i === actual ? x.alt : ''} aria-hidden={i !== actual}
+            width="1200" height="680" fetchPriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'}
+            className={'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ' + (i === actual ? 'opacity-100' : 'opacity-0')} />
+        </picture>
       ))}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent p-4 pb-10 text-white sm:p-6 sm:pb-12" aria-live="polite">
-        <h2 className="text-xl font-semibold sm:text-3xl">{d.titulo}</h2>
-        <p className="mt-1 hidden text-sm text-white/90 sm:block">{d.texto}</p>
-        <Link to={d.enlace} className="mt-3 inline-flex items-center gap-1 rounded-lg bg-rosa px-3 py-1.5 text-sm font-semibold">
-          {d.boton} <Icono nombre="flechaDer" tam={14} />
-        </Link>
-      </div>
+      {d.conTexto !== false && (
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent p-4 pb-10 text-white sm:p-6 sm:pb-12" aria-live="polite">
+          <h2 className="text-xl font-semibold sm:text-3xl">{d.titulo}</h2>
+          {d.texto && <p className="mt-1 hidden text-sm text-white/90 sm:block">{d.texto}</p>}
+          {d.enlace && (
+            <Link to={d.enlace} className="mt-3 inline-flex items-center gap-1 rounded-lg bg-rosa px-3 py-1.5 text-sm font-semibold">
+              {d.boton} <Icono nombre="flechaDer" tam={14} />
+            </Link>
+          )}
+        </div>
+      )}
+      {/* "Solo imagen": toda la foto es el enlace */}
+      {d.conTexto === false && d.enlace && <Link to={d.enlace} aria-label={d.titulo} className="absolute inset-0" />}
       {/* Flechas solo en pantallas medianas o más; en celular se usan los puntos (las flechas tapaban el título) */}
       <button type="button" onClick={() => ir(actual - 1)} aria-label="Foto anterior"
         className="absolute left-3 top-1/2 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-noche/80 text-white hover:bg-noche sm:grid">
@@ -69,9 +95,9 @@ function Carrusel() {
         <Icono nombre="flechaDer" />
       </button>
       <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1">
-        {DIAPOSITIVAS.map((x, i) => (
+        {diapositivas.map((x, i) => (
           // Cada punto mide 24 px de alto para que sea fácil de tocar en el celular
-          <button key={x.foto} type="button" onClick={() => ir(i)} aria-label={'Ver foto ' + (i + 1)} aria-current={i === actual}
+          <button key={x.foto + i} type="button" onClick={() => ir(i)} aria-label={'Ver foto ' + (i + 1)} aria-current={i === actual}
             className="grid h-6 w-6 place-items-center">
             <span className={'block h-2 rounded-full transition-all ' + (i === actual ? 'w-5 bg-[#ff8fe4]' : 'w-2 bg-white/70')} />
           </button>
@@ -103,6 +129,7 @@ export default function Inicio() {
   const sesion = leerSesion()
   const [productos, setProductos] = useState(null) // null = todavía cargando
   const [inicio, setInicio] = useState(null)
+  const [banners, setBanners] = useState(null) // HU-24: los maneja Ángel desde el panel
   const [error, setError] = useState('')
   const [favoritos, alternarFavorito] = useFavoritos()
 
@@ -110,10 +137,13 @@ export default function Inicio() {
   useEffect(() => {
     api('/productos').then(setProductos).catch((e) => setError(e.message))
     api('/inicio').then(setInicio).catch(() => {})
+    api('/banners').then(setBanners).catch(() => {})
   }, [])
 
   const cuenta = (cat) => productos?.filter((p) => p.categoria === cat).length ?? '…'
   const enOferta = productos ? ordenarOfertas(productos).length : null
+  const diapositivas = (banners || []).filter((b) => b.ubicacion === 'carrusel' && b.imagen_url).map(aDiapositiva)
+  const fotoCuadro = (u, porDefecto) => urlImagen((banners || []).find((b) => b.ubicacion === u)?.imagen_url) || porDefecto
 
   return (
     <div className="space-y-12">
@@ -142,14 +172,14 @@ export default function Inicio() {
           </ul>
         </nav>
 
-        <div className="order-1 lg:order-none"><Carrusel /></div>
+        <div className="order-1 lg:order-none"><Carrusel diapositivas={diapositivas.length ? diapositivas : DIAPOSITIVAS} /></div>
 
         <div className="order-2 grid gap-4 sm:grid-cols-2 lg:order-none lg:flex lg:flex-col">
-          <Acceso a="/ofertas" foto="/inicio/banner-ofertas.webp" alt="" icono="⚡"
+          <Acceso a="/ofertas" foto={fotoCuadro('cuadro_ofertas', '/inicio/banner-ofertas.webp')} alt="" icono="⚡"
             titulo="Ofertas por tiempo limitado"
             texto={enOferta === null ? 'Precios rebajados por pocos días' : enOferta + ' productos con descuento'}
             enlace="Ver ofertas" />
-          <Acceso a="#servicio" externo foto="/inicio/banner-servicio.webp" alt="" icono={<Icono nombre="llave" tam={18} />}
+          <Acceso a="#servicio" externo foto={fotoCuadro('cuadro_reparaciones', '/inicio/banner-servicio.webp')} alt="" icono={<Icono nombre="llave" tam={18} />}
             titulo="¿Se malogró tu mando?" texto="Cotiza la reparación por WhatsApp" enlace="Ver reparaciones" />
         </div>
       </div>

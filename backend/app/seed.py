@@ -75,6 +75,22 @@ ITEMS_VENTA = ["PlayStation 3 Super Slim 500GB", "Mando DualShock 3 Inalámbrico
                "GTA V (PS3)", "FIFA 26 (PS5)", "Mando DualSense Blanco", "PlayStation 5 Slim Digital",
                "God of War Ragnarök (PS5)", "Mortal Kombat 1 (PS5)"]
 
+# HU-24: banners del inicio (título, texto, destino, foto, texto alternativo, ubicación, orden)
+BANNERS_INICIO = [
+    ("PlayStation 5 nuevas y selladas", "Con boleta y garantía. Te ayudamos a configurarla.", "Máquinas",
+     "/inicio/carrusel-1.webp", "Dos consolas PlayStation 5 con sus mandos", "carrusel", 1),
+    ("Visítanos en Villa El Salvador", "Av. Revolución 1420 · Lunes a sábado 12:00–20:00", "tienda",
+     "/inicio/carrusel-2.webp", "Fachada de la tienda Play Shop Tek en Villa El Salvador", "carrusel", 2),
+    ("Juegos para PS2, PS3, PS4 y PS5", "Nuevos, usados y packs. Pruébalos en la tienda antes de llevarlos.", "catalogo",
+     "/inicio/carrusel-3.webp", "Vitrina de la tienda con juegos y una PS4 en caja", "carrusel", 3),
+    ("Juegos físicos para tu colección", "Sepáralos por la web y recógelos el mismo día.", "PS5",
+     "/inicio/carrusel-4.webp", "PlayStation 5 Slim con un juego en disco y un mando", "carrusel", 4),
+    ("Ofertas por tiempo limitado", "Precios rebajados por pocos días", "ofertas",
+     "/inicio/banner-ofertas.webp", "", "cuadro_ofertas", 1),
+    ("¿Se malogró tu mando?", "Cotiza la reparación por WhatsApp", "reparaciones",
+     "/inicio/banner-servicio.webp", "", "cuadro_reparaciones", 2),
+]
+
 # Reseñas generadas que el prototipo muestra en cada ficha (resenasTodas)
 RES_NOMBRES = ["Jordan Zapata", "Katherine Ñahui", "Alexander Mamani", "Sheyla Quiroz", "Luis Quispe", "Carla Sifuentes",
                "Elmer Vilca", "Fiorella Mendoza", "Brayan Chumpitaz", "Jhon Ramírez", "Yesenia Palomino",
@@ -330,14 +346,9 @@ def cargar(db) -> None:
 
     # ── Banners y notificaciones ─────────────────────────────────────
     db.add_all([
-        Banner(titulo="Ofertas de la semana", subtitulo="Mandos, juegos y consolas con precio rebajado por pocos días.",
-               destino="ofertas", texto_alternativo="Mandos y juegos en oferta sobre el mostrador", orden=1),
-        Banner(titulo="Nuestra tienda", texto_alternativo="Fachada de Play Shop Tek en Villa El Salvador", orden=2),
-        Banner(titulo="Tu mando reparado en 30 minutos", subtitulo="Drift, gatillos y batería. El diagnóstico en tienda es gratis.",
-               destino="reparaciones", texto_alternativo="Técnico reparando un mando en el taller", orden=3),
-        Banner(titulo="Consolas en mostrador", destino="Máquinas", texto_alternativo="Mostrador con consolas PS5, PS4 y PS3", orden=4),
-        Banner(titulo="PS3 y PS4 repotenciadas en taller", subtitulo="Limpieza interna, pasta térmica nueva y 48 horas de prueba antes de venderlas.",
-               destino="Máquinas", texto_alternativo="Consolas PS3 y PS4 repotenciadas", activo=False, orden=5),
+        # HU-24: las mismas diapositivas y cuadros que carga la migración d52e8a1c3f10 (fotos de la tienda)
+        *[Banner(titulo=t, subtitulo=sub, destino=d, imagen_url=f, texto_alternativo=a, ubicacion=u, orden=o)
+          for t, sub, d, f, a, u, o in BANNERS_INICIO],
         Notificacion(cliente_id=kevin.id, titulo="¡Tu PC de escritorio está lista para recoger!",
                      detalle="Pasa por Av. Revolución 1420, VES", destino="reparaciones"),
         Notificacion(cliente_id=kevin.id, titulo="Bajó de precio God of War Ragnarök",

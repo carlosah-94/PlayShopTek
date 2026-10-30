@@ -3,7 +3,7 @@ from datetime import date, datetime
 from decimal import Decimal
 
 from sqlalchemy import (
-    false, true, Boolean, CheckConstraint, Column, Date, DateTime, ForeignKey, Integer, Numeric,
+    false, true, Boolean, CheckConstraint, Column, Date, DateTime, ForeignKey, Integer, LargeBinary, Numeric,
     SmallInteger, String, Table, Text, UniqueConstraint, func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -158,6 +158,20 @@ class Banner(Base):
     subtitulo: Mapped[str | None] = mapped_column(String(200))
     destino: Mapped[str | None] = mapped_column(String(60))  # 'ofertas', 'reparaciones', 'Máquinas'
     imagen_url: Mapped[str | None] = mapped_column(String(400))
+    imagen_movil_url: Mapped[str | None] = mapped_column(String(400))  # HU-24: versión cuadrada para celular (opcional)
     texto_alternativo: Mapped[str | None] = mapped_column(String(160))
+    # HU-24: 'carrusel' (diapositiva) o 'cuadro_ofertas' / 'cuadro_reparaciones' (los dos cuadros junto al carrusel)
+    ubicacion: Mapped[str] = mapped_column(String(20), default="carrusel", server_default="carrusel")
+    con_texto: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())  # "Imagen con texto" o "Solo imagen"
     activo: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
     orden: Mapped[int] = mapped_column(SmallInteger, default=0, server_default="0")
+
+class Imagen(Base):
+    """HU-24: foto que sube Ángel (producto o banner). Se guarda en la base de datos porque el servidor
+    gratuito de Render borra los archivos en cada despliegue. El navegador la pide en /api/imagenes/{id}."""
+    __tablename__ = "imagenes"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    mime: Mapped[str] = mapped_column(String(40))  # 'image/webp'
+    datos: Mapped[bytes] = mapped_column(LargeBinary)
+    creada_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

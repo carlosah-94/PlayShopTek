@@ -1,16 +1,24 @@
 """HU-17: reseñas verificadas. Solo opina quien compró el producto, y la tienda puede responder."""
 from datetime import UTC, date, datetime
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.api.deps import equipo_tienda, solo_cliente
+from app.api.deps import equipo_tienda, solo_cliente, solo_dueno
 from app.api.routes.ventas import cliente_de
 from app.database import get_db
-from app.models import Producto, Resena, Usuario, Venta, VentaItem
+from app.models import Producto, Resena, TipoServicio, Usuario, Venta, VentaItem
 from app.models.enums import EstadoVenta, OrigenResena
-from app.schemas import PuedoOpinar, ResenaEntrada, ResenaSalida, RespuestaResena
+from app.schemas import (
+    CambioActivo,
+    PuedoOpinar,
+    ResenaEntrada,
+    ResenaEquipo,
+    ResenaSalida,
+    RespuestaResena,
+)
 
 router = APIRouter(tags=["Reseñas"])
 
@@ -62,6 +70,34 @@ def opinar(producto_id: int, datos: ResenaEntrada, db: Session = Depends(get_db)
     db.add(r)
     db.commit()
     db.refresh(r)
+    return a_salida(r)
+
+
+@router.get("/resenas", response_model=list[ResenaEquipo])
+def todas_las_resenas(tipo: Literal["producto", "servicio"] = "producto", db: Session = Depends(get_db),
+                      usuario: Usuario = Depends(equipo_tienda)):
+    """HU-24: sección "Reseñas" del panel (pestañas Productos y Servicio de reparación).
+    Las 120 más recientes de ese tipo, con el producto o servicio del que hablan."""
+    de_producto = Resena.producto_id.is_not(None)
+    filas = db.execute(
+        select(Resena, Producto.nombre, TipoServicio.nombre)
+        .outerjoin(Producto, Producto.id == Resena.producto_id)
+        .outerjoin(TipoServicio, TipoServicio.id == Resena.tipo_servicio_id)
+        .where(de_producto if tipo == "producto" else ~de_producto)
+        .order_by(Resena.fecha.desc(), Resena.id.desc()).limit(120))
+    return [ResenaEquipo(**a_salida(r).model_dump(), sobre=producto or servicio or "Servicio técnico",
+                         es_producto=r.producto_id is not None, destacada=r.destacada, origen=r.origen.value)
+            for r, producto, servicio in filas]
+
+
+@router.patch("/resenas/{resena_id}/destacada", response_model=ResenaSalida, dependencies=[Depends(solo_dueno)])
+def destacar(resena_id: int, datos: CambioActivo, db: Session = Depends(get_db)):
+    """HU-24: Ángel elige qué reseñas salen en "Lo que dicen los clientes" del inicio."""
+    r = db.get(Resena, resena_id)
+    if r is None:
+        raise HTTPException(404, "Reseña no encontrada.")
+    r.destacada = datos.activo
+    db.commit()
     return a_salida(r)
 
 

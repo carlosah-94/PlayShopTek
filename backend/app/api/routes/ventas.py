@@ -10,10 +10,25 @@ from sqlalchemy.orm import Session, selectinload
 from app.api.deps import equipo_tienda, solo_cliente
 from app.api.routes.productos import cupos_de_reserva, oferta_vigente
 from app.database import get_db
-from app.models import Cliente, Empleado, Producto, Usuario, Venta, VentaItem
+from app.models import (
+    Cliente,
+    Empleado,
+    Notificacion,
+    Producto,
+    Usuario,
+    Venta,
+    VentaItem,
+)
 from app.models.enums import Canal, EstadoVenta, MetodoPago
 from app.schemas import (
-    CompraEntrada, ItemCarrito, ReservaEntrada, VentaItemSalida, VentaSalida, VentaTiendaEntrada, VentaTiendaSalida,
+    CambioEstadoVenta,
+    CompraEntrada,
+    ItemCarrito,
+    ReservaEntrada,
+    VentaItemSalida,
+    VentaSalida,
+    VentaTiendaEntrada,
+    VentaTiendaSalida,
 )
 
 router = APIRouter(prefix="/ventas", tags=["Compras"])
@@ -182,3 +197,36 @@ def ultimas_en_tienda(db: Session = Depends(get_db), usuario: Usuario = Depends(
     ventas = db.scalars(select(Venta).where(Venta.canal.in_([Canal.tienda, Canal.whatsapp]))
                         .options(selectinload(Venta.items)).order_by(Venta.id.desc()).limit(15))
     return [a_salida_tienda(v, db) for v in ventas]
+
+
+# ── HU-24: sección "Ventas" del panel de gestión ─────────────────────────────────────
+# Un pedido avanza en este orden; "reservado" (preventa) y "cancelado" no se tocan desde aquí
+SIGUIENTE = {EstadoVenta.pagado: EstadoVenta.listo_para_recoger, EstadoVenta.listo_para_recoger: EstadoVenta.entregado}
+
+
+@router.get("", response_model=list[VentaTiendaSalida])
+def todas(db: Session = Depends(get_db), usuario: Usuario = Depends(equipo_tienda)):
+    """Todos los pedidos (web, tienda y WhatsApp), del más reciente al más antiguo.
+    Los nombres de clientes y empleados se cargan una sola vez (no una consulta por fila)."""
+    ventas = list(db.scalars(select(Venta).options(selectinload(Venta.items))
+                             .order_by(Venta.fecha.desc(), Venta.id.desc()).limit(300)))
+    clientes = {c.id: c.nombre for c in db.scalars(select(Cliente).where(Cliente.id.in_({v.cliente_id for v in ventas})))}
+    empleados = {e.usuario_id: e.nombre for e in db.scalars(select(Empleado))}
+    return [VentaTiendaSalida(**a_salida(v).model_dump(), canal=v.canal.value, cliente=clientes.get(v.cliente_id, ""),
+                              registrada_por=empleados.get(v.registrada_por_id)) for v in ventas]
+
+
+@router.patch("/{codigo}/estado", response_model=VentaTiendaSalida)
+def cambiar_estado(codigo: str, datos: CambioEstadoVenta, db: Session = Depends(get_db), usuario: Usuario = Depends(equipo_tienda)):
+    """Pagado -> Listo para recoger -> Entregado. Al quedar listo, el cliente recibe un aviso en su campanita."""
+    v = db.scalar(select(Venta).where(Venta.codigo == codigo).options(selectinload(Venta.items)))
+    if v is None:
+        raise HTTPException(404, "Pedido no encontrado.")
+    if SIGUIENTE.get(v.estado) != datos.estado:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Ese pedido no puede pasar a ese estado.")
+    v.estado = datos.estado
+    if datos.estado == EstadoVenta.listo_para_recoger:
+        db.add(Notificacion(cliente_id=v.cliente_id, titulo=f"¡Tu pedido {v.codigo} está listo para recoger!",
+                            detalle="Pasa por Av. Revolución 1420, VES", destino="mis-compras"))
+    db.commit()
+    return a_salida_tienda(v, db)

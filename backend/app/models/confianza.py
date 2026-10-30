@@ -2,7 +2,7 @@
 from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, Numeric, SmallInteger, String, Text, func
+from sqlalchemy import Boolean, CheckConstraint, Date, DateTime, ForeignKey, Numeric, SmallInteger, String, Text, false, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -44,6 +44,7 @@ class Resena(Base):
     respuesta: Mapped[str | None] = mapped_column(Text)
     respondida_por_id: Mapped[int | None] = mapped_column(ForeignKey("empleados.usuario_id"))
     respondida_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    destacada: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())  # HU-24: sale en el inicio
 
 
 class Reclamo(Base):

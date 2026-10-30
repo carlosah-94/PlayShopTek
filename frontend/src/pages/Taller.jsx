@@ -1,8 +1,13 @@
 // HU-06: Linda o Ángel registran el equipo que llega al mostrador.
 // HU-08: avanzan su estado y avisan al cliente por WhatsApp cuando está listo.
+// HU-24: sección "Reparaciones" del panel, con tabla y filtros como el prototipo.
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { api, leerSesion } from '../api.js'
+import Icono from '../components/Iconos.jsx'
+import {
+  Caja, Encabezado, Estado, Filtros, FILTROS_VACIOS, botonRosa, campo, pasaFiltros,
+} from '../components/PiezasPanel.jsx'
 
 const VACIO = { cliente_nombre: '', cliente_telefono: '', equipo: '', falla: '', tipo_servicio_id: '',
   categoria_falla_id: '', diagnostico: '', costo: '', precio_acordado: false, duracion_estimada: '' }
@@ -26,6 +31,8 @@ export default function Taller() {
   const [mensaje, setMensaje] = useState('')
   const [error, setError] = useState('')
   const [pagos, setPagos] = useState({}) // cómo pagó cada cliente al entregar: { id: 'yape' }
+  const [abierto, setAbierto] = useState(false) // formulario "Registrar reparación"
+  const [filtros, setFiltros] = useState(FILTROS_VACIOS)
 
   const cargarLista = () => api('/reparaciones').then(setLista).catch((e) => setError(e.message))
   useEffect(() => {
@@ -54,6 +61,7 @@ export default function Taller() {
       const r = await api('/reparaciones', { metodo: 'POST', cuerpo })
       setMensaje(`Registrado con el código ${r.codigo}. Dáselo a ${r.cliente.split(' ')[0]} para que rastree su equipo.`)
       setForm(VACIO)
+      setAbierto(false)
       cargarLista()
     } catch (err) {
       setError(err.message)
@@ -84,66 +92,104 @@ export default function Taller() {
     return '→ ' + ESTADOS[siguiente]
   }
 
-  const campo = 'w-full rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm'
-  return (
-    <section className="grid gap-6 lg:grid-cols-[380px_1fr]">
-      <form onSubmit={registrar} className="space-y-3 rounded-xl border border-tinta/10 bg-superficie/50 p-5">
-        <h1 className="text-xl font-bold">Recibir equipo</h1>
-        <input placeholder="Nombre del cliente" value={form.cliente_nombre} onChange={cambiar('cliente_nombre')} className={campo} required />
-        <input placeholder="Celular (9 dígitos)" value={form.cliente_telefono} onChange={cambiar('cliente_telefono')} className={campo}
-          pattern="9[0-9]{8}" title="9 dígitos, empieza con 9" required />
-        <input placeholder="Equipo (ej. Mando DualShock 4)" value={form.equipo} onChange={cambiar('equipo')} className={campo} required />
-        <textarea placeholder="¿Qué le pasa? (con las palabras del cliente)" value={form.falla} onChange={cambiar('falla')} className={campo} rows={2} required />
-        <select value={form.tipo_servicio_id} onChange={elegirServicio} className={campo}>
-          <option value="">Tipo de servicio</option>
-          {opciones.servicios.map((s) => <option key={s.id} value={s.id}>{s.nombre}</option>)}
-        </select>
-        <select value={form.categoria_falla_id} onChange={cambiar('categoria_falla_id')} className={campo}>
-          <option value="">Categoría de la falla</option>
-          {opciones.fallas.map((f) => <option key={f.id} value={f.id}>{f.nombre}</option>)}
-        </select>
-        <input placeholder="Diagnóstico (opcional)" value={form.diagnostico} onChange={cambiar('diagnostico')} className={campo} />
-        <div className="grid grid-cols-2 gap-2">
-          <input type="number" min="0" step="1" placeholder="Costo S/" value={form.costo} onChange={cambiar('costo')} className={campo} />
-          <input placeholder="Tiempo (ej. 30 min)" value={form.duracion_estimada} onChange={cambiar('duracion_estimada')} className={campo} />
-        </div>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={form.precio_acordado} onChange={cambiar('precio_acordado')} />
-          El cliente aceptó el precio
-        </label>
-        {error && <p className="text-sm text-error">{error}</p>}
-        {mensaje && <p className="rounded-lg bg-green-500/15 p-2 text-sm text-ok">{mensaje}</p>}
-        <button className="w-full rounded-lg bg-rosa py-2 font-semibold text-white">Registrar</button>
-      </form>
+  const visibles = lista.filter((r) => pasaFiltros(filtros, {
+    textos: [r.cliente, r.equipo, r.codigo, r.falla, r.telefono], estado: r.estado, fecha: r.fecha_ingreso,
+  }))
+  const listos = lista.filter((r) => r.estado === 'listo_para_recoger').length
+  const th = 'px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-tinta/60'
 
-      <div>
-        <h2 className="text-lg font-semibold">En el taller ({lista.length})</h2>
-        <ul className="mt-2 divide-y divide-tinta/10 rounded-xl border border-tinta/10 bg-superficie text-sm">
-          {lista.map((r) => (
-            <li key={r.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3">
-              <span className="font-mono text-rosa">{r.codigo}</span>
-              <span className="font-semibold">{r.equipo}</span>
-              <span className="text-tinta/60">{r.cliente}</span>
-              <span className="ml-auto rounded bg-tinta/10 px-2 py-0.5 text-xs">{ESTADOS[r.estado]}</span>
-              <span className="w-full text-tinta/60">{r.falla}{r.tecnico ? ' · ' + r.tecnico : ''}</span>
-              <div className="flex w-full flex-wrap items-center gap-2 pt-1">
-                {r.estado === 'listo_para_recoger' && (
-                  <>
-                    <a href={enlaceWhatsApp(r)} target="_blank" rel="noreferrer" className="rounded-lg border border-green-500/50 px-3 py-1 text-xs text-ok">Reenviar WhatsApp</a>
-                    <select value={pagos[r.id] || 'efectivo'} onChange={(e) => setPagos({ ...pagos, [r.id]: e.target.value })}
-                      className="rounded-lg border border-tinta/15 bg-fondo px-2 py-1 text-xs">
-                      <option value="efectivo">Pagó en efectivo</option>
-                      <option value="yape">Pagó con Yape</option>
-                      <option value="transferencia">Pagó por transferencia BCP</option>
-                    </select>
-                  </>
-                )}
-                <button onClick={() => avanzar(r)} className="ml-auto rounded-lg bg-morado px-3 py-1 text-xs font-semibold text-white">{textoBoton(r)}</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+  return (
+    <div className="space-y-4">
+      <Encabezado titulo="Reparaciones" detalle={`${lista.length} activas · ${listos} listas para recoger`}>
+        <button type="button" onClick={() => setAbierto(!abierto)} className={botonRosa} aria-expanded={abierto}>
+          <Icono nombre={abierto ? 'cerrar' : 'mas'} tam={16} /> {abierto ? 'Cerrar formulario' : 'Registrar reparación'}
+        </button>
+      </Encabezado>
+
+      <p className="flex items-start gap-2 rounded-xl border border-ok/30 bg-ok/10 p-3 text-sm">
+        <span className="text-ok"><Icono nombre="whatsapp" tam={18} /></span>
+        El diagnóstico, el precio y el pago (Yape o en tienda) se acuerdan por WhatsApp. Aquí registras el equipo y vas moviendo su estado:
+        el cliente lo ve con su código y, al pasar a «Listo para recoger», se abre el WhatsApp con el aviso ya escrito.
+      </p>
+      {mensaje && <p className="rounded-lg bg-ok/10 p-3 text-sm text-ok">{mensaje}</p>}
+      {error && <p className="rounded-lg bg-error/10 p-3 text-sm text-error">{error}</p>}
+
+      {abierto && (
+        <Caja titulo="Registrar una reparación" extra={<span className="text-xs text-tinta/60">Con los datos que acordaste con el cliente por WhatsApp.</span>}>
+          <form onSubmit={registrar} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <input id="rep-cliente" placeholder="Nombre del cliente *" value={form.cliente_nombre} onChange={cambiar('cliente_nombre')} className={campo} required />
+            <input id="rep-telefono" placeholder="WhatsApp del cliente (9 dígitos) *" value={form.cliente_telefono} onChange={cambiar('cliente_telefono')} className={campo}
+              pattern="9[0-9]{8}" title="9 dígitos, empieza con 9" required />
+            <input id="rep-equipo" placeholder="Equipo (ej. Mando DualShock 4) *" value={form.equipo} onChange={cambiar('equipo')} className={campo} required />
+            <textarea id="rep-falla" placeholder="Falla reportada (con las palabras del cliente) *" value={form.falla} onChange={cambiar('falla')}
+              className={campo + ' sm:col-span-2 lg:col-span-3'} rows={2} required />
+            <select id="rep-servicio" value={form.tipo_servicio_id} onChange={elegirServicio} className={campo} aria-label="Tipo de servicio">
+              <option value="">Tipo de servicio</option>
+              {opciones.servicios.map((s) => <option key={s.id} value={s.id}>{s.nombre}</option>)}
+            </select>
+            <select id="rep-falla-cat" value={form.categoria_falla_id} onChange={cambiar('categoria_falla_id')} className={campo} aria-label="Categoría de la falla">
+              <option value="">Categoría de la falla</option>
+              {opciones.fallas.map((f) => <option key={f.id} value={f.id}>{f.nombre}</option>)}
+            </select>
+            <input id="rep-diagnostico" placeholder="Diagnóstico (opcional)" value={form.diagnostico} onChange={cambiar('diagnostico')} className={campo} />
+            <input id="rep-costo" type="number" min="0" step="1" placeholder="Precio acordado S/ (opcional)" value={form.costo} onChange={cambiar('costo')} className={campo} />
+            <input id="rep-tiempo" placeholder="Tiempo (ej. 30 min)" value={form.duracion_estimada} onChange={cambiar('duracion_estimada')} className={campo} />
+            <label className="flex items-center gap-2 text-sm">
+              <input id="rep-acordado" type="checkbox" checked={form.precio_acordado} onChange={cambiar('precio_acordado')} />
+              El cliente aceptó el precio
+            </label>
+            <div className="flex gap-2 sm:col-span-2 lg:col-span-3">
+              <button className={botonRosa}>Registrar reparación</button>
+              <button type="button" onClick={() => setAbierto(false)} className="rounded-lg px-3 py-2 text-sm text-tinta/70 hover:underline">Cancelar</button>
+            </div>
+          </form>
+        </Caja>
+      )}
+
+      <Caja>
+        <Filtros filtros={filtros} setFiltros={setFiltros} estados={ORDEN.slice(0, 4)} placeholder="Cliente, equipo, orden o código" />
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[900px] text-sm">
+            <thead className="border-b border-tinta/10">
+              <tr><th className={th}>Orden</th><th className={th}>Fecha</th><th className={th}>Cliente</th><th className={th}>Equipo</th>
+                <th className={th}>Falla</th><th className={th}>Atiende</th><th className={th}>Precio</th><th className={th}>Estado</th><th className={th}>Siguiente paso</th></tr>
+            </thead>
+            <tbody className="divide-y divide-tinta/10">
+              {visibles.map((r) => (
+                <tr key={r.id} className="align-top">
+                  <td className="px-3 py-3"><span className="inline-block rounded-md border border-rosa/40 bg-rosa/10 px-2 py-0.5 font-mono text-xs text-rosa">{r.codigo}</span></td>
+                  <td className="whitespace-nowrap px-3 py-3 tabular-nums">{r.fecha_ingreso}</td>
+                  <td className="px-3 py-3"><p className="font-medium">{r.cliente}</p><p className="text-xs text-tinta/60">{r.telefono}</p></td>
+                  <td className="px-3 py-3">{r.equipo}</td>
+                  <td className="px-3 py-3 text-tinta/80">{r.falla}</td>
+                  <td className="px-3 py-3">{r.tecnico || '—'}</td>
+                  <td className="whitespace-nowrap px-3 py-3 tabular-nums">{r.precio_acordado ? 'S/ ' + Number(r.costo) : 'Por acordar'}</td>
+                  <td className="px-3 py-3"><Estado estado={r.estado} /></td>
+                  <td className="px-3 py-3">
+                    <div className="flex min-w-48 flex-col gap-2">
+                      {r.estado === 'listo_para_recoger' && (
+                        <>
+                          <a href={enlaceWhatsApp(r)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-ok hover:underline">
+                            <Icono nombre="whatsapp" tam={14} /> Reenviar aviso
+                          </a>
+                          <select value={pagos[r.id] || 'efectivo'} onChange={(e) => setPagos({ ...pagos, [r.id]: e.target.value })}
+                            aria-label={'Cómo pagó ' + r.cliente} className="rounded-lg border border-tinta/15 bg-superficie px-2 py-1 text-xs">
+                            <option value="efectivo">Pagó en efectivo</option>
+                            <option value="yape">Pagó con Yape</option>
+                            <option value="transferencia">Pagó por transferencia BCP</option>
+                          </select>
+                        </>
+                      )}
+                      <button type="button" onClick={() => avanzar(r)} className="rounded-lg bg-morado px-3 py-1.5 text-xs font-semibold text-white">{textoBoton(r)}</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {visibles.length === 0 && <p className="py-6 text-center text-sm text-tinta/60">No hay reparaciones con esos filtros.</p>}
+        </div>
+      </Caja>
+    </div>
   )
 }
