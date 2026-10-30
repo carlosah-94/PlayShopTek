@@ -379,3 +379,63 @@ def test_pagina_de_inicio(cliente, h_cliente):
     con_cuenta = cliente.get("/api/inicio", headers=h_cliente).json()
     assert con_cuenta["personalizado"] and len(con_cuenta["recomendados"]) == 4
     assert not comprados & {p["nombre"] for p in con_cuenta["recomendados"]}
+
+
+def test_panel_ventas_y_resenas(cliente, h_trabajadora, h_cliente):
+    """HU-24: el equipo ve todos los pedidos, avanza uno a "Listo para recoger" (el cliente recibe aviso) y ve las reseñas."""
+    assert cliente.get("/api/ventas", headers=h_cliente).status_code == 403  # un cliente no ve los pedidos de otros
+    ventas = cliente.get("/api/ventas", headers=h_trabajadora).json()
+    assert len(ventas) > 10 and {"web", "tienda"} <= {v["canal"] for v in ventas}
+    pagado = next(v for v in ventas if v["estado"] == "pagado")
+    url = f"/api/ventas/{pagado['codigo']}/estado"
+    assert cliente.patch(url, json={"estado": "entregado"}, headers=h_trabajadora).status_code == 409  # no se salta pasos
+    r = cliente.patch(url, json={"estado": "listo_para_recoger"}, headers=h_trabajadora)
+    assert r.status_code == 200 and r.json()["estado"] == "listo_para_recoger"
+    assert cliente.patch(url, json={"estado": "entregado"}, headers=h_trabajadora).json()["estado"] == "entregado"
+
+    resenas = cliente.get("/api/resenas", headers=h_trabajadora).json()
+    assert resenas and all(x["sobre"] and x["es_producto"] for x in resenas)
+    servicio = cliente.get("/api/resenas?tipo=servicio", headers=h_trabajadora).json()
+    assert servicio and not any(x["es_producto"] for x in servicio)  # pestaña "Servicio de reparación"
+    assert cliente.get("/api/resenas", headers=h_cliente).status_code == 403
+
+
+def test_gestion_del_dueno(cliente, h_dueno, h_trabajadora):
+    """HU-24: Ángel publica un producto con foto, lo edita y lo quita; maneja banners, su equipo, servicios y géneros."""
+    import base64
+    foto = "data:image/png;base64," + base64.b64encode(b"\x89PNG\r\n\x1a\nprueba").decode()
+    assert cliente.post("/api/imagenes", json={"datos": foto}, headers=h_trabajadora).status_code == 403
+    url = cliente.post("/api/imagenes", json={"datos": foto}, headers=h_dueno).json()["url"]
+    assert cliente.get(url).content.endswith(b"prueba")
+
+    nuevo = {"nombre": "Astro Bot (PS5)", "categoria": "PS5", "precio": 199, "stock": 3, "condicion": "Nuevo, sellado",
+             "generos": ["aventura", "familiar"], "modos": ["solo"], "etiquetas": ["plataformas"], "incluye_caja": True,
+             "incluye_disco": True, "fotos": [url], "descuento": 10, "descuento_dias": 5}
+    p = cliente.post("/api/productos", json=nuevo, headers=h_dueno).json()
+    assert p["plataforma"] == "PS5" and p["foto"] == url and p["descuento"] == 10 and p["precio_final"] == "179"
+    ficha = cliente.get(f"/api/productos/{p['id']}").json()
+    assert ficha["etiquetas"] == ["plataformas"] and set(ficha["generos"]) == {"aventura", "familiar"}
+    editado = cliente.put(f"/api/productos/{p['id']}", json={**nuevo, "precio": 189, "descuento": None}, headers=h_dueno).json()
+    assert float(editado["precio"]) == 189 and editado["descuento"] is None
+    assert cliente.delete(f"/api/productos/{p['id']}", headers=h_dueno).status_code == 204
+    assert all(x["id"] != p["id"] for x in cliente.get("/api/productos").json())
+
+    banners = cliente.get("/api/banners").json()
+    assert {b["ubicacion"] for b in banners} == {"carrusel", "cuadro_ofertas", "cuadro_reparaciones"}
+    b = cliente.post("/api/banners", json={"titulo": "Prueba", "imagen_url": url}, headers=h_dueno).json()
+    assert cliente.put(f"/api/banners/{b['id']}", json={**b, "activo": False}, headers=h_dueno).json()["activo"] is False
+    assert all(x["id"] != b["id"] for x in cliente.get("/api/banners").json())  # inactiva: no sale en el inicio
+    assert cliente.delete(f"/api/banners/{b['id']}", headers=h_dueno).status_code == 204
+
+    t = cliente.post("/api/equipo", json={"nombre": "Rosa Huamán", "email": "rosa@playshoptek.pe", "telefono": "960210211"}, headers=h_dueno).json()
+    clave = t["clave_temporal"]
+    assert clave and cliente.post("/api/auth/login", json={"email": "rosa@playshoptek.pe", "password": clave}).status_code == 200
+    cliente.patch(f"/api/equipo/{t['usuario_id']}", json={"activo": False}, headers=h_dueno)
+    assert cliente.post("/api/auth/login", json={"email": "rosa@playshoptek.pe", "password": clave}).status_code != 200
+    assert any(x["nombre"].startswith("Linda") for x in cliente.get("/api/equipo", headers=h_dueno).json())
+
+    s = cliente.post("/api/servicios", json={"nombre": "Cambio de pantalla PS Portal", "tiempo": "1 a 2 días"}, headers=h_dueno).json()
+    cliente.patch(f"/api/servicios/{s['id']}", json={"activo": False}, headers=h_dueno)
+    assert all(x["id"] != s["id"] for x in cliente.get("/api/servicios").json())
+    g = cliente.post("/api/generos", json={"nombre": "Simulación"}, headers=h_dueno).json()
+    assert g["id"] == "simulacion" and cliente.post("/api/generos", json={"nombre": "simulación"}, headers=h_dueno).status_code == 409

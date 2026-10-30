@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, Route, Routes, useNavigate } from 'react-router-dom'
+import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Asistente from './components/Asistente.jsx'
 import Icono from './components/Iconos.jsx'
+import PanelGestion, { RUTAS_PANEL } from './components/PanelGestion.jsx'
+import Banners from './pages/Banners.jsx'
 import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
 import Favoritos from './pages/Favoritos.jsx'
@@ -10,12 +12,14 @@ import Inicio from './pages/Inicio.jsx'
 import Inventario from './pages/Inventario.jsx'
 import LibroReclamaciones from './pages/LibroReclamaciones.jsx'
 import Login from './pages/Login.jsx'
+import MiEquipo from './pages/MiEquipo.jsx'
 import MisCompras from './pages/MisCompras.jsx'
 import Ofertas from './pages/Ofertas.jsx'
 import Panel from './pages/Panel.jsx'
 import Rastreo from './pages/Rastreo.jsx'
 import Reclamos from './pages/Reclamos.jsx'
-import Tablero from './pages/Tablero.jsx'
+import Resenas from './pages/Resenas.jsx'
+import ServiciosTecnicos from './pages/ServiciosTecnicos.jsx'
 import Taller from './pages/Taller.jsx'
 import VentaTienda from './pages/VentaTienda.jsx'
 import { cerrarSesion, leerSesion } from './api.js'
@@ -50,6 +54,36 @@ export default function App() {
   const enviarBusqueda = (e) => {
     e.preventDefault()
     navegar('/catalogo?q=' + encodeURIComponent(buscar.trim()))
+  }
+
+  // HU-24: las páginas del equipo van dentro del "Panel de gestión" (menú a la izquierda, sin la cabecera de la tienda)
+  const { pathname } = useLocation()
+  const rutas = (
+    <Routes>
+      <Route path="/" element={<Inicio />} />
+      <Route path="/catalogo" element={<Catalogo />} />
+      <Route path="/ofertas" element={<Ofertas />} />
+      <Route path="/producto/:id" element={<Ficha />} />
+      <Route path="/rastreo" element={<Rastreo />} />
+      <Route path="/carrito" element={<Carrito />} />
+      <Route path="/mis-compras" element={<MisCompras />} />
+      <Route path="/favoritos" element={<Favoritos />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/panel" element={<Panel />} />
+      <Route path="/taller" element={<Taller />} />
+      <Route path="/vender" element={<VentaTienda />} />
+      <Route path="/inventario" element={<Inventario />} />
+      <Route path="/tablero" element={<Navigate to="/panel" replace />} />
+      <Route path="/resenas" element={<Resenas />} />
+      <Route path="/banners" element={<Banners />} />
+      <Route path="/equipo" element={<MiEquipo />} />
+      <Route path="/servicios-tecnicos" element={<ServiciosTecnicos />} />
+      <Route path="/libro-de-reclamaciones" element={<LibroReclamaciones />} />
+      <Route path="/reclamos" element={<Reclamos />} />
+    </Routes>
+  )
+  if (sesion && rol !== 'cliente' && RUTAS_PANEL.some((r) => pathname.startsWith(r))) {
+    return <PanelGestion usuario={sesion.usuario} tema={tema} setTema={setTema} salir={salir}>{rutas}</PanelGestion>
   }
 
   return (
@@ -88,17 +122,11 @@ export default function App() {
                 </Link>}
           </div>
         </div>
-        {/* Menú del equipo: solo lo ven Ángel y Linda */}
+        {/* HU-24: Ángel y Linda vuelven a su panel desde la tienda */}
         {sesion && rol !== 'cliente' && (
           <nav className="border-t border-white/10 bg-white/5">
-            <div className="mx-auto flex max-w-6xl flex-wrap gap-x-5 gap-y-1 px-4 py-2 text-sm sm:px-8">
-              <span className="text-white/60">Equipo:</span>
-              <NavLink to="/panel" className={enlace}>Panel</NavLink>
-              <NavLink to="/taller" className={enlace}>Taller</NavLink>
-              <NavLink to="/vender" className={enlace}>Vender</NavLink>
-              <NavLink to="/reclamos" className={enlace}>Reclamos</NavLink>
-              {rol === 'dueno' && <NavLink to="/inventario" className={enlace}>Inventario</NavLink>}
-              {rol === 'dueno' && <NavLink to="/tablero" className={enlace}>Tablero</NavLink>}
+            <div className="mx-auto flex max-w-6xl px-4 py-2 text-sm sm:px-8">
+              <Link to="/panel" className="flex items-center gap-2 hover:text-[#ff8fe4]"><Icono nombre="tablero" tam={16} /> Ir al panel de gestión</Link>
             </div>
           </nav>
         )}
@@ -114,24 +142,7 @@ export default function App() {
 
       {/* TT-03: alto mínimo para que el pie de página no "salte" mientras carga el catálogo */}
       <main className="mx-auto min-h-[75vh] max-w-6xl px-4 py-6 sm:px-8">
-        <Routes>
-          <Route path="/" element={<Inicio />} />
-          <Route path="/catalogo" element={<Catalogo />} />
-          <Route path="/ofertas" element={<Ofertas />} />
-          <Route path="/producto/:id" element={<Ficha />} />
-          <Route path="/rastreo" element={<Rastreo />} />
-          <Route path="/carrito" element={<Carrito />} />
-          <Route path="/mis-compras" element={<MisCompras />} />
-          <Route path="/favoritos" element={<Favoritos />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/panel" element={<Panel />} />
-          <Route path="/taller" element={<Taller />} />
-          <Route path="/vender" element={<VentaTienda />} />
-          <Route path="/inventario" element={<Inventario />} />
-          <Route path="/tablero" element={<Tablero />} />
-          <Route path="/libro-de-reclamaciones" element={<LibroReclamaciones />} />
-          <Route path="/reclamos" element={<Reclamos />} />
-        </Routes>
+        {rutas}
       </main>
 
       <footer className="mt-10 bg-noche text-sm text-white">

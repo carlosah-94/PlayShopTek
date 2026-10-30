@@ -1,13 +1,21 @@
 // HU-15: Linda o Ángel registran lo que se vende en el mostrador o por WhatsApp.
+// HU-24: sección "Ventas" del panel: todos los pedidos (web, tienda y WhatsApp) con filtros,
+// y el botón para pasar un pedido a "Listo para recoger" (el cliente recibe el aviso) y luego a "Entregado".
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { api, leerSesion } from '../api.js'
+import Icono from '../components/Iconos.jsx'
+import {
+  Caja, Encabezado, Estado, Filtros, FILTROS_VACIOS, NOMBRE_ESTADO, Paginacion, botonRosa, pasaFiltros, soles,
+} from '../components/PiezasPanel.jsx'
 
-const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
+const CANAL = { web: 'Web', tienda: 'Tienda', whatsapp: 'WhatsApp' }
+const SIGUIENTE = { pagado: 'listo_para_recoger', listo_para_recoger: 'entregado' }
+const POR_PAGINA = 15
 // Medios de pago que acepta cada canal (regla del dueño)
 const METODOS = { tienda: ['efectivo', 'yape', 'transferencia'], whatsapp: ['yape'] }
-const NOMBRES = { efectivo: 'Efectivo', yape: 'Yape', transferencia: 'Transferencia BCP' }
-const campo = 'w-full rounded-lg border border-tinta/15 bg-superficie px-3 py-2'
+const NOMBRES = { efectivo: 'Efectivo', yape: 'Yape', transferencia: 'Transferencia BCP', tarjeta: 'Tarjeta' }
+const campo = 'w-full rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm'
 
 export default function VentaTienda() {
   const sesion = leerSesion()
@@ -19,15 +27,18 @@ export default function VentaTienda() {
   const [operacion, setOperacion] = useState('')
   const [nombre, setNombre] = useState('')
   const [telefono, setTelefono] = useState('')
-  const [ultimas, setUltimas] = useState([])
+  const [ventas, setVentas] = useState([])
+  const [abierto, setAbierto] = useState(false) // formulario "Registrar venta"
+  const [filtros, setFiltros] = useState(FILTROS_VACIOS)
+  const [pagina, setPagina] = useState(1)
   const [mensaje, setMensaje] = useState('')
   const [error, setError] = useState('')
 
-  const cargarUltimas = () => api('/ventas/tienda').then(setUltimas).catch((e) => setError(e.message))
+  const cargarVentas = () => api('/ventas').then(setVentas).catch((e) => setError(e.message))
   useEffect(() => {
     if (!sesion || sesion.usuario.rol === 'cliente') return
     api('/productos').then((ps) => setProductos(ps.filter((p) => !p.es_preventa))).catch((e) => setError(e.message))
-    cargarUltimas()
+    cargarVentas()
   }, [])
 
   if (!sesion || sesion.usuario.rol === 'cliente') return <Navigate to="/login" />
@@ -58,18 +69,49 @@ export default function VentaTienda() {
       const v = await api('/ventas/tienda', { metodo: 'POST', cuerpo })
       setMensaje(`Venta ${v.codigo} registrada por ${soles(v.total)}. El stock ya se actualizó.`)
       setLineas([]); setOperacion(''); setNombre(''); setTelefono('')
-      cargarUltimas()
+      setAbierto(false)
+      cargarVentas()
       api('/productos').then((ps) => setProductos(ps.filter((p) => !p.es_preventa)))
     } catch (err) {
       setError(err.message)
     }
   }
 
-  return (
-    <section className="grid gap-6 lg:grid-cols-[420px_1fr]">
-      <form onSubmit={registrar} className="space-y-3 rounded-xl border border-tinta/10 bg-superficie/50 p-5">
-        <h1 className="text-xl font-bold">Registrar venta</h1>
+  // Avanza el pedido un paso: Pagado -> Listo para recoger -> Entregado
+  const avanzar = async (v) => {
+    setError(''); setMensaje('')
+    try {
+      const nuevo = await api(`/ventas/${v.codigo}/estado`, { metodo: 'PATCH', cuerpo: { estado: SIGUIENTE[v.estado] } })
+      setVentas(ventas.map((x) => (x.codigo === v.codigo ? nuevo : x)))
+      setMensaje(`${v.codigo}: ${NOMBRE_ESTADO[nuevo.estado]}` + (nuevo.estado === 'listo_para_recoger' ? '. El cliente ya tiene el aviso en su cuenta.' : ''))
+    } catch (err) {
+      setError(err.message)
+    }
+  }
 
+  const esDueno = sesion.usuario.rol === 'dueno'
+  const visibles = ventas.filter((v) => pasaFiltros(filtros, {
+    textos: [v.codigo, v.cliente, ...v.items.map((i) => i.nombre)], estado: v.estado, fecha: v.fecha,
+  }))
+  const pagina_ = visibles.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA)
+  const cobrado = ventas.filter((v) => v.estado !== 'cancelado').reduce((s, v) => s + Number(v.total), 0)
+  const th = 'px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-tinta/60'
+  const detalle = (v) => v.items[0].nombre + (v.items.length > 1 ? ` + ${v.items.length - 1} más` : '') + (v.items[0].cantidad > 1 ? ` (×${v.items[0].cantidad})` : '')
+
+  return (
+    <div className="space-y-4">
+      {/* Linda no ve los montos totales del negocio */}
+      <Encabezado titulo="Ventas" detalle={`${ventas.length} pedidos` + (esDueno ? ` · ${soles(cobrado)} sin cancelados` : '')}>
+        <button type="button" onClick={() => setAbierto(!abierto)} className={botonRosa} aria-expanded={abierto}>
+          <Icono nombre={abierto ? 'cerrar' : 'mas'} tam={16} /> {abierto ? 'Cerrar formulario' : 'Registrar venta'}
+        </button>
+      </Encabezado>
+      {mensaje && <p className="rounded-lg bg-ok/10 p-3 text-sm text-ok">{mensaje}</p>}
+      {error && <p className="rounded-lg bg-error/10 p-3 text-sm text-error">{error}</p>}
+
+      {abierto && (
+        <Caja titulo="Registrar venta" extra={<span className="max-w-md text-xs text-tinta/60">Ventas cobradas en el mostrador o coordinadas por WhatsApp. Descuentan el stock igual que una compra web y suman al tablero.</span>}>
+          <form onSubmit={registrar} className="grid gap-3 lg:max-w-2xl">
         <div className="flex gap-2">
           {['tienda', 'whatsapp'].map((c) => (
             <button type="button" key={c} onClick={() => elegirCanal(c)}
@@ -123,35 +165,48 @@ export default function VentaTienda() {
         </div>
         <p className="text-xs text-tinta/60">Con el celular, la compra aparece en “Mis compras” del cliente y podrá dejar una reseña verificada.</p>
 
-        {error && <p className="text-sm text-error">{error}</p>}
-        {mensaje && <p className="text-sm text-ok">{mensaje}</p>}
         <button disabled={lineas.length === 0} className="w-full rounded-lg bg-rosa py-2 font-semibold text-white disabled:opacity-40">
           Registrar venta
         </button>
-      </form>
+          </form>
+        </Caja>
+      )}
 
-      <div>
-        <h2 className="text-lg font-semibold">Últimas ventas en tienda y WhatsApp</h2>
-        <table className="mt-3 w-full text-sm [&_td]:pr-3 [&_th]:pr-3">
-          <thead className="text-left text-tinta/60">
-            <tr><th className="py-1">Código</th><th>Fecha</th><th>Canal</th><th>Cliente</th><th>Productos</th><th>Pago</th><th>Total</th></tr>
-          </thead>
-          <tbody className="divide-y divide-tinta/10">
-            {ultimas.map((v) => (
-              <tr key={v.codigo}>
-                <td className="whitespace-nowrap py-2 font-mono text-rosa">{v.codigo}</td>
-                <td className="whitespace-nowrap">{new Date(v.fecha + 'T12:00').toLocaleDateString('es-PE', { day: 'numeric', month: 'short' })}</td>
-                <td>{v.canal === 'tienda' ? 'Tienda' : 'WhatsApp'}</td>
-                <td>{v.cliente}</td>
-                <td>{v.items.map((i) => `${i.cantidad} × ${i.nombre}`).join(', ')}</td>
-                <td>{NOMBRES[v.metodo_pago]}</td>
-                <td className="whitespace-nowrap">{soles(v.total)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {ultimas.length === 0 && <p className="mt-2 text-sm text-tinta/60">Todavía no hay ventas registradas en la tienda.</p>}
-      </div>
-    </section>
+      <Caja>
+        <Filtros filtros={filtros} setFiltros={(f) => { setFiltros(f); setPagina(1) }}
+          estados={['pagado', 'reservado', 'listo_para_recoger', 'entregado', 'cancelado']} placeholder="Cliente, producto o pedido" />
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[820px] text-sm">
+            <thead className="border-b border-tinta/10">
+              <tr><th className={th}>Pedido</th><th className={th}>Fecha</th><th className={th}>Cliente</th><th className={th}>Detalle</th>
+                <th className={th}>Canal · pago</th><th className={th}>Total</th><th className={th}>Estado</th><th className={th}></th></tr>
+            </thead>
+            <tbody className="divide-y divide-tinta/10">
+              {pagina_.map((v) => (
+                <tr key={v.codigo}>
+                  <td className="px-3 py-3 font-mono text-xs">{v.codigo}</td>
+                  <td className="whitespace-nowrap px-3 py-3 tabular-nums">{v.fecha}</td>
+                  <td className="px-3 py-3 font-medium">{v.cliente}</td>
+                  <td className="px-3 py-3">{detalle(v)}</td>
+                  <td className="whitespace-nowrap px-3 py-3 text-tinta/80">{CANAL[v.canal]} · {NOMBRES[v.metodo_pago] || v.metodo_pago}</td>
+                  <td className="whitespace-nowrap px-3 py-3 tabular-nums">{soles(v.total)}</td>
+                  <td className="px-3 py-3"><Estado estado={v.estado} /></td>
+                  <td className="px-3 py-3 text-right">
+                    {SIGUIENTE[v.estado] && (
+                      <button type="button" onClick={() => avanzar(v)}
+                        className="whitespace-nowrap rounded-lg border border-morado/40 px-3 py-1 text-xs font-semibold text-morado hover:bg-morado/10">
+                        → {NOMBRE_ESTADO[SIGUIENTE[v.estado]]}
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {visibles.length === 0 && <p className="py-6 text-center text-sm text-tinta/60">No hay pedidos con esos filtros.</p>}
+        </div>
+        <Paginacion pagina={pagina} setPagina={setPagina} total={visibles.length} porPagina={POR_PAGINA} />
+      </Caja>
+    </div>
   )
 }

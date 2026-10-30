@@ -1,6 +1,6 @@
 """HU-22: datos de la página de inicio en una sola llamada: recomendados, servicios del taller y reseñas."""
 from fastapi import APIRouter, Depends
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import usuario_opcional
@@ -69,13 +69,13 @@ def servicios_del_taller(db: Session, cuantos: int = 4) -> list[ServicioInicio]:
 
 
 def resenas_destacadas(db: Session, cuantas: int = 3) -> list[ResenaInicio]:
-    """Las reseñas de 5 estrellas más recientes, sin repetir el mismo texto ni el mismo producto."""
+    """Primero las que destacó Ángel; luego las de 5 estrellas más recientes. Sin repetir texto ni producto."""
     filas = db.execute(
         select(Resena, Producto.nombre, TipoServicio.nombre)
         .outerjoin(Producto, Producto.id == Resena.producto_id)
         .outerjoin(TipoServicio, TipoServicio.id == Resena.tipo_servicio_id)
-        .where(Resena.estrellas == 5)
-        .order_by(Resena.fecha.desc(), Resena.id.desc())
+        .where(or_(Resena.estrellas == 5, Resena.destacada.is_(True)))
+        .order_by(Resena.destacada.desc(), Resena.fecha.desc(), Resena.id.desc())  # HU-24: primero las que destacó Ángel
         .limit(200)
     )
     elegidas, textos, temas = [], set(), set()

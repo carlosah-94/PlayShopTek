@@ -9,12 +9,14 @@ export default function ResumenIA() {
   const [r, setR] = useState(null)
   const [cargando, setCargando] = useState(false)
   const [error, setError] = useState('')
+  const [oculto, setOculto] = useState(false) // HU-24: el resumen se puede ocultar y volver a mostrar
 
   const generar = async () => {
     setCargando(true)
     setError('')
     try {
       setR(await api('/ia/resumen'))
+      setOculto(false)
     } catch (e) {
       setError(e.message)
     }
@@ -22,16 +24,28 @@ export default function ResumenIA() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">Resumen inteligente de la semana</h2>
-        <button onClick={generar} disabled={cargando} className="rounded-lg bg-morado px-4 py-2 text-sm font-semibold disabled:opacity-50">
-          {cargando ? 'Calculando...' : r ? 'Volver a calcular' : 'Generar con IA'}
+    <div className="space-y-4 rounded-2xl border border-rosa/30 bg-gradient-to-r from-morado/10 via-rosa/5 to-rosa/10 p-5">
+      {/* HU-24: cabecera lila como la del prototipo */}
+      <div className="flex flex-wrap items-center gap-4">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-rosa to-morado text-xl text-white" aria-hidden="true">✦</span>
+        <div className="min-w-0 flex-1 basis-60">
+          <h2 className="text-lg font-medium">Resumen inteligente</h2>
+          <p className="text-sm text-tinta/70">Lee las ventas, el stock y lo que buscan los clientes, y propone qué reponer, qué agregar y qué poner en oferta esta semana.</p>
+        </div>
+        {r && (
+          <button type="button" onClick={() => setOculto(!oculto)} aria-expanded={!oculto}
+            className="rounded-lg px-3 py-2 text-sm font-semibold text-tinta/80 hover:bg-tinta/5">
+            {oculto ? '▾ Mostrar' : '▴ Ocultar'}
+          </button>
+        )}
+        <button onClick={generar} disabled={cargando}
+          className="rounded-lg bg-gradient-to-r from-rosa to-[#8b2fd9] px-4 py-2 text-sm font-semibold text-white shadow-md disabled:opacity-50">
+          {cargando ? 'Calculando...' : r ? 'Volver a generar' : '✦ Generar resumen'}
         </button>
       </div>
       {error && <p className="rounded-lg bg-red-500/15 p-3 text-sm text-error">{error}</p>}
 
-      {r && (
+      {r && !oculto && (
         <>
           <p className="text-xs text-tinta/60">
             Ganó <b>{r.modelo.algoritmo_elegido}</b> · aprendió de {r.modelo.filas} semanas-producto

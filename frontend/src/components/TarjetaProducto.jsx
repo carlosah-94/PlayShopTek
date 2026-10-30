@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { agregarAlCarrito } from '../carrito.js'
+import { urlImagen } from '../api.js'
 import Icono from './Iconos.jsx'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
@@ -24,7 +25,7 @@ export default function TarjetaProducto({ p, favorito = false, onFavorito }) {
         <Link to={'/producto/' + p.id} tabIndex={-1}>
           {/* HU-22: foto cuadrada, así las consolas (fotos anchas) no dejan tanto espacio en blanco arriba y abajo */}
           {p.foto
-            ? <img src={p.foto} alt={p.nombre} loading="lazy" width="300" height="300" className="aspect-square w-full bg-white object-contain p-2" />
+            ? <img src={urlImagen(p.foto)} alt={p.nombre} loading="lazy" width="300" height="300" className="aspect-square w-full bg-white object-contain p-2" />
             : <div className="grid aspect-square place-items-center bg-tinta/5 text-sm text-tinta/60">Foto pendiente</div>}
         </Link>
         {p.descuento && <span className="absolute left-2 top-2 rounded-full bg-rosa px-2 py-0.5 text-xs font-semibold text-white">-{p.descuento}%</span>}

@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.api.routes import (
-    asistente, auth, cuenta, ia, inicio, intereses, productos, rastreo, reclamos, reparaciones, resenas, tablero, ventas,
+    asistente, auth, cuenta, gestion, ia, inicio, intereses, productos, rastreo, reclamos, reparaciones, resenas, tablero, ventas,
 )
 from app.config import settings
 from app.database import engine
@@ -51,4 +51,5 @@ api.include_router(asistente.router)
 api.include_router(reclamos.router)
 api.include_router(resenas.router)
 api.include_router(inicio.router)  # HU-22
+api.include_router(gestion.router)  # HU-24
 app.include_router(api)

@@ -11,9 +11,9 @@
   --color-noche: #150941; /* cabecera y pie de página, igual en los dos modos */
   --color-rosa: #cc19ab; /* TT-03: un poco más oscuro para que el texto blanco encima se lea bien (contraste 4.9:1) */
   --color-morado: #5546e4;
-  --color-ok: #11804a;
+  --color-ok: #0d6b3d; /* HU-24: un poco más oscuro para leerse bien sobre los avisos verdes claros */
   --color-error: #c41d55;
-  --color-aviso: #9a6700;
+  --color-aviso: #7f5500; /* HU-24: igual, sobre los avisos amarillos claros */
 }
 
 /* HU-20: modo oscuro (botón de la luna en la cabecera) */

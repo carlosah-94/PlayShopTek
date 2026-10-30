@@ -2,6 +2,9 @@
 // En producción (Vercel) VITE_API_URL apunta a Render; en desarrollo queda vacío y usa el proxy.
 const BASE = import.meta.env.VITE_API_URL || ''
 
+// HU-24: las fotos que sube Ángel viven en el servidor (/api/imagenes/15); las demás, en Vercel (/productos/p1-1.webp)
+export const urlImagen = (u) => (u && u.startsWith('/api/') ? BASE + u : u)
+
 export function guardarSesion(datos) { localStorage.setItem('psk-sesion', JSON.stringify(datos)) }
 export function leerSesion() { try { return JSON.parse(localStorage.getItem('psk-sesion')) } catch { return null } }
 export function cerrarSesion() { localStorage.removeItem('psk-sesion') }

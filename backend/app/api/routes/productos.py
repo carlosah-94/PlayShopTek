@@ -12,10 +12,11 @@ from app.api.deps import equipo_tienda, solo_dueno
 from app.database import get_db
 from app.ia.parecidos import parecidos
 from app.models import (
-    AvisoLlegada, Categoria, Condicion, Genero, GrupoInteres, Notificacion, Producto, Resena, Venta, VentaItem,
+    AvisoLlegada, Categoria, Condicion, Genero, GrupoInteres, Notificacion, Oferta, Producto, ProductoEtiqueta,
+    ProductoMedio, ProductoModo, Resena, Venta, VentaItem,
 )
-from app.models.enums import EstadoVenta, GrupoCondicion
-from app.schemas import ProductoDetalle, ProductoEdicion, ProductoSalida, ResenaSalida
+from app.models.enums import EstadoVenta, GrupoCondicion, TipoMedio
+from app.schemas import ProductoAlta, ProductoDetalle, ProductoEdicion, ProductoSalida, ResenaSalida
 
 router = APIRouter(prefix="/productos", tags=["Catálogo"])
 
@@ -77,7 +78,8 @@ def _consulta_base():
         select(Producto)
         .where(Producto.activo.is_(True))
         .options(selectinload(Producto.categoria), selectinload(Producto.condicion),
-                 selectinload(Producto.generos), selectinload(Producto.ofertas))
+                 selectinload(Producto.generos), selectinload(Producto.ofertas),
+                 selectinload(Producto.medios))  # HU-24: fotos subidas por Ángel (si las hay)
         .order_by(Producto.id)
     )
 
@@ -166,3 +168,89 @@ def avisar_llegada(db: Session, p: Producto) -> None:
         db.add(Notificacion(cliente_id=aviso.cliente_id, titulo=f"¡Llegó {p.nombre}!",
                             detalle="Ya está disponible en la tienda. Quedan pocas unidades.", destino=f"/producto/{p.id}"))
         aviso.avisado_en = datetime.now(UTC)
+
+# ── HU-24: "Dar de alta un producto", editarlo y quitarlo del catálogo (solo Ángel) ──────────────────
+def siguiente_codigo_producto(db: Session) -> str:
+    """p47 -> p48 (mismo formato que los productos del prototipo)."""
+    codigos = db.scalars(select(Producto.codigo).where(Producto.codigo.like("p%")))
+    return "p" + str(max((int(c[1:]) for c in codigos if c[1:].isdigit()), default=0) + 1)
+
+
+def aplicar_alta(db: Session, p: Producto, datos: ProductoAlta) -> None:
+    """Copia el formulario al producto. Lo usan "Publicar producto" y "Guardar cambios"."""
+    categoria = db.scalar(select(Categoria).where(Categoria.nombre == datos.categoria))
+    condicion = db.scalar(select(Condicion).where(Condicion.nombre == datos.condicion))
+    if categoria is None or condicion is None:
+        raise HTTPException(422, "Elige una categoría y un estado de la lista.")
+    generos = list(db.scalars(select(Genero).where(Genero.id.in_(datos.generos)))) if categoria.es_juego else []
+    p.nombre, p.categoria, p.condicion = datos.nombre.strip(), categoria, condicion
+    p.precio, p.stock, p.descripcion = datos.precio, datos.stock, datos.descripcion
+    # Los juegos son de su consola; las máquinas y mandos dicen para qué consola son; lo de PC es "PC"
+    p.plataforma = datos.categoria if categoria.es_juego else ("PC" if datos.categoria == "PC y periféricos" else datos.plataforma)
+    p.subcategoria = datos.subcategoria if datos.categoria == "PC y periféricos" else None
+    p.color = datos.color if datos.categoria == "Mandos" else None
+    p.origen = datos.origen if datos.categoria == "Mandos" else None
+    p.incluye_caja, p.incluye_manual, p.incluye_disco = (
+        (datos.incluye_caja, datos.incluye_manual, datos.incluye_disco) if categoria.es_juego else (None, None, None))
+    p.generos = generos
+    if p.id:  # al editar: primero se borran los anteriores, si no la base ve "repetidos" al insertar los nuevos
+        p.modos, p.etiquetas, p.medios = [], [], []
+        db.flush()
+    p.modos = [ProductoModo(modo=m) for m in dict.fromkeys(datos.modos)] if categoria.es_juego else []
+    p.etiquetas = [ProductoEtiqueta(etiqueta=e.strip().lower()[:40]) for e in dict.fromkeys(datos.etiquetas) if e.strip()]
+    p.medios = [ProductoMedio(tipo=TipoMedio.imagen, url=u, orden=i) for i, u in enumerate(datos.fotos[:4], start=1)]
+    p.trailer_url = datos.trailer_url or None
+    p.es_preventa = datos.es_preventa
+    p.monto_reserva = datos.monto_reserva if datos.es_preventa else None
+    p.fecha_lanzamiento = datos.fecha_lanzamiento if datos.es_preventa else None
+    # Descuento: si es distinto al vigente, empieza hoy. Si se quita, la oferta vigente termina hoy.
+    vigente = oferta_vigente(p) if p.id else None
+    hoy = date.today()
+
+    def terminar(o: Oferta) -> None:
+        # Se guarda como historial con los días que duró; si empezó hoy mismo, simplemente se borra
+        dias = (hoy - o.fecha_inicio).days
+        if dias > 0:
+            o.dias = dias
+        else:
+            p.ofertas.remove(o)
+
+    if datos.descuento and datos.descuento_dias:
+        if vigente is None or (vigente.porcentaje, vigente.dias) != (datos.descuento, datos.descuento_dias):
+            if vigente:
+                terminar(vigente)
+            p.ofertas.append(Oferta(porcentaje=datos.descuento, dias=datos.descuento_dias, fecha_inicio=hoy))
+    elif vigente:
+        terminar(vigente)
+
+
+@router.post("", response_model=ProductoSalida, status_code=201, dependencies=[Depends(solo_dueno)])
+def publicar(datos: ProductoAlta, db: Session = Depends(get_db)):
+    p = Producto(codigo=siguiente_codigo_producto(db), ofertas=[])
+    aplicar_alta(db, p, datos)
+    db.add(p)
+    db.commit()
+    return a_salida(db.scalar(_consulta_base().where(Producto.id == p.id)), calificaciones(db))
+
+
+@router.put("/{producto_id}", response_model=ProductoSalida, dependencies=[Depends(solo_dueno)])
+def guardar_cambios(producto_id: int, datos: ProductoAlta, db: Session = Depends(get_db)):
+    p = db.scalar(_consulta_base().where(Producto.id == producto_id))
+    if p is None:
+        raise HTTPException(404, "Producto no encontrado.")
+    estaba_agotado = p.stock == 0
+    aplicar_alta(db, p, datos)
+    if estaba_agotado and p.stock > 0:
+        avisar_llegada(db, p)
+    db.commit()
+    return a_salida(db.scalar(_consulta_base().where(Producto.id == p.id)), calificaciones(db))
+
+
+@router.delete("/{producto_id}", status_code=204, dependencies=[Depends(solo_dueno)])
+def quitar_del_catalogo(producto_id: int, db: Session = Depends(get_db)):
+    """No se borra la fila: queda inactivo, así sus ventas y reseñas antiguas siguen guardadas."""
+    p = db.get(Producto, producto_id)
+    if p is None:
+        raise HTTPException(404, "Producto no encontrado.")
+    p.activo = False
+    db.commit()

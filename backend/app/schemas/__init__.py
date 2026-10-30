@@ -88,6 +88,14 @@ class InicioSalida(BaseModel):
     resenas: list[ResenaInicio]
 
 
+class ResenaEquipo(ResenaSalida):
+    """HU-24: reseña vista desde el panel, con el producto o servicio del que habla."""
+    sobre: str
+    es_producto: bool
+    destacada: bool = False
+    origen: str = "web"  # web, tienda o whatsapp
+
+
 class ResenaEntrada(BaseModel):
     """HU-17: lo que manda el cliente para opinar de un producto que compró."""
     estrellas: int = Field(ge=1, le=5)
@@ -235,6 +243,11 @@ class VentaTiendaEntrada(BaseModel):
     numero_operacion: str | None = Field(default=None, pattern=r"^\d{6,12}$")
 
 
+class CambioEstadoVenta(BaseModel):
+    """HU-24: Linda o Ángel avanzan un pedido (pagado -> listo para recoger -> entregado)."""
+    estado: EstadoVenta
+
+
 class VentaTiendaSalida(VentaSalida):
     canal: str
     cliente: str
@@ -367,3 +380,101 @@ class ReclamoSalida(BaseModel):
 
 class RespuestaReclamo(BaseModel):
     respuesta: str = Field(min_length=10, max_length=2000)
+
+# ── HU-24: panel de gestión del dueño ───────────────────────────────────────────────
+class ImagenEntrada(BaseModel):
+    """Foto que sube Ángel, ya achicada en el navegador: 'data:image/webp;base64,...' (máximo ~1.5 MB)."""
+    datos: str = Field(max_length=2_000_000)
+
+
+class ImagenSalida(BaseModel):
+    url: str  # /api/imagenes/15
+
+
+class BannerEntrada(BaseModel):
+    titulo: str = Field(min_length=2, max_length=120)
+    subtitulo: str | None = Field(default=None, max_length=200)
+    destino: str | None = Field(default=None, max_length=60)
+    imagen_url: str | None = Field(default=None, max_length=400)
+    imagen_movil_url: str | None = Field(default=None, max_length=400)
+    texto_alternativo: str | None = Field(default=None, max_length=160)
+    ubicacion: Literal["carrusel", "cuadro_ofertas", "cuadro_reparaciones"] = "carrusel"
+    con_texto: bool = True
+    activo: bool = True
+    orden: int = 0
+
+
+class BannerSalida(BannerEntrada):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+
+
+class TrabajadorEntrada(BaseModel):
+    nombre: str = Field(min_length=3, max_length=120)
+    email: EmailStr
+    telefono: str | None = Field(default=None, pattern=r"^9\d{8}$")
+
+
+class TrabajadorSalida(BaseModel):
+    usuario_id: int
+    nombre: str
+    email: str
+    telefono: str | None
+    rol: Rol
+    activo: bool
+    fecha_ingreso: date | None
+    reparaciones_atendidas: int
+    clave_temporal: str | None = None  # solo al crear la cuenta o restablecer la contraseña
+
+
+class CambioActivo(BaseModel):
+    activo: bool
+
+
+class ServicioEntrada(BaseModel):
+    nombre: str = Field(min_length=3, max_length=80)
+    detalle: str | None = Field(default=None, max_length=200)
+    tiempo: str | None = Field(default=None, max_length=40)
+
+
+class ServicioSalida(ServicioEntrada):
+    id: int
+    activo: bool
+    icono: str | None
+
+
+class GeneroEntrada(BaseModel):
+    nombre: str = Field(min_length=3, max_length=40)
+
+
+class GeneroSalida(BaseModel):
+    id: str
+    nombre: str
+    juegos: int
+
+
+class ProductoAlta(BaseModel):
+    """HU-24: "Dar de alta un producto" (y editarlo). Según la categoría se llenan unos campos u otros."""
+    nombre: str = Field(min_length=3, max_length=160)
+    categoria: str
+    precio: Decimal = Field(gt=0)
+    stock: int = Field(ge=0)
+    condicion: str
+    plataforma: str | None = Field(default=None, max_length=10)
+    subcategoria: str | None = Field(default=None, max_length=40)
+    color: str | None = Field(default=None, max_length=30)
+    origen: str | None = Field(default=None, max_length=20)
+    generos: list[str] = []
+    modos: list[ModoJuego] = []
+    etiquetas: list[str] = Field(default=[], max_length=12)
+    incluye_caja: bool | None = None
+    incluye_manual: bool | None = None
+    incluye_disco: bool | None = None
+    descripcion: str | None = Field(default=None, max_length=2000)
+    es_preventa: bool = False
+    monto_reserva: Decimal | None = Field(default=None, ge=0)
+    fecha_lanzamiento: date | None = None
+    descuento: int | None = Field(default=None, ge=1, le=90)
+    descuento_dias: int | None = Field(default=None, ge=1, le=60)
+    fotos: list[str] = Field(default=[], max_length=4)
+    trailer_url: str | None = Field(default=None, max_length=300)
