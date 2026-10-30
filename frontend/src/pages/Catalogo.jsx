@@ -1,14 +1,13 @@
 // HU-01: catálogo con filtros por categoría, género y estado.
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import { api } from '../api.js'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { api, leerSesion } from '../api.js'
+import TarjetaProducto from '../components/TarjetaProducto.jsx'
 
 const CATEGORIAS = ['PS5', 'PS4', 'PS3', 'PS2', 'Máquinas', 'Mandos', 'PC y periféricos']
 const GENEROS = [['accion', 'Acción'], ['aventura', 'Aventura'], ['deportes', 'Deportes'], ['carreras', 'Carreras'],
   ['shooter', 'Disparos'], ['pelea', 'Pelea'], ['rol', 'Rol'], ['terror', 'Terror'], ['familiar', 'Familiar']]
 const ESTADOS = [['nuevo', 'Nuevo'], ['usado', 'Usado'], ['reacondicionado', 'Reacondicionado en taller']]
-
-const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 
 export default function Catalogo() {
   // HU-20: la búsqueda y la categoría pueden llegar en el enlace (ej. /catalogo?q=fifa desde el buscador de la cabecera)
@@ -19,6 +18,21 @@ export default function Catalogo() {
   const [productos, setProductos] = useState([])
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(true) // TT-03: mientras llega la respuesta del servidor
+  // HU-21: el corazón de favoritos solo funciona con cuenta de cliente; sin cuenta lleva a iniciar sesión
+  const esCliente = leerSesion()?.usuario.rol === 'cliente'
+  const navegar = useNavigate()
+  const [favoritos, setFavoritos] = useState(new Set())
+  useEffect(() => {
+    if (esCliente) api('/mi/favoritos').then((fs) => setFavoritos(new Set(fs.map((f) => f.id)))).catch(() => {})
+  }, [])
+  const alternarFavorito = async (p) => {
+    if (!esCliente) return navegar('/login')
+    const es = favoritos.has(p.id)
+    await api('/mi/favoritos/' + p.id, { metodo: es ? 'DELETE' : 'PUT' })
+    const nuevo = new Set(favoritos)
+    if (es) nuevo.delete(p.id); else nuevo.add(p.id)
+    setFavoritos(nuevo)
+  }
 
   // Si se busca otra vez desde la cabecera estando ya en el catálogo, se actualizan los filtros
   useEffect(() => {
@@ -47,8 +61,8 @@ export default function Catalogo() {
 
   return (
     <section>
-      <h1 className="text-2xl font-bold">Catálogo</h1>
-      <p className="mt-1 text-sm text-tinta/60">Datos de ejemplo cargados desde la base de datos.</p>
+      <h1 className="text-3xl font-semibold">Catálogo completo</h1>
+      <p className="mt-1 text-sm text-tinta/60">Juegos, consolas, mandos y accesorios de la tienda.</p>
 
       <div className="mt-4 grid gap-2 sm:grid-cols-4">
         <input placeholder="Buscar..." value={filtros.q} onChange={cambiar('q')} className={selector} />
@@ -78,21 +92,11 @@ export default function Catalogo() {
         </p>
       )}
 
-      <ul className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <h2 className="sr-only">Productos</h2>
+      <ul className="mt-2 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {productos.map((p) => (
           <li key={p.id}>
-            <Link to={'/producto/' + p.id} className="block h-full rounded-xl border border-tinta/10 bg-superficie p-4 hover:border-rosa/60">
-            <p className="text-xs uppercase tracking-wide text-tinta/60">{p.categoria} · {p.condicion || 'Nuevo'}</p>
-            <h2 className="mt-1 font-semibold">{p.nombre}</h2>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-lg font-bold">{soles(p.precio_final)}</span>
-              {p.descuento && <span className="text-sm text-tinta/60 line-through">{soles(p.precio)}</span>}
-              {p.descuento && <span className="rounded bg-rosa px-1.5 text-xs font-semibold text-white">-{p.descuento}%</span>}
-            </div>
-            <p className="mt-2 text-sm text-tinta/70">
-              {p.es_preventa ? 'Preventa' : p.stock > 0 ? p.stock + ' en stock' : 'Agotado'}
-            </p>
-            </Link>
+            <TarjetaProducto p={p} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} />
           </li>
         ))}
       </ul>

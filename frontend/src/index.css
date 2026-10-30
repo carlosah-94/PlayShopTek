@@ -36,3 +36,6 @@ h1, h2, h3 { font-family: var(--font-titulo); }
 /* El texto rosa usa un tono que se lee bien en cada modo (contraste de 7.4:1 en claro y 6.2:1 en oscuro) */
 .text-rosa { color: #a3128a; }
 html[data-tema="oscuro"] .text-rosa { color: #f15fd5; }
+
+/* HU-21: el morado de las categorías también se aclara en modo oscuro */
+html[data-tema="oscuro"] .text-morado { color: #a99eff; }

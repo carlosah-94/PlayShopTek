@@ -1,6 +1,8 @@
 """HU-01 (catálogo con filtros), HU-02 (ficha), HU-12 (inventario del dueño) y HU-05 (aviso de llegada)."""
+import json
 from datetime import UTC, date, datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
+from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, or_, select
@@ -16,6 +18,16 @@ from app.models.enums import EstadoVenta, GrupoCondicion
 from app.schemas import ProductoDetalle, ProductoEdicion, ProductoSalida, ResenaSalida
 
 router = APIRouter(prefix="/productos", tags=["Catálogo"])
+
+# HU-21: cuántas fotos tiene cada producto (las sacó scripts/extraer_fotos.py del prototipo).
+# Las fotos viven en el frontend (Vercel): /productos/p36-1.webp, /productos/p36-2.webp...
+FOTOS = json.loads((Path(__file__).resolve().parents[2] / "seed_data" / "fotos.json").read_text(encoding="utf-8"))
+
+
+def fotos_de(p: Producto) -> list[str]:
+    """Fotos del producto: primero las subidas por la tienda (si hay), si no, las del prototipo."""
+    subidas = [m.url for m in p.medios if m.tipo.value == "imagen"] if "medios" in p.__dict__ else []
+    return subidas or [f"/productos/{p.codigo}-{n}.webp" for n in range(1, FOTOS.get(p.codigo, 0) + 1)]
 
 
 def oferta_vigente(p: Producto, hoy: date | None = None):
@@ -41,7 +53,7 @@ def a_salida(p: Producto, notas: dict[int, Decimal]) -> ProductoSalida:
         precio=p.precio, precio_final=final, descuento=o.porcentaje if o else None, stock=p.stock,
         condicion=p.condicion.nombre, grupo_condicion=p.condicion.grupo, generos=[g.id for g in p.generos],
         es_preventa=p.es_preventa, fecha_lanzamiento=p.fecha_lanzamiento, calificacion=notas.get(p.id),
-        trailer_url=p.trailer_url,
+        trailer_url=p.trailer_url, foto=next(iter(fotos_de(p)), None),
     )
 
 def cupos_de_reserva(db: Session, p: Producto) -> int | None:
@@ -108,7 +120,7 @@ def detalle(producto_id: int, db: Session = Depends(get_db)):
         descripcion=p.descripcion, subcategoria=p.subcategoria, incluye_caja=p.incluye_caja,
         incluye_manual=p.incluye_manual, incluye_disco=p.incluye_disco, color=p.color, origen=p.origen,
         etiquetas=[e.etiqueta for e in p.etiquetas], modos=[m.modo for m in p.modos],
-        fotos=[m.url for m in p.medios if m.tipo.value == "imagen"], monto_reserva=p.monto_reserva,
+        fotos=fotos_de(p), monto_reserva=p.monto_reserva,
         cupos_reserva=cupos_de_reserva(db, p), total_resenas=total,
         resenas=[ResenaSalida(id=r.id, nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
                               respuesta=r.respuesta, verificada=r.venta_id is not None) for r in ultimas],

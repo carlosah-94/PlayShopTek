@@ -52,6 +52,7 @@ class ProductoSalida(BaseModel):
     fecha_lanzamiento: date | None
     calificacion: Decimal | None
     trailer_url: str | None
+    foto: str | None = None  # HU-21: foto principal para la tarjeta del catálogo
 
 
 class ResenaSalida(BaseModel):
