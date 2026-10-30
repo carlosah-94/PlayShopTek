@@ -19,21 +19,21 @@ export default function Panel() {
     <section className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold">Hola, {sesion.usuario.nombre.split(' ')[0]}</h1>
-        <p className="text-sm text-white/60">{esDueno ? 'Dueño · acceso total' : 'Trabajadora · taller, stock bajo y reseñas'}</p>
+        <p className="text-sm text-tinta/60">{esDueno ? 'Dueño · acceso total' : 'Trabajadora · taller, stock bajo y reseñas'}</p>
       </div>
 
       {esDueno
         ? <p className="rounded-lg border border-morado/50 bg-morado/10 p-3 text-sm">Aquí irán el tablero de ventas, el resumen inteligente, el inventario con precios y Mi equipo.</p>
-        : <p className="rounded-lg border border-white/15 p-3 text-sm text-white/70">Tu perfil no ve las ventas totales ni puede cambiar precios.</p>}
+        : <p className="rounded-lg border border-tinta/15 p-3 text-sm text-tinta/70">Tu perfil no ve las ventas totales ni puede cambiar precios.</p>}
 
-      <div className="rounded-xl border border-white/10 bg-superficie p-4">
+      <div className="rounded-xl border border-tinta/10 bg-superficie p-4">
         <h2 className="font-semibold">Stock bajo</h2>
-        {error && <p className="text-sm text-red-300">{error}</p>}
-        <ul className="mt-2 divide-y divide-white/10 text-sm">
+        {error && <p className="text-sm text-error">{error}</p>}
+        <ul className="mt-2 divide-y divide-tinta/10 text-sm">
           {stockBajo.map((p) => (
             <li key={p.id} className="flex justify-between py-2">
               <span>{p.nombre}</span>
-              <span className={p.stock === 0 ? 'text-red-300' : 'text-white/70'}>{p.stock === 0 ? 'Agotado' : 'Quedan ' + p.stock}</span>
+              <span className={p.stock === 0 ? 'text-error' : 'text-tinta/70'}>{p.stock === 0 ? 'Agotado' : 'Quedan ' + p.stock}</span>
             </li>
           ))}
         </ul>

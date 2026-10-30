@@ -32,31 +32,31 @@ export default function Reclamos() {
     <section className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold">Libro de Reclamaciones</h1>
-        <p className="text-sm text-white/60">Plazo legal: 15 días hábiles para responder.</p>
+        <p className="text-sm text-tinta/60">Plazo legal: 15 días hábiles para responder.</p>
       </div>
-      {error && <p className="text-sm text-red-300">{error}</p>}
-      {lista.length === 0 && <p className="text-white/60">No hay reclamos registrados.</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
+      {lista.length === 0 && <p className="text-tinta/60">No hay reclamos registrados.</p>}
 
       {lista.map((r) => (
-        <article key={r.id} className="space-y-2 rounded-xl border border-white/10 bg-superficie p-4">
+        <article key={r.id} className="space-y-2 rounded-xl border border-tinta/10 bg-superficie p-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-mono text-rosa">{r.codigo}</span>
-            <span className="rounded bg-white/10 px-2 py-0.5 text-xs capitalize">{r.tipo}</span>
-            <span className={'rounded px-2 py-0.5 text-xs ' + (r.estado === 'pendiente' ? 'bg-amber-400/20 text-amber-200' : 'bg-green-400/20 text-green-200')}>
+            <span className="rounded bg-tinta/10 px-2 py-0.5 text-xs capitalize">{r.tipo}</span>
+            <span className={'rounded px-2 py-0.5 text-xs ' + (r.estado === 'pendiente' ? 'bg-amber-400/20 text-aviso' : 'bg-green-400/20 text-ok')}>
               {r.estado === 'pendiente' ? 'Pendiente · responder hasta el ' + fecha(r.fecha_limite) : 'Respondido'}</span>
-            <span className="ml-auto text-xs text-white/50">Recibido el {fecha(r.fecha)}</span>
+            <span className="ml-auto text-xs text-tinta/60">Recibido el {fecha(r.fecha)}</span>
           </div>
           <p className="text-sm"><b>{r.nombre}</b> · {r.correo}{r.telefono ? ' · ' + r.telefono : ''}</p>
-          {r.bien_contratado && <p className="text-sm text-white/70">{r.bien_contratado}{r.monto_reclamado ? ' · S/ ' + r.monto_reclamado : ''}</p>}
+          {r.bien_contratado && <p className="text-sm text-tinta/70">{r.bien_contratado}{r.monto_reclamado ? ' · S/ ' + r.monto_reclamado : ''}</p>}
           <p className="text-sm">{r.detalle}</p>
-          {r.pedido_cliente && <p className="text-sm text-white/70">Solicita: {r.pedido_cliente}</p>}
+          {r.pedido_cliente && <p className="text-sm text-tinta/70">Solicita: {r.pedido_cliente}</p>}
 
           {r.respuesta && <p className="rounded-lg bg-fondo p-3 text-sm"><b>Respuesta:</b> {r.respuesta}</p>}
           {!r.respuesta && esDueno && (
             <div className="flex gap-2">
               <input placeholder="Escribe la respuesta al cliente" value={textos[r.id] || ''}
                 onChange={(e) => setTextos({ ...textos, [r.id]: e.target.value })}
-                className="flex-1 rounded-lg border border-white/15 bg-fondo px-3 py-2 text-sm" />
+                className="flex-1 rounded-lg border border-tinta/15 bg-fondo px-3 py-2 text-sm" />
               <button onClick={() => responder(r.id)} className="rounded-lg bg-rosa px-3 py-2 text-sm font-semibold text-white">Responder</button>
             </div>
           )}

@@ -90,8 +90,8 @@ export default function Ficha() {
     cargar()
   }
 
-  if (error) return <p className="rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>
-  if (!p) return <p className="text-white/60">Cargando...</p>
+  if (error) return <p className="rounded-lg bg-red-500/15 p-3 text-sm text-error">{error}</p>
+  if (!p) return <p className="text-tinta/60">Cargando...</p>
 
   const video = idDeYoutube(p.trailer_url)
   const incluye = [p.incluye_caja && 'Caja', p.incluye_manual && 'Manual', p.incluye_disco && 'Disco'].filter(Boolean)
@@ -99,27 +99,27 @@ export default function Ficha() {
 
   return (
     <article className="space-y-6">
-      <Link to="/" className="text-sm text-white/60 hover:text-rosa">← Volver al catálogo</Link>
+      <Link to="/" className="text-sm text-tinta/60 hover:text-rosa">← Volver al catálogo</Link>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-3">
           {p.fotos.length
             ? <img src={p.fotos[0]} alt={p.nombre} className="aspect-[4/3] w-full rounded-xl object-cover" />
-            : <div className="grid aspect-[4/3] place-items-center rounded-xl bg-superficie text-white/60">Foto pendiente</div>}
+            : <div className="grid aspect-[4/3] place-items-center rounded-xl bg-superficie text-tinta/60">Foto pendiente</div>}
           {video && <Trailer key={video} id={video} nombre={p.nombre} />}
         </div>
 
         <div className="space-y-4">
-          <p className="text-xs uppercase tracking-wide text-white/50">{p.categoria} · {p.condicion}</p>
+          <p className="text-xs uppercase tracking-wide text-tinta/60">{p.categoria} · {p.condicion}</p>
           <h1 className="text-2xl font-bold">{p.nombre}</h1>
           {p.calificacion && <p className="text-sm">★ {p.calificacion} · {p.total_resenas} reseñas</p>}
 
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-bold">{soles(p.precio_final)}</span>
-            {p.descuento && <span className="text-white/50 line-through">{soles(p.precio)}</span>}
+            {p.descuento && <span className="text-tinta/60 line-through">{soles(p.precio)}</span>}
             {p.descuento && <span className="rounded bg-rosa px-1.5 text-sm font-semibold text-white">-{p.descuento}%</span>}
           </div>
-          <p className={p.stock === 0 && !p.es_preventa ? 'text-red-300' : 'text-white/70'}>{disponibilidad}</p>
+          <p className={p.stock === 0 && !p.es_preventa ? 'text-error' : 'text-tinta/70'}>{disponibilidad}</p>
           {p.es_preventa && p.monto_reserva && <ReservaPreventa p={p} />}
           {!p.es_preventa && p.stock > 0 && (
             <div className="flex items-center gap-3">
@@ -132,30 +132,30 @@ export default function Ficha() {
           {/* HU-05: favoritos y "Avísame cuando llegue" (solo con cuenta de cliente) */}
           {esCliente ? (
             <div className="flex flex-wrap items-center gap-3 text-sm">
-              <button onClick={alternarFavorito} className="rounded-lg border border-white/20 px-4 py-2">
+              <button onClick={alternarFavorito} className="rounded-lg border border-tinta/20 px-4 py-2">
                 {esFavorito ? '♥ En tus favoritos' : '♡ Guardar en favoritos'}
               </button>
               {p.stock === 0 && !p.es_preventa && !aviso && (
                 <button onClick={pedirAviso} className="rounded-lg border border-rosa px-4 py-2 text-rosa">Avísame cuando llegue</button>
               )}
-              {aviso && <span className="text-green-300">{aviso}</span>}
+              {aviso && <span className="text-ok">{aviso}</span>}
             </div>
           ) : (
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-tinta/60">
               <Link to={'/login?volver=/producto/' + id} className="text-rosa underline">Inicia sesión</Link> para guardar favoritos
               {p.stock === 0 && !p.es_preventa ? ' o pedir que te avisemos cuando llegue' : ''}.
             </p>
           )}
 
-          {p.descripcion && <p className="text-white/80">{p.descripcion}</p>}
+          {p.descripcion && <p className="text-tinta/80">{p.descripcion}</p>}
 
           <dl className="grid grid-cols-2 gap-2 text-sm">
-            {incluye.length > 0 && <><dt className="text-white/50">Incluye</dt><dd>{incluye.join(', ')}</dd></>}
-            {p.modos.length > 0 && <><dt className="text-white/50">Modos</dt><dd>{p.modos.map((m) => MODOS[m]).join(', ')}</dd></>}
-            {p.color && <><dt className="text-white/50">Color</dt><dd>{p.color}</dd></>}
-            {p.origen && <><dt className="text-white/50">Origen</dt><dd>{p.origen}</dd></>}
+            {incluye.length > 0 && <><dt className="text-tinta/60">Incluye</dt><dd>{incluye.join(', ')}</dd></>}
+            {p.modos.length > 0 && <><dt className="text-tinta/60">Modos</dt><dd>{p.modos.map((m) => MODOS[m]).join(', ')}</dd></>}
+            {p.color && <><dt className="text-tinta/60">Color</dt><dd>{p.color}</dd></>}
+            {p.origen && <><dt className="text-tinta/60">Origen</dt><dd>{p.origen}</dd></>}
           </dl>
-          <p className="text-sm text-white/50">Recojo en tienda: Av. Revolución 1420, Villa El Salvador.</p>
+          <p className="text-sm text-tinta/60">Recojo en tienda: Av. Revolución 1420, Villa El Salvador.</p>
         </div>
       </div>
 
@@ -168,37 +168,37 @@ export default function Ficha() {
             <p className="font-semibold">Compraste este producto: cuéntanos qué te pareció</p>
             <div className="flex gap-2">
               <select value={nueva.estrellas} onChange={(e) => setNueva({ ...nueva, estrellas: e.target.value })}
-                className="rounded-lg border border-white/15 bg-fondo px-2 py-2">
+                className="rounded-lg border border-tinta/15 bg-fondo px-2 py-2">
                 {[5, 4, 3, 2, 1].map((n) => <option key={n} value={n}>{'★'.repeat(n)}</option>)}
               </select>
               <input placeholder="Tu opinión (mínimo 10 letras)" value={nueva.texto} minLength={10} required
                 onChange={(e) => setNueva({ ...nueva, texto: e.target.value })}
-                className="flex-1 rounded-lg border border-white/15 bg-fondo px-3 py-2" />
+                className="flex-1 rounded-lg border border-tinta/15 bg-fondo px-3 py-2" />
               <button className="rounded-lg bg-rosa px-4 py-2 font-semibold text-white">Publicar</button>
             </div>
-            {errorResena && <p className="text-red-300">{errorResena}</p>}
+            {errorResena && <p className="text-error">{errorResena}</p>}
           </form>
         )}
-        {esCliente && puedo?.motivo === 'ya_opinaste' && <p className="mt-2 text-sm text-green-300">✓ Ya dejaste tu reseña. ¡Gracias!</p>}
+        {esCliente && puedo?.motivo === 'ya_opinaste' && <p className="mt-2 text-sm text-ok">✓ Ya dejaste tu reseña. ¡Gracias!</p>}
         {esCliente && puedo?.motivo === 'no_compraste' && (
-          <p className="mt-2 text-sm text-white/50">Solo pueden opinar quienes compraron este producto (en la web o en la tienda con su celular).</p>
+          <p className="mt-2 text-sm text-tinta/60">Solo pueden opinar quienes compraron este producto (en la web o en la tienda con su celular).</p>
         )}
 
         <ul className="mt-2 grid gap-3 sm:grid-cols-2">
           {p.resenas.map((r, i) => (
-            <li key={r.id ?? i} className="rounded-xl border border-white/10 bg-superficie p-4 text-sm">
+            <li key={r.id ?? i} className="rounded-xl border border-tinta/10 bg-superficie p-4 text-sm">
               <p className="font-semibold">
                 {r.nombre} <span className="text-rosa">{'★'.repeat(r.estrellas)}</span>
-                {r.verificada && <span className="ml-2 rounded bg-green-500/15 px-1.5 text-xs font-normal text-green-300">✓ Compra verificada</span>}
+                {r.verificada && <span className="ml-2 rounded bg-green-500/15 px-1.5 text-xs font-normal text-ok">✓ Compra verificada</span>}
               </p>
-              <p className="mt-1 text-white/80">{r.texto}</p>
-              {r.respuesta && <p className="mt-2 border-l-2 border-morado pl-2 text-white/60">Tienda: {r.respuesta}</p>}
+              <p className="mt-1 text-tinta/80">{r.texto}</p>
+              {r.respuesta && <p className="mt-2 border-l-2 border-morado pl-2 text-tinta/60">Tienda: {r.respuesta}</p>}
               {/* La tienda responde las reseñas que aún no tienen respuesta */}
               {esEquipo && !r.respuesta && r.id && (
                 <div className="mt-2 flex gap-2">
                   <input placeholder="Responder como tienda" value={respuestas[r.id] || ''}
                     onChange={(e) => setRespuestas({ ...respuestas, [r.id]: e.target.value })}
-                    className="flex-1 rounded-lg border border-white/15 bg-fondo px-2 py-1" />
+                    className="flex-1 rounded-lg border border-tinta/15 bg-fondo px-2 py-1" />
                   <button onClick={() => responder(r.id)} disabled={(respuestas[r.id] || '').length < 5}
                     className="rounded-lg border border-rosa px-3 py-1 text-rosa disabled:opacity-40">Responder</button>
                 </div>
@@ -214,14 +214,14 @@ export default function Ficha() {
           <ul className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {parecidos.map((x) => (
               <li key={x.id}>
-                <Link to={'/producto/' + x.id} className="block rounded-xl border border-white/10 bg-superficie p-4 text-sm hover:border-rosa">
-                  <p className="text-xs text-white/50">{x.categoria}</p>
+                <Link to={'/producto/' + x.id} className="block rounded-xl border border-tinta/10 bg-superficie p-4 text-sm hover:border-rosa">
+                  <p className="text-xs text-tinta/60">{x.categoria}</p>
                   <p className="font-semibold">{x.nombre}</p>
                   <p className="mt-1">
                     {soles(x.precio_final)}
                     {x.descuento && <span className="ml-2 rounded bg-rosa px-1.5 text-xs text-white">-{x.descuento}%</span>}
                   </p>
-                  <p className={x.stock > 0 ? 'text-xs text-white/60' : 'text-xs text-red-300'}>{x.stock > 0 ? x.stock + ' en stock' : 'Agotado'}</p>
+                  <p className={x.stock > 0 ? 'text-xs text-tinta/60' : 'text-xs text-error'}>{x.stock > 0 ? x.stock + ' en stock' : 'Agotado'}</p>
                 </Link>
               </li>
             ))}

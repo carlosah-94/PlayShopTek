@@ -1,6 +1,6 @@
 // HU-01: catálogo con filtros por categoría, género y estado.
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { api } from '../api.js'
 
 const CATEGORIAS = ['PS5', 'PS4', 'PS3', 'PS2', 'Máquinas', 'Mandos', 'PC y periféricos']
@@ -11,10 +11,21 @@ const ESTADOS = [['nuevo', 'Nuevo'], ['usado', 'Usado'], ['reacondicionado', 'Re
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 
 export default function Catalogo() {
-  const [filtros, setFiltros] = useState({ categoria: '', genero: '', estado: '', q: '' })
+  // HU-20: la búsqueda y la categoría pueden llegar en el enlace (ej. /catalogo?q=fifa desde el buscador de la cabecera)
+  const [parametros] = useSearchParams()
+  const [filtros, setFiltros] = useState(() => ({
+    categoria: parametros.get('categoria') || '', genero: '', estado: '', q: parametros.get('q') || '',
+  }))
   const [productos, setProductos] = useState([])
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(true) // TT-03: mientras llega la respuesta del servidor
+
+  // Si se busca otra vez desde la cabecera estando ya en el catálogo, se actualizan los filtros
+  useEffect(() => {
+    const q = parametros.get('q') || ''
+    const categoria = parametros.get('categoria') || ''
+    setFiltros((f) => (f.q === q && f.categoria === categoria ? f : { ...f, q, categoria }))
+  }, [parametros])
 
   useEffect(() => {
     const params = new URLSearchParams(Object.entries(filtros).filter(([, v]) => v))
@@ -32,12 +43,12 @@ export default function Catalogo() {
   }, [productos, filtros.q])
 
   const cambiar = (k) => (e) => setFiltros({ ...filtros, [k]: e.target.value })
-  const selector = 'rounded-lg border border-white/15 bg-superficie px-3 py-2 text-sm'
+  const selector = 'rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm'
 
   return (
     <section>
       <h1 className="text-2xl font-bold">Catálogo</h1>
-      <p className="mt-1 text-sm text-white/60">Datos de ejemplo cargados desde la base de datos.</p>
+      <p className="mt-1 text-sm text-tinta/60">Datos de ejemplo cargados desde la base de datos.</p>
 
       <div className="mt-4 grid gap-2 sm:grid-cols-4">
         <input placeholder="Buscar..." value={filtros.q} onChange={cambiar('q')} className={selector} />
@@ -55,13 +66,13 @@ export default function Catalogo() {
         </select>
       </div>
 
-      {error && <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>}
+      {error && <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm text-error">{error}</p>}
       {/* TT-03: el servidor gratuito se "duerme"; mientras despierta se avisa en lugar de mostrar "0 productos" */}
       {cargando
-        ? <p className="mt-4 text-sm text-white/60">Cargando catálogo… La primera visita del día puede tardar hasta 1 minuto mientras el servidor despierta.</p>
-        : <p className="mt-4 text-sm text-white/60">{productos.length} productos</p>}
+        ? <p className="mt-4 text-sm text-tinta/60">Cargando catálogo… La primera visita del día puede tardar hasta 1 minuto mientras el servidor despierta.</p>
+        : <p className="mt-4 text-sm text-tinta/60">{productos.length} productos</p>}
       {!cargando && productos.length === 0 && filtros.q.trim().length >= 3 && (
-        <p className="mt-2 rounded-lg border border-white/15 p-3 text-sm">
+        <p className="mt-2 rounded-lg border border-tinta/15 p-3 text-sm">
           No tenemos "{filtros.q.trim()}" por ahora. Le avisamos a la tienda que lo estás buscando;
           también puedes preguntar por WhatsApp.
         </p>
@@ -70,15 +81,15 @@ export default function Catalogo() {
       <ul className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {productos.map((p) => (
           <li key={p.id}>
-            <Link to={'/producto/' + p.id} className="block h-full rounded-xl border border-white/10 bg-superficie p-4 hover:border-rosa/60">
-            <p className="text-xs uppercase tracking-wide text-white/50">{p.categoria} · {p.condicion || 'Nuevo'}</p>
+            <Link to={'/producto/' + p.id} className="block h-full rounded-xl border border-tinta/10 bg-superficie p-4 hover:border-rosa/60">
+            <p className="text-xs uppercase tracking-wide text-tinta/60">{p.categoria} · {p.condicion || 'Nuevo'}</p>
             <h2 className="mt-1 font-semibold">{p.nombre}</h2>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-lg font-bold">{soles(p.precio_final)}</span>
-              {p.descuento && <span className="text-sm text-white/50 line-through">{soles(p.precio)}</span>}
+              {p.descuento && <span className="text-sm text-tinta/60 line-through">{soles(p.precio)}</span>}
               {p.descuento && <span className="rounded bg-rosa px-1.5 text-xs font-semibold text-white">-{p.descuento}%</span>}
             </div>
-            <p className="mt-2 text-sm text-white/70">
+            <p className="mt-2 text-sm text-tinta/70">
               {p.es_preventa ? 'Preventa' : p.stock > 0 ? p.stock + ' en stock' : 'Agotado'}
             </p>
             </Link>

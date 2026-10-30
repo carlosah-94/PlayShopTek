@@ -84,10 +84,10 @@ export default function Taller() {
     return '→ ' + ESTADOS[siguiente]
   }
 
-  const campo = 'w-full rounded-lg border border-white/15 bg-superficie px-3 py-2 text-sm'
+  const campo = 'w-full rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm'
   return (
     <section className="grid gap-6 lg:grid-cols-[380px_1fr]">
-      <form onSubmit={registrar} className="space-y-3 rounded-xl border border-white/10 bg-superficie/50 p-5">
+      <form onSubmit={registrar} className="space-y-3 rounded-xl border border-tinta/10 bg-superficie/50 p-5">
         <h1 className="text-xl font-bold">Recibir equipo</h1>
         <input placeholder="Nombre del cliente" value={form.cliente_nombre} onChange={cambiar('cliente_nombre')} className={campo} required />
         <input placeholder="Celular (9 dígitos)" value={form.cliente_telefono} onChange={cambiar('cliente_telefono')} className={campo}
@@ -111,27 +111,27 @@ export default function Taller() {
           <input type="checkbox" checked={form.precio_acordado} onChange={cambiar('precio_acordado')} />
           El cliente aceptó el precio
         </label>
-        {error && <p className="text-sm text-red-300">{error}</p>}
-        {mensaje && <p className="rounded-lg bg-green-500/15 p-2 text-sm text-green-300">{mensaje}</p>}
+        {error && <p className="text-sm text-error">{error}</p>}
+        {mensaje && <p className="rounded-lg bg-green-500/15 p-2 text-sm text-ok">{mensaje}</p>}
         <button className="w-full rounded-lg bg-rosa py-2 font-semibold text-white">Registrar</button>
       </form>
 
       <div>
         <h2 className="text-lg font-semibold">En el taller ({lista.length})</h2>
-        <ul className="mt-2 divide-y divide-white/10 rounded-xl border border-white/10 bg-superficie text-sm">
+        <ul className="mt-2 divide-y divide-tinta/10 rounded-xl border border-tinta/10 bg-superficie text-sm">
           {lista.map((r) => (
             <li key={r.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3">
               <span className="font-mono text-rosa">{r.codigo}</span>
               <span className="font-semibold">{r.equipo}</span>
-              <span className="text-white/60">{r.cliente}</span>
-              <span className="ml-auto rounded bg-white/10 px-2 py-0.5 text-xs">{ESTADOS[r.estado]}</span>
-              <span className="w-full text-white/60">{r.falla}{r.tecnico ? ' · ' + r.tecnico : ''}</span>
+              <span className="text-tinta/60">{r.cliente}</span>
+              <span className="ml-auto rounded bg-tinta/10 px-2 py-0.5 text-xs">{ESTADOS[r.estado]}</span>
+              <span className="w-full text-tinta/60">{r.falla}{r.tecnico ? ' · ' + r.tecnico : ''}</span>
               <div className="flex w-full flex-wrap items-center gap-2 pt-1">
                 {r.estado === 'listo_para_recoger' && (
                   <>
-                    <a href={enlaceWhatsApp(r)} target="_blank" rel="noreferrer" className="rounded-lg border border-green-500/50 px-3 py-1 text-xs text-green-300">Reenviar WhatsApp</a>
+                    <a href={enlaceWhatsApp(r)} target="_blank" rel="noreferrer" className="rounded-lg border border-green-500/50 px-3 py-1 text-xs text-ok">Reenviar WhatsApp</a>
                     <select value={pagos[r.id] || 'efectivo'} onChange={(e) => setPagos({ ...pagos, [r.id]: e.target.value })}
-                      className="rounded-lg border border-white/15 bg-fondo px-2 py-1 text-xs">
+                      className="rounded-lg border border-tinta/15 bg-fondo px-2 py-1 text-xs">
                       <option value="efectivo">Pagó en efectivo</option>
                       <option value="yape">Pagó con Yape</option>
                       <option value="transferencia">Pagó por transferencia BCP</option>

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { api } from '../api.js'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE', { maximumFractionDigits: 0 })
-const caja = 'rounded-xl border border-white/10 bg-superficie p-4'
+const caja = 'rounded-xl border border-tinta/10 bg-superficie p-4'
 
 export default function ResumenIA() {
   const [r, setR] = useState(null)
@@ -29,11 +29,11 @@ export default function ResumenIA() {
           {cargando ? 'Calculando...' : r ? 'Volver a calcular' : 'Generar con IA'}
         </button>
       </div>
-      {error && <p className="rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>}
+      {error && <p className="rounded-lg bg-red-500/15 p-3 text-sm text-error">{error}</p>}
 
       {r && (
         <>
-          <p className="text-xs text-white/60">
+          <p className="text-xs text-tinta/60">
             Ganó <b>{r.modelo.algoritmo_elegido}</b> · aprendió de {r.modelo.filas} semanas-producto
             {' '}({r.modelo.productos} productos, {r.modelo.semanas} semanas de historial) · error promedio (MAE):{' '}
             {Object.entries(r.modelo.resultados).map(([nombre, x]) => nombre + ' ' + x.mae_prueba).join(' · ')} unidades.
@@ -43,10 +43,10 @@ export default function ResumenIA() {
           <div className="grid gap-4 lg:grid-cols-2">
             <div className={caja}>
               <h3 className="font-semibold">Qué reponer</h3>
-              <p className="text-xs text-white/50">Lo que se venderá en 4 semanas (lo que tarda un pedido) menos lo que hay en stock</p>
+              <p className="text-xs text-tinta/60">Lo que se venderá en 4 semanas (lo que tarda un pedido) menos lo que hay en stock</p>
               <table className="mt-2 w-full text-sm">
-                <thead className="text-left text-white/50"><tr><th className="py-1">Producto</th><th>Stock</th><th>Venderá/sem.</th><th>Pedir</th></tr></thead>
-                <tbody className="divide-y divide-white/10">
+                <thead className="text-left text-tinta/60"><tr><th className="py-1">Producto</th><th>Stock</th><th>Venderá/sem.</th><th>Pedir</th></tr></thead>
+                <tbody className="divide-y divide-tinta/10">
                   {r.reponer.map((x) => (
                     <tr key={x.producto_id}>
                       <td className="py-2">{x.nombre}</td><td>{x.stock}</td><td>{x.demanda_semana}</td>
@@ -55,18 +55,18 @@ export default function ResumenIA() {
                   ))}
                 </tbody>
               </table>
-              {r.reponer.length === 0 && <p className="mt-2 text-sm text-white/60">El stock alcanza para las próximas 4 semanas.</p>}
+              {r.reponer.length === 0 && <p className="mt-2 text-sm text-tinta/60">El stock alcanza para las próximas 4 semanas.</p>}
             </div>
 
             <div className={caja}>
               <h3 className="font-semibold">Qué ofertas poner</h3>
-              <p className="text-xs text-white/50">
+              <p className="text-xs text-tinta/60">
                 Hill Climbing: ganancia estimada {soles(r.ofertas.ganancia_sin_ofertas)} sin ofertas →{' '}
-                <b className="text-green-300">{soles(r.ofertas.ganancia_con_ofertas)}</b> con estas ofertas
+                <b className="text-ok">{soles(r.ofertas.ganancia_con_ofertas)}</b> con estas ofertas
               </p>
               <table className="mt-2 w-full text-sm">
-                <thead className="text-left text-white/50"><tr><th className="py-1">Producto</th><th>Descuento</th><th>Unidades</th></tr></thead>
-                <tbody className="divide-y divide-white/10">
+                <thead className="text-left text-tinta/60"><tr><th className="py-1">Producto</th><th>Descuento</th><th>Unidades</th></tr></thead>
+                <tbody className="divide-y divide-tinta/10">
                   {r.ofertas.sugeridas.map((x) => (
                     <tr key={x.producto_id}>
                       <td className="py-2">{x.nombre}</td><td>-{x.descuento}%</td>
@@ -75,13 +75,13 @@ export default function ResumenIA() {
                   ))}
                 </tbody>
               </table>
-              {r.ofertas.sugeridas.length === 0 && <p className="mt-2 text-sm text-white/60">Esta semana conviene no poner ofertas.</p>}
+              {r.ofertas.sugeridas.length === 0 && <p className="mt-2 text-sm text-tinta/60">Esta semana conviene no poner ofertas.</p>}
             </div>
           </div>
 
           <div className={caja}>
             <h3 className="font-semibold">Qué agregar al catálogo</h3>
-            <p className="text-xs text-white/50">Búsquedas agrupadas de productos que la tienda no tiene</p>
+            <p className="text-xs text-tinta/60">Búsquedas agrupadas de productos que la tienda no tiene</p>
             <ul className="mt-2 flex flex-wrap gap-2 text-sm">
               {r.agregar.map((x) => (
                 <li key={x.nombre} className="rounded-full border border-rosa/50 px-3 py-1">{x.nombre} · {x.busquedas} búsquedas</li>

@@ -22,17 +22,17 @@ export default function Login() {
     }
   }
 
-  const campo = 'w-full rounded-lg border border-white/15 bg-superficie px-3 py-2'
+  const campo = 'w-full rounded-lg border border-tinta/15 bg-superficie px-3 py-2'
   return (
-    <form onSubmit={entrar} className="mx-auto mt-6 max-w-sm space-y-3 rounded-xl border border-white/10 bg-superficie/50 p-6">
+    <form onSubmit={entrar} className="mx-auto mt-6 max-w-sm space-y-3 rounded-xl border border-tinta/10 bg-superficie/50 p-6">
       <h1 className="text-xl font-bold">Iniciar sesión</h1>
       <input type="email" placeholder="Correo" value={email} onChange={(e) => setEmail(e.target.value)} className={campo} required />
       <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} className={campo} required />
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
       <button className="w-full rounded-lg bg-rosa py-2 font-semibold text-white">Entrar</button>
       {/* Solo en la PC del programador (npm run dev); en la web publicada no aparece */}
       {import.meta.env.DEV && (
-        <p className="text-xs text-white/50">Prueba: angel@playshoptek.pe / tienda123 · linda@playshoptek.pe / tienda123 · cliente@demo.pe / demo123</p>
+        <p className="text-xs text-tinta/60">Prueba: angel@playshoptek.pe / tienda123 · linda@playshoptek.pe / tienda123 · cliente@demo.pe / demo123</p>
       )}
     </form>
   )

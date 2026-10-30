@@ -1,18 +1,38 @@
 @import "tailwindcss";
 
-/* Colores del prototipo (Claude Design) */
+/* HU-20: colores del prototipo (Claude Design). Modo claro por defecto; el modo oscuro cambia solo estas variables */
 @theme {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --color-fondo: #161826;
-  --color-superficie: #232532;
-  --color-texto: #e9e9ed;
+  --font-sans: "Outfit", system-ui, sans-serif;
+  --font-titulo: "Chakra Petch", "Outfit", system-ui, sans-serif;
+  --color-fondo: #fbfaff;
+  --color-superficie: #ffffff;
+  --color-texto: #1a1040;
+  --color-tinta: #1a1040; /* para textos suaves y bordes: text-tinta/60, border-tinta/10 */
+  --color-noche: #150941; /* cabecera y pie de página, igual en los dos modos */
   --color-rosa: #cc19ab; /* TT-03: un poco más oscuro para que el texto blanco encima se lea bien (contraste 4.9:1) */
   --color-morado: #5546e4;
+  --color-ok: #11804a;
+  --color-error: #c41d55;
+  --color-aviso: #9a6700;
+}
+
+/* HU-20: modo oscuro (botón de la luna en la cabecera) */
+html[data-tema="oscuro"] {
+  --color-fondo: #0b0230;
+  --color-superficie: #190a52;
+  --color-texto: #ffffff;
+  --color-tinta: #ffffff;
+  --color-ok: #7be8a3;
+  --color-error: #ff8a98;
+  --color-aviso: #f0b45a;
+  color-scheme: dark;
 }
 
 /* TT-03: reserva el espacio de la barra de desplazamiento, así la página no se corre de lado al cargar */
 html { scrollbar-gutter: stable; }
 body { @apply bg-fondo text-texto font-sans; }
+h1, h2, h3 { font-family: var(--font-titulo); }
 
-/* TT-03: el texto rosa sobre el fondo oscuro usa un tono más claro, así también se lee bien (contraste 6.2:1) */
-.text-rosa { color: #f15fd5; }
+/* El texto rosa usa un tono que se lee bien en cada modo (contraste de 7.4:1 en claro y 6.2:1 en oscuro) */
+.text-rosa { color: #a3128a; }
+html[data-tema="oscuro"] .text-rosa { color: #f15fd5; }
