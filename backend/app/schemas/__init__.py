@@ -53,6 +53,7 @@ class ProductoSalida(BaseModel):
     calificacion: Decimal | None
     trailer_url: str | None
     foto: str | None = None  # HU-21: foto principal para la tarjeta del catálogo
+    oferta_termina: datetime | None = None  # HU-23: cuándo termina la oferta (para el contador)
 
 
 class ResenaSalida(BaseModel):
