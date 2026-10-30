@@ -33,9 +33,9 @@ export default function Favoritos() {
           <h2 className="text-lg font-semibold">Notificaciones</h2>
           <ul className="mt-2 space-y-2">
             {notificaciones.map((n) => (
-              <li key={n.id} className={'rounded-lg border p-3 text-sm ' + (n.leida ? 'border-white/10' : 'border-rosa/60 bg-rosa/10')}>
+              <li key={n.id} className={'rounded-lg border p-3 text-sm ' + (n.leida ? 'border-tinta/10' : 'border-rosa/60 bg-rosa/10')}>
                 <p className="font-semibold">{n.titulo}</p>
-                {n.detalle && <p className="text-white/70">{n.detalle}</p>}
+                {n.detalle && <p className="text-tinta/70">{n.detalle}</p>}
                 {n.destino?.startsWith('/producto/') && <Link to={n.destino} className="text-rosa">Ver producto</Link>}
               </li>
             ))}
@@ -45,14 +45,14 @@ export default function Favoritos() {
 
       <div>
         <h1 className="text-2xl font-bold">Mis favoritos</h1>
-        {favoritos.length === 0 && <p className="mt-2 text-white/60">Aún no guardas productos. Usa ♡ en la ficha de un producto.</p>}
+        {favoritos.length === 0 && <p className="mt-2 text-tinta/60">Aún no guardas productos. Usa ♡ en la ficha de un producto.</p>}
         <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {favoritos.map((p) => (
-            <li key={p.id} className="rounded-xl border border-white/10 bg-superficie p-4">
+            <li key={p.id} className="rounded-xl border border-tinta/10 bg-superficie p-4">
               <Link to={'/producto/' + p.id} className="font-semibold hover:text-rosa">{p.nombre}</Link>
               <p className="mt-1">{soles(p.precio_final)} {p.descuento && <span className="text-xs text-rosa">-{p.descuento}%</span>}</p>
-              <p className="text-sm text-white/60">{p.stock > 0 ? p.stock + ' en stock' : 'Agotado'}</p>
-              <button onClick={() => quitar(p.id)} className="mt-2 text-xs text-white/50 hover:text-red-300">Quitar</button>
+              <p className="text-sm text-tinta/60">{p.stock > 0 ? p.stock + ' en stock' : 'Agotado'}</p>
+              <button onClick={() => quitar(p.id)} className="mt-2 text-xs text-tinta/60 hover:text-error">Quitar</button>
             </li>
           ))}
         </ul>
@@ -61,7 +61,7 @@ export default function Favoritos() {
       {avisos.length > 0 && (
         <div>
           <h2 className="text-lg font-semibold">Esperando que llegue</h2>
-          <ul className="mt-2 list-disc pl-5 text-sm text-white/80">
+          <ul className="mt-2 list-disc pl-5 text-sm text-tinta/80">
             {avisos.map((a) => <li key={a.nombre}>{a.nombre}</li>)}
           </ul>
         </div>

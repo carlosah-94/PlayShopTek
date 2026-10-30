@@ -7,7 +7,7 @@ const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 // Medios de pago que acepta cada canal (regla del dueño)
 const METODOS = { tienda: ['efectivo', 'yape', 'transferencia'], whatsapp: ['yape'] }
 const NOMBRES = { efectivo: 'Efectivo', yape: 'Yape', transferencia: 'Transferencia BCP' }
-const campo = 'w-full rounded-lg border border-white/15 bg-superficie px-3 py-2'
+const campo = 'w-full rounded-lg border border-tinta/15 bg-superficie px-3 py-2'
 
 export default function VentaTienda() {
   const sesion = leerSesion()
@@ -67,13 +67,13 @@ export default function VentaTienda() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-[420px_1fr]">
-      <form onSubmit={registrar} className="space-y-3 rounded-xl border border-white/10 bg-superficie/50 p-5">
+      <form onSubmit={registrar} className="space-y-3 rounded-xl border border-tinta/10 bg-superficie/50 p-5">
         <h1 className="text-xl font-bold">Registrar venta</h1>
 
         <div className="flex gap-2">
           {['tienda', 'whatsapp'].map((c) => (
             <button type="button" key={c} onClick={() => elegirCanal(c)}
-              className={'flex-1 rounded-lg border px-3 py-2 text-sm ' + (canal === c ? 'border-rosa bg-rosa/20' : 'border-white/15')}>
+              className={'flex-1 rounded-lg border px-3 py-2 text-sm ' + (canal === c ? 'border-rosa bg-rosa/20' : 'border-tinta/15')}>
               {c === 'tienda' ? 'En tienda' : 'Por WhatsApp'}
             </button>
           ))}
@@ -83,12 +83,12 @@ export default function VentaTienda() {
         <div className="relative">
           <input placeholder="Buscar producto (ej. dualsense)" value={buscar} onChange={(e) => setBuscar(e.target.value)} className={campo} />
           {encontrados.length > 0 && (
-            <ul className="absolute z-10 mt-1 w-full rounded-lg border border-white/15 bg-fondo text-sm">
+            <ul className="absolute z-10 mt-1 w-full rounded-lg border border-tinta/15 bg-fondo text-sm">
               {encontrados.map((p) => (
                 <li key={p.id}>
                   <button type="button" onClick={() => agregar(p)} disabled={p.stock === 0}
-                    className="flex w-full justify-between px-3 py-2 text-left hover:bg-white/10 disabled:opacity-40">
-                    <span>{p.nombre}</span><span className="text-white/60">{soles(p.precio_final)} · {p.stock} en stock</span>
+                    className="flex w-full justify-between px-3 py-2 text-left hover:bg-tinta/10 disabled:opacity-40">
+                    <span>{p.nombre}</span><span className="text-tinta/60">{soles(p.precio_final)} · {p.stock} en stock</span>
                   </button>
                 </li>
               ))}
@@ -98,14 +98,14 @@ export default function VentaTienda() {
 
         <ul className="space-y-2 text-sm">
           {lineas.map((l) => (
-            <li key={l.producto.id} className="flex items-center justify-between gap-2 rounded-lg bg-white/5 px-3 py-2">
+            <li key={l.producto.id} className="flex items-center justify-between gap-2 rounded-lg bg-tinta/5 px-3 py-2">
               <span className="flex-1">{l.producto.nombre}</span>
               <input type="number" min="0" max={Math.min(5, l.producto.stock)} value={l.cantidad}
                 onChange={(e) => cambiarCantidad(l.producto.id, Number(e.target.value))} className="w-14 rounded bg-superficie px-2 py-1" />
               <span className="w-20 text-right">{soles(Number(l.producto.precio_final) * l.cantidad)}</span>
             </li>
           ))}
-          {lineas.length === 0 && <li className="text-white/50">Agrega al menos un producto.</li>}
+          {lineas.length === 0 && <li className="text-tinta/60">Agrega al menos un producto.</li>}
         </ul>
         <p className="text-right text-lg font-bold">Total: {soles(total)}</p>
 
@@ -121,10 +121,10 @@ export default function VentaTienda() {
           <input placeholder="Celular (opcional)" value={telefono} onChange={(e) => setTelefono(e.target.value)} className={campo}
             pattern="9\d{8}" title="9 dígitos, empieza con 9" />
         </div>
-        <p className="text-xs text-white/50">Con el celular, la compra aparece en “Mis compras” del cliente y podrá dejar una reseña verificada.</p>
+        <p className="text-xs text-tinta/60">Con el celular, la compra aparece en “Mis compras” del cliente y podrá dejar una reseña verificada.</p>
 
-        {error && <p className="text-sm text-red-300">{error}</p>}
-        {mensaje && <p className="text-sm text-green-300">{mensaje}</p>}
+        {error && <p className="text-sm text-error">{error}</p>}
+        {mensaje && <p className="text-sm text-ok">{mensaje}</p>}
         <button disabled={lineas.length === 0} className="w-full rounded-lg bg-rosa py-2 font-semibold text-white disabled:opacity-40">
           Registrar venta
         </button>
@@ -133,10 +133,10 @@ export default function VentaTienda() {
       <div>
         <h2 className="text-lg font-semibold">Últimas ventas en tienda y WhatsApp</h2>
         <table className="mt-3 w-full text-sm [&_td]:pr-3 [&_th]:pr-3">
-          <thead className="text-left text-white/50">
+          <thead className="text-left text-tinta/60">
             <tr><th className="py-1">Código</th><th>Fecha</th><th>Canal</th><th>Cliente</th><th>Productos</th><th>Pago</th><th>Total</th></tr>
           </thead>
-          <tbody className="divide-y divide-white/10">
+          <tbody className="divide-y divide-tinta/10">
             {ultimas.map((v) => (
               <tr key={v.codigo}>
                 <td className="whitespace-nowrap py-2 font-mono text-rosa">{v.codigo}</td>
@@ -150,7 +150,7 @@ export default function VentaTienda() {
             ))}
           </tbody>
         </table>
-        {ultimas.length === 0 && <p className="mt-2 text-sm text-white/50">Todavía no hay ventas registradas en la tienda.</p>}
+        {ultimas.length === 0 && <p className="mt-2 text-sm text-tinta/60">Todavía no hay ventas registradas en la tienda.</p>}
       </div>
     </section>
   )

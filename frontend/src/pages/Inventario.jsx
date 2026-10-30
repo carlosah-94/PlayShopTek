@@ -34,34 +34,34 @@ export default function Inventario() {
   }
 
   const visibles = productos.filter((p) => p.nombre.toLowerCase().includes(buscar.toLowerCase()))
-  const celda = 'w-full rounded border border-white/15 bg-fondo px-2 py-1'
+  const celda = 'w-full rounded border border-tinta/15 bg-fondo px-2 py-1'
 
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-end gap-3">
         <div>
           <h1 className="text-2xl font-bold">Inventario</h1>
-          <p className="text-sm text-white/60">Cambia el valor y presiona Guardar en esa fila.</p>
+          <p className="text-sm text-tinta/60">Cambia el valor y presiona Guardar en esa fila.</p>
         </div>
         <input placeholder="Buscar producto..." value={buscar} onChange={(e) => setBuscar(e.target.value)}
-          className="ml-auto rounded-lg border border-white/15 bg-superficie px-3 py-2 text-sm" />
+          className="ml-auto rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm" />
       </div>
-      {aviso && <p className="rounded-lg bg-white/10 p-2 text-sm">{aviso}</p>}
+      {aviso && <p className="rounded-lg bg-tinta/10 p-2 text-sm">{aviso}</p>}
 
-      <div className="overflow-x-auto rounded-xl border border-white/10">
+      <div className="overflow-x-auto rounded-xl border border-tinta/10">
         <table className="w-full text-sm">
-          <thead className="bg-superficie text-left text-white/60">
+          <thead className="bg-superficie text-left text-tinta/60">
             <tr><th className="p-3">Producto</th><th className="p-3 w-28">Precio S/</th><th className="p-3 w-24">Stock</th>
               <th className="p-3">Tráiler (YouTube)</th><th className="p-3 w-24"></th></tr>
           </thead>
-          <tbody className="divide-y divide-white/10">
+          <tbody className="divide-y divide-tinta/10">
             {visibles.map((p) => {
               const c = cambios[p.id] || {}
               return (
                 <tr key={p.id} className={p.stock <= 2 && !p.es_preventa ? 'bg-red-500/5' : ''}>
                   <td className="p-3">
                     <p className="font-semibold">{p.nombre}</p>
-                    <p className="text-xs text-white/50">{p.categoria}{p.descuento ? ` · oferta -${p.descuento}%` : ''}</p>
+                    <p className="text-xs text-tinta/60">{p.categoria}{p.descuento ? ` · oferta -${p.descuento}%` : ''}</p>
                   </td>
                   <td className="p-3"><input type="number" min="0" value={c.precio ?? Number(p.precio)}
                     onChange={(e) => editar(p.id, 'precio', e.target.value)} className={celda} /></td>

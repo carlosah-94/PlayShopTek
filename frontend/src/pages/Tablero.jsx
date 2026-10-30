@@ -10,10 +10,10 @@ const diaMes = (iso) => new Date(iso + 'T12:00').toLocaleDateString('es-PE', { d
 // Una tarjeta con un número grande (un KPI)
 function Indicador({ titulo, valor, detalle }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-superficie p-4">
-      <p className="text-xs uppercase tracking-wide text-white/50">{titulo}</p>
+    <div className="rounded-xl border border-tinta/10 bg-superficie p-4">
+      <p className="text-xs uppercase tracking-wide text-tinta/60">{titulo}</p>
       <p className="mt-1 text-2xl font-bold">{valor}</p>
-      {detalle && <p className="text-xs text-white/60">{detalle}</p>}
+      {detalle && <p className="text-xs text-tinta/60">{detalle}</p>}
     </div>
   )
 }
@@ -22,13 +22,13 @@ function Indicador({ titulo, valor, detalle }) {
 function Ranking({ titulo, filas, formato = (v) => v }) {
   const max = Math.max(...filas.map((f) => Number(f.valor)), 1)
   return (
-    <div className="rounded-xl border border-white/10 bg-superficie p-4">
+    <div className="rounded-xl border border-tinta/10 bg-superficie p-4">
       <h2 className="font-semibold">{titulo}</h2>
       <ul className="mt-3 space-y-2 text-sm">
         {filas.map((f) => (
           <li key={f.nombre}>
-            <div className="flex justify-between"><span>{f.nombre}</span><span className="text-white/70">{formato(f.valor)}</span></div>
-            <div className="mt-1 h-2 rounded bg-white/10"><div className="h-2 rounded bg-rosa" style={{ width: (Number(f.valor) / max) * 100 + '%' }} /></div>
+            <div className="flex justify-between"><span>{f.nombre}</span><span className="text-tinta/70">{formato(f.valor)}</span></div>
+            <div className="mt-1 h-2 rounded bg-tinta/10"><div className="h-2 rounded bg-rosa" style={{ width: (Number(f.valor) / max) * 100 + '%' }} /></div>
           </li>
         ))}
       </ul>
@@ -60,8 +60,8 @@ export default function Tablero() {
   }
 
   if (sesion?.usuario.rol !== 'dueno') return <Navigate to="/login" />
-  if (error) return <p className="text-red-300">{error}</p>
-  if (!t) return <p className="text-white/60">Cargando...</p>
+  if (error) return <p className="text-error">{error}</p>
+  if (!t) return <p className="text-tinta/60">Cargando...</p>
 
   const maxSemana = Math.max(...t.semanas.map((s) => Number(s.ventas)), 1)
 
@@ -70,10 +70,10 @@ export default function Tablero() {
       <div className="flex flex-wrap items-end gap-3">
         <div>
           <h1 className="text-2xl font-bold">Tablero del negocio</h1>
-          <p className="text-sm text-white/60">Del {diaMes(t.desde)} al {diaMes(t.hasta)} · datos de ejemplo</p>
+          <p className="text-sm text-tinta/60">Del {diaMes(t.desde)} al {diaMes(t.hasta)} · datos de ejemplo</p>
         </div>
         <select value={dias} onChange={(e) => setDias(Number(e.target.value))}
-          className="ml-auto rounded-lg border border-white/15 bg-superficie px-3 py-2 text-sm">
+          className="ml-auto rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm">
           <option value={7}>Últimos 7 días</option>
           <option value={30}>Últimos 30 días</option>
           <option value={90}>Últimos 90 días</option>
@@ -87,16 +87,16 @@ export default function Tablero() {
         <Indicador titulo="Por reponer" valor={t.stock_bajo} detalle="productos con stock bajo" />
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-superficie p-4">
+      <div className="rounded-xl border border-tinta/10 bg-superficie p-4">
         <h2 className="font-semibold">Ventas por semana</h2>
         <div className="mt-4 flex items-end gap-2">
           {t.semanas.map((s) => (
             <div key={s.semana} className="flex flex-1 flex-col items-center gap-1" title={`${soles(s.ventas)} · ${s.reparaciones} reparaciones`}>
-              <span className="text-[10px] text-white/60">{soles(s.ventas)}</span>
+              <span className="text-[10px] text-tinta/60">{soles(s.ventas)}</span>
               <div className="flex h-32 w-full items-end">
                 <div className="w-full rounded-t bg-morado" style={{ height: (Number(s.ventas) / maxSemana) * 100 + '%' }} />
               </div>
-              <span className="text-[10px] text-white/50">{diaMes(s.semana)}</span>
+              <span className="text-[10px] text-tinta/60">{diaMes(s.semana)}</span>
             </div>
           ))}
         </div>
@@ -108,7 +108,7 @@ export default function Tablero() {
         <Ranking titulo="Ventas por método de pago" filas={t.ventas_por_metodo} formato={(v) => v + ' compras'} />
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-superficie p-4">
+      <div className="rounded-xl border border-tinta/10 bg-superficie p-4">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="font-semibold">Lo más buscado por los clientes</h2>
           <button onClick={agruparConIA} disabled={agrupando}
@@ -117,7 +117,7 @@ export default function Tablero() {
           </button>
         </div>
         {ia?.algoritmo_elegido && (
-          <p className="mt-2 rounded-lg bg-morado/15 p-2 text-xs text-white/80">
+          <p className="mt-2 rounded-lg bg-morado/15 p-2 text-xs text-tinta/80">
             Ganó <b>{ia.algoritmo_elegido}</b> · K-Means ({ia.kmeans.parametro}) silueta {ia.kmeans.silueta}
             {ia.dbscan && <> · DBSCAN ({ia.dbscan.parametro}) silueta {ia.dbscan.silueta}</>}
             {ia.ari_vs_grupos_manuales !== null && <> · coincide con los grupos hechos a mano: ARI {ia.ari_vs_grupos_manuales}</>}
@@ -125,12 +125,12 @@ export default function Tablero() {
           </p>
         )}
         <table className="mt-2 w-full text-sm">
-          <thead className="text-left text-white/50"><tr><th className="py-1">Búsqueda</th><th>Veces</th><th>Pidieron "Avísame"</th><th>¿Lo tenemos?</th></tr></thead>
-          <tbody className="divide-y divide-white/10">
+          <thead className="text-left text-tinta/60"><tr><th className="py-1">Búsqueda</th><th>Veces</th><th>Pidieron "Avísame"</th><th>¿Lo tenemos?</th></tr></thead>
+          <tbody className="divide-y divide-tinta/10">
             {t.mas_buscados.map((b) => (
               <tr key={b.nombre}>
                 <td className="py-2">{b.nombre}</td><td>{b.busquedas}</td><td>{b.avisos}</td>
-                <td className={b.hay_en_tienda ? 'text-green-300' : 'text-red-300'}>{b.hay_en_tienda ? 'Sí' : 'No · oportunidad de venta'}</td>
+                <td className={b.hay_en_tienda ? 'text-ok' : 'text-error'}>{b.hay_en_tienda ? 'Sí' : 'No · oportunidad de venta'}</td>
               </tr>
             ))}
           </tbody>

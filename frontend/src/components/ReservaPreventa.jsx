@@ -40,11 +40,11 @@ export default function ReservaPreventa({ p }) {
     <div className="space-y-3 rounded-xl border border-morado/60 bg-morado/10 p-4 text-sm">
       <p className="font-semibold">
         Preventa{p.fecha_lanzamiento ? ' · sale el ' + fecha(p.fecha_lanzamiento) : ''}
-        {p.cupos_reserva !== null && <span className="font-normal text-white/70"> · quedan {p.cupos_reserva} cupos</span>}
+        {p.cupos_reserva !== null && <span className="font-normal text-tinta/70"> · quedan {p.cupos_reserva} cupos</span>}
       </p>
       <p>Reserva hoy con <b>{soles(p.monto_reserva)}</b> y paga los {soles(resto)} restantes al recogerlo en tienda.</p>
 
-      {p.cupos_reserva === 0 ? <p className="text-red-300">Se acabaron los cupos de reserva.</p>
+      {p.cupos_reserva === 0 ? <p className="text-error">Se acabaron los cupos de reserva.</p>
         : !esCliente ? <Link to={'/login?volver=/producto/' + p.id} className="text-rosa">Inicia sesión para reservar</Link>
         : (
           <>
@@ -58,9 +58,9 @@ export default function ReservaPreventa({ p }) {
             {metodo === 'yape' && (
               <input placeholder={`N.° de operación (yapea ${soles(p.monto_reserva)} al ${YAPE_TIENDA})`} value={operacion}
                 onChange={(e) => setOperacion(e.target.value)} inputMode="numeric"
-                className="w-full rounded-lg border border-white/15 bg-superficie px-3 py-2" />
+                className="w-full rounded-lg border border-tinta/15 bg-superficie px-3 py-2" />
             )}
-            {error && <p className="text-red-300">{error}</p>}
+            {error && <p className="text-error">{error}</p>}
             <button onClick={reservar} className="rounded-lg bg-rosa px-5 py-2 font-semibold text-white">Reservar con {soles(p.monto_reserva)}</button>
           </>
         )}

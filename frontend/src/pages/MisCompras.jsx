@@ -21,16 +21,16 @@ export default function MisCompras() {
   return (
     <section className="space-y-4">
       <h1 className="text-2xl font-bold">Mis compras</h1>
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
       {ventas.map((v) => (
-        <article key={v.codigo} className="rounded-xl border border-white/10 bg-superficie p-4 text-sm">
+        <article key={v.codigo} className="rounded-xl border border-tinta/10 bg-superficie p-4 text-sm">
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-mono text-rosa">{v.codigo}</span>
-            <span className="text-white/60">{new Date(v.fecha + 'T12:00').toLocaleDateString('es-PE')}</span>
-            <span className="text-white/60">{METODOS[v.metodo_pago]}</span>
-            <span className="ml-auto rounded bg-white/10 px-2 py-0.5 text-xs">{ESTADOS[v.estado]}</span>
+            <span className="text-tinta/60">{new Date(v.fecha + 'T12:00').toLocaleDateString('es-PE')}</span>
+            <span className="text-tinta/60">{METODOS[v.metodo_pago]}</span>
+            <span className="ml-auto rounded bg-tinta/10 px-2 py-0.5 text-xs">{ESTADOS[v.estado]}</span>
           </div>
-          <ul className="mt-2 text-white/80">
+          <ul className="mt-2 text-tinta/80">
             {v.items.map((i, n) => <li key={n}>{i.cantidad} × {i.nombre} · S/ {Number(i.precio_unitario)}</li>)}
           </ul>
           <p className="mt-2 text-right font-semibold">Total: S/ {Number(v.total)}</p>
