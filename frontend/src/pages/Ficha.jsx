@@ -94,7 +94,8 @@ export default function Ficha() {
   }
 
   if (error) return <p className="rounded-lg bg-error/10 p-3 text-sm text-error">{error}</p>
-  if (!p) return <p className="text-tinta/60">Cargando...</p>
+  // Mientras carga se reserva el alto de la ficha, así el pie de página no aparece arriba y luego "salta"
+  if (!p) return <p className="min-h-[110vh] text-tinta/60">Cargando...</p>
 
   const galeria = medios(p)
   const actual = Math.min(fotoActual, Math.max(galeria.length - 1, 0))

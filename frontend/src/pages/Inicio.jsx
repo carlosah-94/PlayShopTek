@@ -223,7 +223,7 @@ export default function Inicio() {
               <li key={p.id}><TarjetaProducto p={p} razon={inicio.razones?.[p.id]} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} /></li>
             ))
             // Mientras carga se reserva el espacio, así la página no "salta" (TT-03)
-            : [1, 2, 3, 4].map((n) => <li key={n} className="h-96 animate-pulse rounded-2xl bg-tinta/5" />)}
+            : [1, 2, 3, 4].map((n) => <li key={'carga-' + n} className="h-96 animate-pulse rounded-2xl bg-tinta/5" />)}
         </ul>
       </section>
 
