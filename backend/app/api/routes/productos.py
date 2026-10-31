@@ -1,6 +1,6 @@
 """HU-01 (catálogo con filtros), HU-02 (ficha), HU-12 (inventario del dueño) y HU-05 (aviso de llegada)."""
 import json
-from datetime import UTC, date, datetime, time, timedelta
+from datetime import UTC, date, datetime, time, timedelta, timezone
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
@@ -31,8 +31,17 @@ def fotos_de(p: Producto) -> list[str]:
     return subidas or [f"/productos/{p.codigo}-{n}.webp" for n in range(1, FOTOS.get(p.codigo, 0) + 1)]
 
 
+# HU-26: la tienda está en Lima (UTC-5, sin cambio de hora). Las ofertas empiezan y terminan a la medianoche de Lima,
+# así el precio rebajado y el contador cambian a la vez sin importar en qué país esté el servidor (Render usa la hora de Londres).
+LIMA = timezone(timedelta(hours=-5), "Lima")
+
+
+def hoy_en_lima() -> date:
+    return datetime.now(LIMA).date()
+
+
 def oferta_vigente(p: Producto, hoy: date | None = None):
-    hoy = hoy or date.today()
+    hoy = hoy or hoy_en_lima()
     for o in p.ofertas:
         if o.fecha_inicio <= hoy < o.fecha_inicio + timedelta(days=o.dias):
             return o
@@ -40,9 +49,9 @@ def oferta_vigente(p: Producto, hoy: date | None = None):
 
 
 def fin_de_oferta(o) -> datetime:
-    """HU-23: momento exacto en que termina la oferta (inicio + días, a la medianoche del servidor).
+    """HU-23: momento exacto en que termina la oferta (inicio + días, a la medianoche de Lima).
     Es el mismo corte que usa oferta_vigente, así el contador y el precio cambian a la vez."""
-    return datetime.combine(o.fecha_inicio + timedelta(days=o.dias), time(), tzinfo=UTC)
+    return datetime.combine(o.fecha_inicio + timedelta(days=o.dias), time(), tzinfo=LIMA)
 
 
 def calificaciones(db: Session) -> dict[int, Decimal]:
@@ -224,7 +233,7 @@ def aplicar_alta(db: Session, p: Producto, datos: ProductoAlta) -> None:
     p.fecha_lanzamiento = datos.fecha_lanzamiento if datos.es_preventa else None
     # Descuento: si es distinto al vigente, empieza hoy. Si se quita, la oferta vigente termina hoy.
     vigente = oferta_vigente(p) if p.id else None
-    hoy = date.today()
+    hoy = hoy_en_lima()
 
     def terminar(o: Oferta) -> None:
         # Se guarda como historial con los días que duró; si empezó hoy mismo, simplemente se borra

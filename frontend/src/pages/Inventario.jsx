@@ -177,6 +177,7 @@ export default function Inventario() {
   const th = 'px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-tinta/60'
   const precioFinal = form.con_descuento && form.precio ? Math.round(Number(form.precio) * (100 - Number(form.descuento)) / 100) : null
   const c = form.categoria
+  const trailer = ES_JUEGO(c) && (form.trailer_url.match(/(?:v=|youtu\.be\/)([\w-]{11})/) || [])[1] // código del video de YouTube
 
   return (
     <div className="space-y-6">
@@ -307,14 +308,27 @@ export default function Inventario() {
           <div className="grid grid-cols-2 gap-3">
             {form.fotos.map((u, i) => (
               <div key={i}>
-                <p className="mb-1 text-xs text-tinta/60">{i === 0 ? 'Imagen 1 · portada' : 'Imagen ' + (i + 1)}</p>
-                <SubirFoto id={'np-foto-' + i} url={u} onCambio={(url) => ponerFoto(i, url)} etiqueta={i === 0 ? 'Portada' : 'Opcional'} />
+                <p className="mb-1 text-xs text-tinta/60">{i === 0 ? 'Imagen 1 · portada' : i === 3 && trailer ? 'Imagen 4 · tráiler' : 'Imagen ' + (i + 1)}</p>
+                {/* HU-26: como el prototipo, si el juego tiene tráiler ocupa el 4.º lugar de la galería */}
+                {i === 3 && trailer
+                  ? (
+                    <div className="relative grid aspect-[3/4] place-items-center overflow-hidden rounded-xl border border-tinta/15 bg-[#0b0820]">
+                      <img src={'https://i.ytimg.com/vi/' + trailer + '/mqdefault.jpg'} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60" />
+                      <span className="relative flex flex-col items-center gap-1 text-white">
+                        <span className="grid h-9 w-9 place-items-center rounded-full bg-white/90 pl-0.5 text-[#1a1040]">▶</span>
+                        <span className="text-xs font-semibold">Tráiler</span>
+                      </span>
+                    </div>
+                  )
+                  : <SubirFoto id={'np-foto-' + i} url={u} onCambio={(url) => ponerFoto(i, url)} etiqueta={i === 0 ? 'Portada' : 'Opcional'} />}
               </div>
             ))}
           </div>
           {ES_JUEGO(c) && (
             <div className="mt-4"><Etiqueta htmlFor="np-trailer">Tráiler de YouTube (opcional)</Etiqueta>
-              <input id="np-trailer" value={form.trailer_url} onChange={cambiar('trailer_url')} placeholder="https://www.youtube.com/watch?v=..." className={campo} /></div>
+              <input id="np-trailer" value={form.trailer_url} onChange={cambiar('trailer_url')} placeholder="https://www.youtube.com/watch?v=..." className={campo} />
+              <p className="mt-1 text-xs text-tinta/60">{trailer ? 'Se verá como la 4.ª imagen de la galería. Bórralo para usar una foto en su lugar.'
+                : form.trailer_url.trim() ? 'Ese enlace no parece de YouTube.' : 'Si lo pones, se verá como la 4.ª imagen de la galería.'}</p></div>
           )}
         </Caja>
       </form>

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, leerSesion, urlImagen } from '../api.js'
 import { agregarAlCarrito } from '../carrito.js'
+import { BotonWhatsApp } from '../components/Asesores.jsx'
 import Icono from '../components/Iconos.jsx'
 import ReservaPreventa from '../components/ReservaPreventa.jsx'
 import TarjetaProducto from '../components/TarjetaProducto.jsx'
@@ -12,7 +13,6 @@ import TarjetaProducto from '../components/TarjetaProducto.jsx'
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
 const etiqueta = (c) => (/^PS\d$/.test(c) ? 'Juegos ' + c : c)
 const iniciales = (n) => n.split(' ').map((x) => x[0]).slice(0, 2).join('').toUpperCase()
-const WHATSAPP = 'https://wa.me/51915152886?text='
 const MODOS = { solo: 'Un jugador', local: 'Multijugador local', online: 'En línea' }
 
 // "https://www.youtube.com/watch?v=ABC" -> "ABC" (el código del video)
@@ -21,22 +21,12 @@ function idDeYoutube(url) {
   return id ? id[1] : null
 }
 
-// TT-03: primero se muestra solo la miniatura; el reproductor de YouTube (y su cookie) carga recién al hacer clic
-function Trailer({ id, nombre }) {
-  const [ver, setVer] = useState(false)
-  if (ver) {
-    return <iframe src={'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1'} title={'Tráiler de ' + nombre}
-      className="aspect-video w-full rounded-xl" allow="autoplay; encrypted-media" allowFullScreen />
-  }
-  return (
-    <button type="button" onClick={() => setVer(true)} aria-label={'Ver tráiler de ' + nombre}
-      className="relative block aspect-video w-full overflow-hidden rounded-xl">
-      <img src={'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg'} alt="" className="h-full w-full object-cover" />
-      <span className="absolute inset-0 grid place-items-center">
-        <span className="rounded-2xl bg-red-600 px-6 py-3 text-2xl text-white">▶</span>
-      </span>
-    </button>
-  )
+// HU-26: como el prototipo, el tráiler es la 4.ª pieza de la galería (fotos 1-3 + tráiler).
+// TT-03: el reproductor de YouTube (y su cookie) carga recién cuando el cliente elige el tráiler.
+function medios(p) {
+  const video = idDeYoutube(p.trailer_url)
+  const fotos = p.fotos.map((url) => ({ tipo: 'foto', url }))
+  return video ? [...fotos.slice(0, 3), { tipo: 'video', id: video }] : fotos
 }
 
 export default function Ficha() {
@@ -106,7 +96,9 @@ export default function Ficha() {
   if (error) return <p className="rounded-lg bg-error/10 p-3 text-sm text-error">{error}</p>
   if (!p) return <p className="text-tinta/60">Cargando...</p>
 
-  const video = idDeYoutube(p.trailer_url)
+  const galeria = medios(p)
+  const actual = Math.min(fotoActual, Math.max(galeria.length - 1, 0))
+  const pieza = galeria[actual]
   const incluye = [p.incluye_caja && 'Caja', p.incluye_manual && 'Manual', p.incluye_disco && 'Disco'].filter(Boolean)
   const sePuedeComprar = !p.es_preventa && p.stock > 0
   const maximo = Math.min(p.stock, 5)
@@ -137,32 +129,47 @@ export default function Ficha() {
 
       <div className="grid gap-8 rounded-3xl border border-tinta/10 bg-superficie p-5 shadow-sm sm:p-8 md:grid-cols-2">
         <div className="min-w-0 space-y-3">
-          {/* HU-21: galería: la foto grande con flechas y, debajo, las miniaturas */}
+          {/* HU-21: galería: la pieza grande con flechas y, debajo, las 4 miniaturas (la 4.ª puede ser el tráiler) */}
           <div className="relative overflow-hidden rounded-2xl border border-tinta/10 bg-white">
-            {p.fotos.length
-              ? <img src={urlImagen(p.fotos[fotoActual])} alt={p.nombre} width="600" height="600" className="aspect-square w-full object-contain p-4" />
-              : <div className="grid aspect-square place-items-center text-tinta/60">Foto pendiente</div>}
-            {p.fotos.length > 1 && (
+            {!galeria.length && <div className="grid aspect-square place-items-center text-tinta/60">Foto pendiente</div>}
+            {pieza?.tipo === 'foto' && <img src={urlImagen(pieza.url)} alt={p.nombre} width="600" height="600" className="aspect-square w-full object-contain p-4" />}
+            {pieza?.tipo === 'video' && (
+              <div className="grid aspect-square w-full place-items-center bg-[#0b0820]">
+                <iframe key={pieza.id} src={'https://www.youtube-nocookie.com/embed/' + pieza.id + '?autoplay=1&rel=0'} title={'Tráiler de ' + p.nombre}
+                  className="aspect-video w-full" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen />
+              </div>
+            )}
+            {galeria.length > 1 && (
               <>
-                <span className="absolute left-3 top-3 rounded-full border border-tinta/15 bg-white/90 px-2.5 py-0.5 text-xs text-[#1a1040]">{fotoActual + 1} / {p.fotos.length}</span>
-                <button type="button" onClick={() => setFotoActual((fotoActual - 1 + p.fotos.length) % p.fotos.length)} aria-label="Foto anterior"
+                <span className="absolute left-3 top-3 rounded-full border border-tinta/15 bg-white/90 px-2.5 py-0.5 text-xs text-[#1a1040]">{actual + 1} / {galeria.length}</span>
+                <button type="button" onClick={() => setFotoActual((actual - 1 + galeria.length) % galeria.length)} aria-label="Anterior"
                   className="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-tinta/15 bg-white/90 text-[#1a1040] shadow"><Icono nombre="flechaIzq" /></button>
-                <button type="button" onClick={() => setFotoActual((fotoActual + 1) % p.fotos.length)} aria-label="Foto siguiente"
+                <button type="button" onClick={() => setFotoActual((actual + 1) % galeria.length)} aria-label="Siguiente"
                   className="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-tinta/15 bg-white/90 text-[#1a1040] shadow"><Icono nombre="flechaDer" /></button>
               </>
             )}
           </div>
-          {p.fotos.length > 1 && (
-            <div className="flex flex-wrap gap-2">
-              {p.fotos.map((f, i) => (
-                <button key={f} type="button" onClick={() => setFotoActual(i)} aria-label={'Ver foto ' + (i + 1)} aria-current={i === fotoActual}
-                  className={'h-20 w-20 overflow-hidden rounded-xl border-2 bg-white ' + (i === fotoActual ? 'border-rosa' : 'border-tinta/10')}>
-                  <img src={urlImagen(f)} alt="" loading="lazy" className="h-full w-full object-contain p-1" />
+          {galeria.length > 1 && (
+            <div className="mx-auto grid w-full max-w-[340px] grid-cols-4 gap-2">
+              {galeria.map((m, i) => (
+                <button key={m.url || m.id} type="button" onClick={() => setFotoActual(i)} aria-current={i === actual}
+                  aria-label={m.tipo === 'video' ? 'Ver tráiler' : 'Ver foto ' + (i + 1)}
+                  className={'relative aspect-square overflow-hidden rounded-[10px] border-2 bg-white ' + (i === actual ? 'border-rosa shadow-[0_0_0_3px_rgba(222,28,187,.18)]' : 'border-tinta/10')}>
+                  {m.tipo === 'foto'
+                    ? <img src={urlImagen(m.url)} alt="" loading="lazy" className="h-full w-full object-contain p-1" />
+                    : (
+                      <>
+                        <img src={'https://i.ytimg.com/vi/' + m.id + '/mqdefault.jpg'} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-60" />
+                        <span className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 bg-[#1a1040]/35 text-white">
+                          <span className="grid h-7 w-7 place-items-center rounded-full bg-white/90 pl-0.5 text-xs text-[#1a1040]">▶</span>
+                          <span className="text-[10px] font-semibold [text-shadow:0_1px_6px_rgba(26,16,64,.6)]">Tráiler</span>
+                        </span>
+                      </>
+                    )}
                 </button>
               ))}
             </div>
           )}
-          {video && <Trailer key={video} id={video} nombre={p.nombre} />}
         </div>
 
         <div className="min-w-0 space-y-4">
@@ -220,10 +227,11 @@ export default function Ficha() {
             {esCliente && p.stock === 0 && !p.es_preventa && !aviso && (
               <button type="button" onClick={pedirAviso} className={boton + ' border-rosa/50 text-rosa'}>Avísame cuando llegue</button>
             )}
-            <a href={WHATSAPP + encodeURIComponent('Hola Play Shop Tek, tengo una consulta sobre ' + p.nombre + ' (PST-' + p.codigo.toUpperCase() + ').')}
-              target="_blank" rel="noreferrer" className={boton + ' border-ok/40 text-ok'}>
-              <Icono nombre="whatsapp" tam={16} /> Hablar con un asesor
-            </a>
+            {/* HU-26: como el prototipo, abre el panel verde con los dos asesores */}
+            <BotonWhatsApp mensaje={'Hola Play Shop Tek, tengo una consulta sobre ' + p.nombre + ' (PST-' + p.codigo.toUpperCase() + ').'} flecha
+              className={boton + ' border-[#25D366]/55 bg-[#25D366]/10 text-ok hover:bg-[#25D366]/20'}>
+              <span className="text-[#1f9d55]"><Icono nombre="whatsapp" tam={18} /></span> Hablar con un asesor
+            </BotonWhatsApp>
           </div>
           {aviso && <p className="text-sm text-ok">{aviso}</p>}
           {!esCliente && (

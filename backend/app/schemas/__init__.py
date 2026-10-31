@@ -481,3 +481,26 @@ class ProductoAlta(BaseModel):
     descuento_dias: int | None = Field(default=None, ge=1, le=60)
     fotos: list[str] = Field(default=[], max_length=4)
     trailer_url: str | None = Field(default=None, max_length=300)
+
+
+# ── HU-26: cuenta del cliente ─────────────────────────────────────────────────────────
+class PerfilCliente(BaseModel):
+    nombre: str = Field(min_length=2, max_length=120)
+    email: EmailStr
+    telefono: str | None = Field(default=None, pattern=r"^9\d{8}$")
+    distrito: str | None = Field(default=None, max_length=80)
+
+
+class CambioClave(BaseModel):
+    actual: str
+    nueva: str = Field(min_length=6, max_length=72)
+
+
+class MiReparacion(BaseModel):
+    codigo: str
+    fecha: date
+    equipo: str
+    falla: str
+    costo: Decimal
+    precio_acordado: bool
+    estado: EstadoReparacion

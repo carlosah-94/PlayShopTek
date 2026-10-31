@@ -459,3 +459,25 @@ def test_datos_para_catalogo_y_ficha(cliente):
     assert len(ficha["estrellas"]) == 5 and sum(ficha["estrellas"]) == ficha["total_resenas"]
     todas = cliente.get(f"/api/productos/{p['id']}/resenas").json()
     assert len(todas) == ficha["total_resenas"] >= len(ficha["resenas"])
+
+
+def test_mi_cuenta_y_mis_reparaciones(cliente):
+    """HU-26: el cliente cambia sus datos y su contraseña, y ve sus reparaciones."""
+    import uuid
+    correo = f"prueba-{uuid.uuid4().hex[:8]}@demo.pe"
+    tel = "9" + str(uuid.uuid4().int)[:8]
+    tok = cliente.post("/api/auth/registro", json={"nombre": "Ana Prueba", "email": correo, "telefono": tel, "password": "clave123"}).json()
+    h = {"Authorization": "Bearer " + tok["access_token"]}
+    perfil = cliente.get("/api/mi/perfil", headers=h).json()
+    assert perfil["email"] == correo and perfil["telefono"] == tel
+    nuevo = cliente.put("/api/mi/perfil", json={**perfil, "nombre": "Ana María Prueba", "distrito": "Villa El Salvador"}, headers=h).json()
+    assert nuevo["nombre"] == "Ana María Prueba" and nuevo["distrito"] == "Villa El Salvador"
+    assert cliente.put("/api/mi/perfil", json={**perfil, "email": "cliente@demo.pe"}, headers=h).status_code == 409
+    assert cliente.post("/api/mi/clave", json={"actual": "mala", "nueva": "otra123"}, headers=h).status_code == 400
+    assert cliente.post("/api/mi/clave", json={"actual": "clave123", "nueva": "otra123"}, headers=h).status_code == 204
+    assert cliente.post("/api/auth/login", json={"email": correo, "password": "otra123"}).status_code == 200
+
+    demo = {"Authorization": "Bearer " + cliente.post("/api/auth/login", json={"email": "cliente@demo.pe", "password": "demo123"}).json()["access_token"]}
+    reps = cliente.get("/api/mi/reparaciones", headers=demo).json()
+    assert reps and all(r["codigo"].startswith("R-") for r in reps)
+    assert cliente.get("/api/mi/reparaciones", headers=h).json() == []
