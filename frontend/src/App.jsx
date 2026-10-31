@@ -1,31 +1,57 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Asistente from './components/Asistente.jsx'
+import { PanelWhatsApp, useDesplegable } from './components/Asesores.jsx'
 import Icono from './components/Iconos.jsx'
+import { MenuCuenta, Notificaciones } from './components/MenusCliente.jsx'
 import PanelGestion, { RUTAS_PANEL } from './components/PanelGestion.jsx'
 import Banners from './pages/Banners.jsx'
 import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
 import Favoritos from './pages/Favoritos.jsx'
+import Informacion from './pages/Informacion.jsx'
 import Ficha from './pages/Ficha.jsx'
 import Inicio from './pages/Inicio.jsx'
 import Inventario from './pages/Inventario.jsx'
 import LibroReclamaciones from './pages/LibroReclamaciones.jsx'
 import Login from './pages/Login.jsx'
+import MiCuenta from './pages/MiCuenta.jsx'
 import MiEquipo from './pages/MiEquipo.jsx'
+import MiTienda from './pages/MiTienda.jsx'
 import MisCompras from './pages/MisCompras.jsx'
+import MisReparaciones from './pages/MisReparaciones.jsx'
 import Ofertas from './pages/Ofertas.jsx'
+import Pago from './pages/Pago.jsx'
 import Panel from './pages/Panel.jsx'
 import Rastreo from './pages/Rastreo.jsx'
 import Reclamos from './pages/Reclamos.jsx'
+import Reparaciones from './pages/Reparaciones.jsx'
 import Resenas from './pages/Resenas.jsx'
 import ServiciosTecnicos from './pages/ServiciosTecnicos.jsx'
 import Taller from './pages/Taller.jsx'
 import VentaTienda from './pages/VentaTienda.jsx'
-import { cerrarSesion, leerSesion } from './api.js'
+import { api, cerrarSesion, leerSesion } from './api.js'
 import { leerCarrito, unidades } from './carrito.js'
 
-const WHATSAPP = 'https://wa.me/51915152886?text=' + encodeURIComponent('Hola Play Shop Tek, quiero hacer una consulta.')
+function WhatsAppFlotante() {
+  const [abierto, alternar, cerrar] = useDesplegable()
+  return (
+    <>
+      {abierto && (
+        <>
+          <div className="fixed inset-0 z-[55]" onClick={cerrar} aria-hidden="true" />
+          <div className="fixed bottom-[9.75rem] right-5 z-[60] w-[min(320px,calc(100vw-40px))]">
+            <PanelWhatsApp mensaje="Hola Play Shop Tek, quiero hacer una consulta." alCerrar={cerrar} conCerrar />
+          </div>
+        </>
+      )}
+      <button type="button" onClick={alternar} aria-expanded={abierto} aria-label={abierto ? 'Cerrar WhatsApp' : 'Escríbenos por WhatsApp'}
+        className="fixed bottom-5 right-5 z-[56] grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lg hover:bg-[#1fb857]">
+        <Icono nombre={abierto ? 'cerrar' : 'whatsapp'} tam={abierto ? 26 : 30} />
+      </button>
+    </>
+  )
+}
 const enlace = ({ isActive }) => (isActive ? 'text-[#ff8fe4]' : 'hover:text-[#ff8fe4]')
 const botonIcono = 'relative grid h-9 w-9 place-items-center rounded-lg border border-white/15 hover:bg-white/10'
 
@@ -41,6 +67,13 @@ export default function App() {
     window.addEventListener('carrito', actualizar)
     return () => window.removeEventListener('carrito', actualizar)
   }, [])
+
+  // HU-26: cuántos favoritos tiene (el número junto al corazón). Se actualiza al cambiar de página
+  const [nFavoritos, setNFavoritos] = useState(0)
+  const ruta = useLocation().pathname
+  useEffect(() => {
+    if (rol === 'cliente') api('/mi/favoritos').then((fs) => setNFavoritos(fs.length)).catch(() => {})
+  }, [ruta, rol])
 
   // HU-20: modo claro u oscuro. Se recuerda en el navegador para la próxima visita
   const [tema, setTema] = useState(() => localStorage.getItem('tema') || 'claro')
@@ -66,7 +99,14 @@ export default function App() {
       <Route path="/producto/:id" element={<Ficha />} />
       <Route path="/rastreo" element={<Rastreo />} />
       <Route path="/carrito" element={<Carrito />} />
+      <Route path="/pago" element={<Pago />} />
       <Route path="/mis-compras" element={<MisCompras />} />
+      <Route path="/mis-reparaciones" element={<MisReparaciones />} />
+      <Route path="/mi-cuenta" element={<MiCuenta />} />
+      <Route path="/reparaciones" element={<Reparaciones />} />
+      <Route path="/mi-tienda" element={<MiTienda />} />
+      <Route path="/privacidad" element={<Informacion tema="privacidad" />} />
+      <Route path="/terminos" element={<Informacion tema="terminos" />} />
       <Route path="/favoritos" element={<Favoritos />} />
       <Route path="/login" element={<Login />} />
       <Route path="/panel" element={<Panel />} />
@@ -98,7 +138,7 @@ export default function App() {
             <NavLink to="/" end className={enlace}>Inicio</NavLink>
             <NavLink to="/catalogo" className={enlace}>Catálogo</NavLink>
             <NavLink to="/ofertas" className={enlace}>⚡ Ofertas</NavLink>
-            <NavLink to="/rastreo" className={enlace}>Reparaciones</NavLink>
+            <NavLink to="/reparaciones" className={enlace}>Reparaciones</NavLink>
           </nav>
           <form onSubmit={enviarBusqueda} role="search" className="order-last flex w-full items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 lg:order-none lg:w-auto lg:flex-1">
             <Icono nombre="buscar" tam={16} />
@@ -106,7 +146,13 @@ export default function App() {
               aria-label="Buscar productos" className="w-full bg-transparent py-2 text-sm text-white placeholder:text-white/60 focus:outline-none" />
           </form>
           <div className="ml-auto flex items-center gap-2">
-            {rol === 'cliente' && <Link to="/favoritos" className={botonIcono} aria-label="Favoritos"><Icono nombre="corazon" /></Link>}
+            {rol === 'cliente' && <Notificaciones />}
+            {rol === 'cliente' && (
+              <Link to="/favoritos" className={botonIcono} aria-label={'Favoritos, ' + nFavoritos + ' guardados'}>
+                <Icono nombre="corazon" />
+                {nFavoritos > 0 && <span className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-morado px-1 text-xs font-semibold">{nFavoritos}</span>}
+              </Link>
+            )}
             <button type="button" onClick={() => setTema(tema === 'claro' ? 'oscuro' : 'claro')} className={botonIcono}
               aria-label={tema === 'claro' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}>
               <Icono nombre={tema === 'claro' ? 'luna' : 'sol'} />
@@ -115,7 +161,9 @@ export default function App() {
               <Icono nombre="carrito" />
               {enCarrito > 0 && <span className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-rosa px-1 text-xs font-semibold">{enCarrito}</span>}
             </Link>
-            {sesion
+            {rol === 'cliente'
+              ? <MenuCuenta nombre={sesion.usuario.nombre} email={sesion.usuario.email} salir={salir} />
+              : sesion
               ? <button type="button" onClick={salir} className="rounded-lg border border-white/20 px-3 py-2 text-sm">Salir ({sesion.usuario.nombre.split(' ')[0]})</button>
               : <Link to="/login" className="flex items-center gap-2 rounded-lg border border-[#ff8fe4] px-3 py-2 text-sm font-semibold hover:bg-white/10">
                   <Icono nombre="entrar" tam={16} /> Iniciar sesión
@@ -130,14 +178,6 @@ export default function App() {
             </div>
           </nav>
         )}
-        {rol === 'cliente' && (
-          <nav className="border-t border-white/10 bg-white/5">
-            <div className="mx-auto flex max-w-6xl gap-5 px-4 py-2 text-sm sm:px-8">
-              <NavLink to="/mis-compras" className={enlace}>Mis compras</NavLink>
-              <NavLink to="/favoritos" className={enlace}>Favoritos</NavLink>
-            </div>
-          </nav>
-        )}
       </header>
 
       {/* TT-03: alto mínimo para que el pie de página no "salte" mientras carga el catálogo */}
@@ -146,38 +186,43 @@ export default function App() {
       </main>
 
       <footer className="mt-10 bg-noche text-sm text-white">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3 sm:px-8">
-          <div className="space-y-3">
-            <p className="flex items-center gap-2 font-titulo text-base font-semibold">
-              <img src="/logo.jpg" alt="" className="h-9 w-9 rounded-full object-cover" /> PLAY SHOP TEK
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3 sm:px-8 sm:text-center">
+          <div className="space-y-3 sm:justify-self-center">
+            <p className="flex items-center gap-2 font-titulo text-base font-semibold sm:justify-center">
+              <img src="/logo.jpg" alt="" className="h-9 w-9 rounded-full object-cover" />
+              <span className="leading-tight sm:text-left">PLAY SHOP TEK<span className="block text-[11px] font-normal uppercase tracking-[0.14em] text-[#cfc7ff]">Villa El Salvador</span></span>
             </p>
-            <p className="text-white/70">Videojuegos, consolas y servicio técnico en Villa El Salvador.</p>
-            <div className="flex gap-3">
-              <a href="https://www.facebook.com/PlayShopTek/" target="_blank" rel="noreferrer" className="underline hover:text-[#ff8fe4]">Facebook</a>
-              <a href="https://www.instagram.com/play_shop_tek/" target="_blank" rel="noreferrer" className="underline hover:text-[#ff8fe4]">Instagram</a>
-              <a href="https://www.tiktok.com/@playshoptek" target="_blank" rel="noreferrer" className="underline hover:text-[#ff8fe4]">TikTok</a>
+            {/* HU-26: redes en círculos, como el prototipo */}
+            <div className="flex gap-2 sm:justify-center">
+              {[['https://www.facebook.com/PlayShopTek/', 'facebook', 'Facebook'], ['https://www.instagram.com/play_shop_tek/', 'instagram', 'Instagram'],
+                ['https://www.tiktok.com/@playshoptek', 'tiktok', 'TikTok']].map(([url, ic, nombre]) => (
+                <a key={nombre} href={url} target="_blank" rel="noreferrer" aria-label={nombre + ' de Play Shop Tek'}
+                  className="grid h-9 w-9 place-items-center rounded-full border border-white/20 hover:bg-white/10"><Icono nombre={ic} tam={17} /></a>
+              ))}
             </div>
           </div>
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-wider text-[#cfc7ff]">Ubícanos</p>
             <p>Av. Revolución 1420, Villa El Salvador, Lima Sur</p>
-            <p className="text-white/70">Lunes a sábado 12:00–20:00 · Domingo 15:00–20:00</p>
+            <p className="text-white/75">Lunes a sábado 12:00–20:00 · Domingo 15:00–20:00</p>
           </div>
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-wider text-[#cfc7ff]">Información al cliente</p>
-            <p><Link to="/rastreo" className="hover:text-[#ff8fe4]">Rastrea tu reparación</Link></p>
-            {/* La ley pide que el Libro de Reclamaciones se vea en la página principal */}
-            <p><Link to="/libro-de-reclamaciones" className="hover:text-[#ff8fe4]">📕 Libro de Reclamaciones</Link></p>
+            <ul className="space-y-1.5">
+              <li><Link to="/mi-tienda" className="hover:text-[#ff8fe4]">Mi tienda</Link></li>
+              <li><Link to="/rastreo" className="hover:text-[#ff8fe4]">Rastrea tu reparación</Link></li>
+              <li><Link to="/privacidad" className="hover:text-[#ff8fe4]">Políticas de privacidad</Link></li>
+              <li><Link to="/terminos" className="hover:text-[#ff8fe4]">Términos y condiciones</Link></li>
+              {/* La ley pide que el Libro de Reclamaciones se vea en la página principal */}
+              <li><Link to="/libro-de-reclamaciones" className="hover:text-[#ff8fe4]">📕 Libro de Reclamaciones</Link></li>
+            </ul>
           </div>
         </div>
-        <p className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/60">© 2026 Play Shop Tek · Villa El Salvador, Lima Sur</p>
+        <p className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/65">© 2026 Play Shop Tek · Villa El Salvador, Lima Sur</p>
       </footer>
 
-      {/* HU-20: botón flotante de WhatsApp (el asistente queda encima) */}
-      <a href={WHATSAPP} target="_blank" rel="noreferrer" aria-label="Escribir por WhatsApp"
-        className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-[#1f9d55] text-white shadow-lg hover:bg-[#17803f]">
-        <Icono nombre="whatsapp" tam={28} />
-      </a>
+      {/* HU-20: botón flotante de WhatsApp (el asistente queda encima). HU-26: abre los asesores, como el prototipo */}
+      <WhatsAppFlotante />
       <Asistente />
     </div>
   )

@@ -1,13 +1,31 @@
-"""HU-05: favoritos, "Avísame cuando llegue" y notificaciones del cliente."""
+"""HU-05: favoritos, "Avísame cuando llegue" y notificaciones del cliente.
+HU-26: "Mi cuenta" (datos y contraseña) y "Mis reparaciones"."""
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.api.deps import solo_cliente
 from app.api.routes.productos import _consulta_base, a_salida, calificaciones
+from app.core.security import hash_password, verificar_password
 from app.database import get_db
-from app.models import AvisoLlegada, Cliente, Favorito, GrupoInteres, Notificacion, Producto, Usuario
-from app.schemas import AvisoSalida, NotificacionSalida, ProductoSalida
+from app.models import (
+    AvisoLlegada,
+    Cliente,
+    Favorito,
+    GrupoInteres,
+    Notificacion,
+    Producto,
+    Reparacion,
+    Usuario,
+)
+from app.schemas import (
+    AvisoSalida,
+    CambioClave,
+    MiReparacion,
+    NotificacionSalida,
+    PerfilCliente,
+    ProductoSalida,
+)
 
 router = APIRouter(prefix="/mi", tags=["Mi cuenta"])
 
@@ -96,3 +114,46 @@ def marcar_leidas(cliente: Cliente = Depends(mi_cliente), db: Session = Depends(
     db.execute(update(Notificacion).where(Notificacion.cliente_id == cliente.id).values(leida=True))
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+# ── HU-26: Mi cuenta ────────────────────────────────────────────────
+def a_perfil(cliente: Cliente) -> PerfilCliente:
+    return PerfilCliente(nombre=cliente.nombre, email=cliente.usuario.email, telefono=cliente.telefono, distrito=cliente.distrito)
+
+
+@router.get("/perfil", response_model=PerfilCliente)
+def ver_perfil(cliente: Cliente = Depends(mi_cliente)):
+    return a_perfil(cliente)
+
+
+@router.put("/perfil", response_model=PerfilCliente)
+def guardar_perfil(datos: PerfilCliente, cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    """Con estos datos se preparan sus pedidos para recojo y sus reparaciones."""
+    email = datos.email.lower()
+    if db.scalar(select(Usuario.id).where(Usuario.email == email, Usuario.id != cliente.usuario_id)):
+        raise HTTPException(status.HTTP_409_CONFLICT, "Ese correo ya lo usa otra cuenta.")
+    if datos.telefono and db.scalar(select(Cliente.id).where(Cliente.telefono == datos.telefono, Cliente.id != cliente.id)):
+        raise HTTPException(status.HTTP_409_CONFLICT, "Ese celular ya está registrado en otra cuenta. Escríbenos por WhatsApp.")
+    cliente.nombre, cliente.telefono, cliente.distrito = datos.nombre.strip(), datos.telefono, (datos.distrito or "").strip() or None
+    cliente.usuario.email = email
+    db.commit()
+    return a_perfil(cliente)
+
+
+@router.post("/clave", status_code=status.HTTP_204_NO_CONTENT)
+def cambiar_clave(datos: CambioClave, cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    if not verificar_password(datos.actual, cliente.usuario.password_hash):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "La contraseña actual no es correcta.")
+    cliente.usuario.password_hash = hash_password(datos.nueva)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+# ── HU-26: Mis reparaciones ─────────────────────────────────────────
+@router.get("/reparaciones", response_model=list[MiReparacion])
+def mis_reparaciones(cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    """Los equipos que dejó en el taller (los registra la tienda con su celular)."""
+    filas = db.scalars(select(Reparacion).where(Reparacion.cliente_id == cliente.id)
+                       .order_by(Reparacion.fecha_ingreso.desc(), Reparacion.id.desc()))
+    return [MiReparacion(codigo=r.codigo, fecha=r.fecha_ingreso, equipo=r.equipo, falla=r.falla, costo=r.costo,
+                         precio_acordado=r.precio_acordado, estado=r.estado) for r in filas]

@@ -1,106 +1,98 @@
-// HU-03: carrito y pago con Yape o tarjeta, con recojo en la tienda.
+// HU-03: carrito con recojo en la tienda.
+// HU-26: como el prototipo: productos a la izquierda y "Resumen" a la derecha; el pago va en su propia página (/pago).
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { api, leerSesion } from '../api.js'
-import { cambiarCantidad, leerCarrito, vaciarCarrito } from '../carrito.js'
+import { Link, useNavigate } from 'react-router-dom'
+import { api, leerSesion, urlImagen } from '../api.js'
+import { cambiarCantidad, completarFotos, leerCarrito } from '../carrito.js'
+import Icono from '../components/Iconos.jsx'
+import { botonRosa, soles } from '../components/PiezasPanel.jsx'
 
-const YAPE_TIENDA = '987 654 321' // EJEMPLO: cambiar por el número de Yape real de la tienda
-const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
+export function Resumen({ items, children }) {
+  const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0)
+  return (
+    <aside className="h-fit space-y-3 rounded-2xl border border-tinta/10 bg-superficie p-5 shadow-sm">
+      {children}
+      <div className="space-y-2 border-b border-tinta/10 pb-3 text-sm">
+        <p className="flex justify-between"><span>Subtotal</span><span className="tabular-nums">{soles(subtotal)}</span></p>
+        <p className="flex justify-between"><span>Recojo en tienda</span><span>Gratis</span></p>
+      </div>
+      <p className="flex items-baseline justify-between"><span>Total</span><span className="font-titulo text-3xl font-semibold tabular-nums">{soles(subtotal)}</span></p>
+    </aside>
+  )
+}
 
 export default function Carrito() {
-  const sesion = leerSesion()
   const [items, setItems] = useState(leerCarrito())
-  const [metodo, setMetodo] = useState('yape')
-  const [operacion, setOperacion] = useState('')
-  const [compra, setCompra] = useState(null)
-  const [error, setError] = useState('')
-
+  const navegar = useNavigate()
+  const esCliente = leerSesion()?.usuario.rol === 'cliente'
   // Si el carrito cambia (por ejemplo, en otra pestaña), se vuelve a leer
   useEffect(() => {
     const leer = () => setItems(leerCarrito())
     window.addEventListener('carrito', leer)
+    if (leerCarrito().some((i) => !i.foto)) api('/productos').then(completarFotos).catch(() => {})
     return () => window.removeEventListener('carrito', leer)
   }, [])
 
-  const total = items.reduce((s, i) => s + i.precio * i.cantidad, 0)
-
-  const pagar = async () => {
-    setError('')
-    try {
-      const cuerpo = { items: items.map((i) => ({ producto_id: i.id, cantidad: i.cantidad })), metodo_pago: metodo,
-        numero_operacion: metodo === 'yape' ? (operacion.trim() || null) : null }
-      setCompra(await api('/ventas', { metodo: 'POST', cuerpo }))
-      vaciarCarrito()
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  if (compra) {
+  if (!items.length) {
     return (
-      <section className="mx-auto max-w-lg space-y-3 rounded-xl border border-green-500/40 bg-green-500/10 p-6">
-        <h1 className="text-xl font-bold">¡Compra confirmada!</h1>
-        <p>Tu código es <span className="font-mono text-rosa">{compra.codigo}</span>. Total pagado: <b>{soles(compra.total)}</b>.</p>
-        <p className="text-sm text-tinta/70">Muéstralo al recoger en Av. Revolución 1420, Villa El Salvador.
-          Horario: lunes a sábado 12:00–20:00, domingo 15:00–20:00.</p>
-        <Link to="/mis-compras" className="inline-block rounded-lg bg-rosa px-4 py-2 font-semibold text-white">Ver mis compras</Link>
-      </section>
+      <div className="space-y-4">
+        <h1 className="text-3xl font-semibold">Tu carrito</h1>
+        <div className="grid place-items-center gap-3 rounded-2xl border border-tinta/10 bg-superficie p-10 text-center shadow-sm">
+          <span className="text-morado"><Icono nombre="carrito" tam={40} /></span>
+          <h2 className="text-2xl font-semibold">Todavía no agregaste nada</h2>
+          <p className="text-sm text-tinta/70">Mira lo que te recomendamos según tus gustos.</p>
+          <Link to="/catalogo" className={botonRosa}>Ir al catálogo</Link>
+        </div>
+      </div>
     )
   }
 
-  if (!items.length) {
-    return <p className="text-tinta/60">Tu carrito está vacío. <Link to="/" className="text-rosa">Ir al catálogo</Link></p>
-  }
-
-  const campo = 'w-full rounded-lg border border-tinta/15 bg-superficie px-3 py-2'
+  const boton = 'grid h-8 w-8 place-items-center text-lg disabled:opacity-30'
   return (
-    <section className="grid gap-6 md:grid-cols-[1fr_360px]">
-      <div>
-        <h1 className="text-2xl font-bold">Tu carrito</h1>
-        <ul className="mt-3 divide-y divide-tinta/10 rounded-xl border border-tinta/10 bg-superficie">
-          {items.map((i) => (
-            <li key={i.id} className="flex items-center gap-3 p-4">
-              <span className="flex-1 font-semibold">{i.nombre}</span>
-              <select value={i.cantidad} onChange={(e) => cambiarCantidad(i.id, Number(e.target.value))}
-                className="rounded border border-tinta/15 bg-fondo px-2 py-1">
-                {Array.from({ length: Math.min(i.stock, 5) }, (_, n) => <option key={n + 1}>{n + 1}</option>)}
-              </select>
-              <span className="w-24 text-right">{soles(i.precio * i.cantidad)}</span>
-              <button onClick={() => cambiarCantidad(i.id, 0)} className="text-sm text-tinta/60 hover:text-error">Quitar</button>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-3 text-right text-lg">Total: <b>{soles(total)}</b></p>
-        <p className="text-right text-xs text-tinta/60">Recojo gratis en tienda. El precio final se confirma al pagar.</p>
-      </div>
-
-      <div className="space-y-3 rounded-xl border border-tinta/10 bg-superficie/50 p-5">
-        <h2 className="font-semibold">¿Cómo quieres pagar?</h2>
-        {[['yape', 'Yape'], ['tarjeta', 'Tarjeta (BCP)']].map(([k, nombre]) => (
-          <label key={k} className="flex items-center gap-2">
-            <input type="radio" name="metodo" checked={metodo === k} onChange={() => { setMetodo(k); setError('') }} /> {nombre}
-          </label>
-        ))}
-
-        {metodo === 'yape' ? (
-          <div className="space-y-2 text-sm">
-            <p>1. Yapea <b>{soles(total)}</b> al <b>{YAPE_TIENDA}</b> (Play Shop Tek).</p>
-            <p>2. Escribe el número de operación que te muestra Yape:</p>
-            <input placeholder="Número de operación" value={operacion} onChange={(e) => setOperacion(e.target.value)}
-              className={campo} inputMode="numeric" />
-          </div>
-        ) : (
-          <p className="rounded-lg border border-tinta/15 p-3 text-sm text-tinta/70">
-            Pago con tarjeta <b>simulado</b> para la demostración. En producción se conecta a una pasarela de pago
-            certificada; la tienda nunca ve ni guarda los datos de tu tarjeta.
+    <div className="space-y-4">
+      <h1 className="text-3xl font-semibold">Tu carrito</h1>
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="space-y-3">
+          <ul className="space-y-3">
+            {items.map((i) => (
+              <li key={i.id} className="flex flex-wrap items-center gap-4 rounded-2xl border border-tinta/10 bg-superficie p-4 shadow-sm">
+                {i.foto
+                  ? <img src={urlImagen(i.foto)} alt="" className="h-16 w-14 rounded-md bg-white object-contain" />
+                  : <span className="grid h-16 w-14 place-items-center rounded-md bg-morado/10 text-morado"><Icono nombre="paquete" /></span>}
+                <div className="min-w-0 flex-1 basis-40">
+                  <Link to={'/producto/' + i.id} className="font-medium hover:text-rosa">{i.nombre}</Link>
+                  <p className="text-xs text-tinta/70">{soles(i.precio)} por unidad · Disponible hoy</p>
+                  <button type="button" onClick={() => cambiarCantidad(i.id, 0)} className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-rosa hover:underline">
+                    <Icono nombre="basura" tam={13} /> Quitar
+                  </button>
+                </div>
+                <div className="flex items-center rounded-lg border border-tinta/15" role="group" aria-label={'Cantidad de ' + i.nombre}>
+                  <button type="button" onClick={() => cambiarCantidad(i.id, i.cantidad - 1)} aria-label="Una menos" className={boton}>−</button>
+                  <span className="w-7 text-center tabular-nums">{i.cantidad}</span>
+                  <button type="button" onClick={() => cambiarCantidad(i.id, i.cantidad + 1)} disabled={i.cantidad >= Math.min(i.stock, 5)} aria-label="Una más" className={boton}>+</button>
+                </div>
+                <span className="w-24 text-right font-medium tabular-nums">{soles(i.precio * i.cantidad)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="flex items-start gap-3 rounded-2xl border border-tinta/10 bg-superficie p-4 text-sm shadow-sm">
+            <span className="text-morado"><Icono nombre="tienda" /></span>
+            <span><b className="font-medium">Entrega: recoger en tienda</b><br />
+              <span className="text-xs text-tinta/70">Gratis · Av. Revolución 1420, Villa El Salvador · lun a sáb 12:00–20:00, dom 15:00–20:00.</span></span>
           </p>
-        )}
-
-        {error && <p className="text-sm text-error">{error}</p>}
-        {sesion?.usuario.rol === 'cliente'
-          ? <button onClick={pagar} className="w-full rounded-lg bg-rosa py-2 font-semibold text-white">Pagar {soles(total)}</button>
-          : <Link to="/login?volver=/carrito" className="block rounded-lg bg-rosa py-2 text-center font-semibold text-white">Inicia sesión como cliente para pagar</Link>}
+        </div>
+        <Resumen items={items}>
+          <h2 className="text-lg font-medium">Resumen</h2>
+        </Resumen>
       </div>
-    </section>
+      <div className="flex justify-end">
+        <div className="w-full space-y-1 lg:w-[340px]">
+          <button type="button" onClick={() => navegar(esCliente ? '/pago' : '/login?volver=/pago')} className={botonRosa + ' w-full py-3'}>
+            <Icono nombre="tarjeta" tam={17} /> {esCliente ? 'Ir a pagar' : 'Inicia sesión para pagar'}
+          </button>
+          <p className="text-center text-xs text-tinta/70">Al iniciar sesión te devolvemos directo al pago.</p>
+        </div>
+      </div>
+    </div>
   )
 }

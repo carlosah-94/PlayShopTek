@@ -3,13 +3,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, leerSesion, urlImagen } from '../api.js'
+import { BotonWhatsApp } from '../components/Asesores.jsx'
 import Icono from '../components/Iconos.jsx'
 import MenuCategoria from '../components/MenuCategoria.jsx'
 import SeccionOfertas, { ordenarOfertas } from '../components/SeccionOfertas.jsx'
 import TarjetaProducto from '../components/TarjetaProducto.jsx'
 import { useFavoritos } from '../favoritos.js'
 
-const WHATSAPP_TALLER = 'https://wa.me/51915152886?text=' + encodeURIComponent('Hola Play Shop Tek, quiero cotizar una reparación.')
 
 // Mismo orden que el prototipo; "PS2" se muestra como "Juegos PS2"
 const CATEGORIAS = [
@@ -228,9 +228,9 @@ export default function Inicio() {
             Cotiza por WhatsApp con un asesor: ahí acuerdan el diagnóstico y el precio. Luego sigues el estado de tu equipo con tu código de reparación.
           </p>
           <div className="flex flex-wrap gap-2">
-            <a href={WHATSAPP_TALLER} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg bg-rosa px-3 py-2 text-sm font-semibold text-white">
+            <BotonWhatsApp mensaje="Hola Play Shop Tek, quiero cotizar una reparación." conCerrar className="flex items-center gap-2 rounded-lg bg-rosa px-3 py-2 text-sm font-semibold text-white">
               <Icono nombre="whatsapp" tam={18} /> Cotizar por WhatsApp
-            </a>
+            </BotonWhatsApp>
             <Link to="/rastreo" className="flex items-center gap-2 rounded-lg border border-tinta/20 bg-superficie px-3 py-2 text-sm font-semibold hover:bg-tinta/5">
               <Icono nombre="buscar" tam={16} /> Rastrea tu reparación
             </Link>
