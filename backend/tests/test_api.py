@@ -508,3 +508,25 @@ def test_encuesta_de_gustos_y_recomendaciones(cliente):
     saltada = cliente.put("/api/mi/encuesta", json={}, headers=h).json()
     assert saltada["hecha"] and saltada["perfil"] is None
     assert cliente.get("/api/inicio", headers=h).json()["personalizado"] is False
+
+
+def test_asistente_categorias_recomendaciones_y_taller(cliente, h_cliente):
+    """Mejora del asistente (como el prototipo): entiende plurales y categorías, recomienda según la encuesta
+    (HU-27) y, si preguntan por reparaciones, muestra los servicios del taller."""
+    def decir(mensaje, headers=None):
+        return cliente.post("/api/asistente", json={"mensaje": mensaje, "sesion": "prueba-pytest"}, headers=headers or {}).json()
+
+    r = decir("vende mandos?")  # antes respondía con "PlayStation 2 Slim + 2 mandos" (la única con la palabra "mandos")
+    assert r["intencion"] == "buscar_producto" and all("Mando" in p["nombre"] for p in r["productos"])
+    assert r["acciones"][0]["destino"] == "/catalogo?categoria=Mandos"
+    assert decir("tienen juegos de ps4")["acciones"][0]["destino"] == "/catalogo?categoria=PS4"
+
+    con_gustos = decir("recomiendame un juego", h_cliente)  # Kevin respondió la encuesta: deportes y acción en PS5
+    assert con_gustos["intencion"] == "recomendar" and con_gustos["respuesta"].startswith("Por lo que respondiste")
+    assert con_gustos["productos"] and all(p["categoria"].startswith("PS") for p in con_gustos["productos"])
+    assert decir("que me recomiendas")["acciones"][0]["destino"] == "/login?crear=1"  # sin cuenta: lo más pedido
+
+    taller = decir("mi mando tiene drift")
+    assert taller["intencion"] == "reparacion" and taller["servicios"] and taller["acciones"][0]["tipo"] == "whatsapp"
+    assert decir("llevame a ofertas")["acciones"][0]["destino"] == "/ofertas"
+    assert "agotado" in decir("tienen el gran turismo 7")["respuesta"]
