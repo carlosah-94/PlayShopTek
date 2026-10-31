@@ -54,6 +54,10 @@ class ProductoSalida(BaseModel):
     trailer_url: str | None
     foto: str | None = None  # HU-21: foto principal para la tarjeta del catálogo
     oferta_termina: datetime | None = None  # HU-23: cuándo termina la oferta (para el contador)
+    # HU-25: para los filtros del catálogo y la línea "Nuevo, sellado · caja, disco" de la tarjeta
+    subcategoria: str | None = None
+    origen: str | None = None
+    incluye: str | None = None
 
 
 class ResenaSalida(BaseModel):
@@ -115,18 +119,17 @@ class PuedoOpinar(BaseModel):
 class ProductoDetalle(ProductoSalida):
     """HU-02: lo mismo del catálogo + lo que solo se ve en la ficha."""
     descripcion: str | None
-    subcategoria: str | None
     incluye_caja: bool | None
     incluye_manual: bool | None
     incluye_disco: bool | None
     color: str | None
-    origen: str | None
     etiquetas: list[str]
     modos: list[ModoJuego]
     fotos: list[str]
     monto_reserva: Decimal | None
     cupos_reserva: int | None  # HU-04: cuántas reservas quedan antes del lanzamiento
     total_resenas: int
+    estrellas: list[int] = []  # HU-25: cuántas reseñas de 5, 4, 3, 2 y 1 estrellas (para las barras)
     resenas: list[ResenaSalida]
 
 
