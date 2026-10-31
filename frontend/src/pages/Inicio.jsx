@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, leerSesion, urlImagen } from '../api.js'
 import Icono from '../components/Iconos.jsx'
+import MenuCategoria from '../components/MenuCategoria.jsx'
 import SeccionOfertas, { ordenarOfertas } from '../components/SeccionOfertas.jsx'
 import TarjetaProducto from '../components/TarjetaProducto.jsx'
 import { useFavoritos } from '../favoritos.js'
@@ -130,6 +131,8 @@ export default function Inicio() {
   const [productos, setProductos] = useState(null) // null = todavía cargando
   const [inicio, setInicio] = useState(null)
   const [banners, setBanners] = useState(null) // HU-24: los maneja Ángel desde el panel
+  const [generos, setGeneros] = useState({})
+  const [abierta, setAbierta] = useState(null) // HU-25: categoría cuyo panel está abierto (solo en computadora)
   const [error, setError] = useState('')
   const [favoritos, alternarFavorito] = useFavoritos()
 
@@ -138,6 +141,7 @@ export default function Inicio() {
     api('/productos').then(setProductos).catch((e) => setError(e.message))
     api('/inicio').then(setInicio).catch(() => {})
     api('/banners').then(setBanners).catch(() => {})
+    api('/generos').then((gs) => setGeneros(Object.fromEntries(gs.map((g) => [g.id, g.nombre])))).catch(() => {})
   }, [])
 
   const cuenta = (cat) => productos?.filter((p) => p.categoria === cat).length ?? '…'
@@ -151,19 +155,26 @@ export default function Inicio() {
       {error && <p className="rounded-lg bg-red-500/15 p-3 text-sm text-error">{error}</p>}
 
       {/* Parte de arriba: categorías · carrusel · dos accesos. En celular, una sola columna */}
-      <div className="grid gap-4 lg:grid-cols-[230px_minmax(0,1fr)_230px]">
+      <div className="relative grid gap-4 lg:grid-cols-[230px_minmax(0,1fr)_230px]" onMouseLeave={() => setAbierta(null)}>
+        {/* HU-25: panel de la categoría, encima del carrusel (solo en computadora y cuando ya cargaron los productos) */}
+        {abierta && productos && (
+          <div className="absolute inset-y-0 left-[246px] z-30 hidden w-[min(680px,calc(100%-262px))] lg:block">
+            <MenuCategoria cat={abierta} icono={CATEGORIAS.find((c) => c[0] === abierta)[2]} productos={productos} generos={generos} />
+          </div>
+        )}
         <nav aria-label="Categorías" className="order-3 rounded-2xl border border-tinta/10 bg-superficie p-2 shadow-sm lg:order-none">
           <p className="mb-1 flex items-center gap-2 rounded-xl bg-gradient-to-r from-rosa to-morado px-4 py-2.5 font-semibold text-white">
             <Icono nombre="lista" tam={18} /> Categorías
           </p>
           <ul className="grid sm:grid-cols-2 lg:grid-cols-1">
             {CATEGORIAS.map(([cat, nombre, icono]) => (
-              <li key={cat}>
-                <Link to={'/catalogo?categoria=' + encodeURIComponent(cat)} className="flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-rosa/10">
+              <li key={cat} onMouseEnter={() => setAbierta(cat)}>
+                <Link to={'/catalogo?categoria=' + encodeURIComponent(cat)}
+                  className={'flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-rosa/10 ' + (abierta === cat ? 'lg:bg-rosa/10' : '')}>
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-rosa/10 text-rosa"><Icono nombre={icono} tam={18} /></span>
                   <span className="flex-1">
                     <span className="block text-sm font-medium">{nombre}</span>
-                    <span className="block text-xs text-tinta/60">{cuenta(cat)} productos</span>
+                    <span className="block text-xs text-tinta/75">{cuenta(cat)} productos</span>
                   </span>
                   <span className="text-tinta/60"><Icono nombre="flechaDer" tam={14} /></span>
                 </Link>
@@ -172,9 +183,9 @@ export default function Inicio() {
           </ul>
         </nav>
 
-        <div className="order-1 lg:order-none"><Carrusel diapositivas={diapositivas.length ? diapositivas : DIAPOSITIVAS} /></div>
+        <div className="order-1 lg:order-none" onMouseEnter={() => setAbierta(null)}><Carrusel diapositivas={diapositivas.length ? diapositivas : DIAPOSITIVAS} /></div>
 
-        <div className="order-2 grid gap-4 sm:grid-cols-2 lg:order-none lg:flex lg:flex-col">
+        <div className="order-2 grid gap-4 sm:grid-cols-2 lg:order-none lg:flex lg:flex-col" onMouseEnter={() => setAbierta(null)}>
           <Acceso a="/ofertas" foto={fotoCuadro('cuadro_ofertas', '/inicio/banner-ofertas.webp')} alt="" icono="⚡"
             titulo="Ofertas por tiempo limitado"
             texto={enOferta === null ? 'Precios rebajados por pocos días' : enOferta + ' productos con descuento'}

@@ -13,7 +13,8 @@ const dos = (n) => String(n).padStart(2, '0')
 // Cuántos milisegundos faltan para el final de la oferta (0 si ya pasó)
 export const faltan = (p) => Math.max(new Date(p.oferta_termina) - Date.now(), 0)
 
-export default function TarjetaOferta({ p, onTermina }) {
+// HU-25: `vertical` = foto arriba y datos abajo (grilla de la página Ofertas, como el prototipo)
+export default function TarjetaOferta({ p, onTermina, vertical = false }) {
   const [resta, setResta] = useState(() => faltan(p))
   const [agregado, setAgregado] = useState(false)
 
@@ -37,16 +38,18 @@ export default function TarjetaOferta({ p, onTermina }) {
   const anadir = () => { agregarAlCarrito(p); setAgregado(true); setTimeout(() => setAgregado(false), 1500) }
 
   return (
-    <article className="grid h-full overflow-hidden rounded-2xl border border-rosa/30 bg-superficie shadow-sm sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+    <article className={'h-full overflow-hidden rounded-2xl border border-rosa/30 bg-superficie shadow-sm ' +
+      (vertical ? 'flex flex-col' : 'grid sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]')}>
       {/* HU-22: en celular la foto se limita a 14 rem de alto para que la oferta no ocupe toda la pantalla */}
-      <Link to={'/producto/' + p.id} tabIndex={-1} className="relative block bg-white">
+      <Link to={'/producto/' + p.id} tabIndex={-1} className={'relative block ' + (vertical ? 'bg-morado/10 px-3 pt-6 pb-3' : 'bg-white')}>
         {p.foto
-          ? <img src={urlImagen(p.foto)} alt={p.nombre} loading="lazy" width="240" height="300" className="mx-auto aspect-[4/5] h-56 w-auto object-contain p-2 sm:h-full sm:w-full" />
+          ? <img src={urlImagen(p.foto)} alt={p.nombre} loading="lazy" width="240" height="300"
+              className={vertical ? 'mx-auto aspect-[7/8] max-h-56 w-auto object-contain sm:max-h-none sm:w-full' : 'mx-auto aspect-[4/5] h-56 w-auto object-contain p-2 sm:h-full sm:w-full'} />
           : <div className="grid aspect-[4/5] place-items-center text-sm text-[#5c5096]">Foto pendiente</div>}
         <span className="absolute left-2 top-2 rounded-full bg-rosa px-2 py-0.5 text-sm font-semibold text-white">-{p.descuento}%</span>
       </Link>
 
-      <div className="flex flex-col gap-2 p-4">
+      <div className={'flex flex-1 flex-col gap-2 p-4 ' + (vertical ? 'bg-gradient-to-b from-rosa/5 to-morado/10' : '')}>
         <p className="text-xs font-semibold uppercase tracking-wider text-morado">{etiqueta(p.categoria)}</p>
         <h3 className="font-semibold leading-snug">
           <Link to={'/producto/' + p.id} className="hover:text-rosa">{p.nombre}</Link>

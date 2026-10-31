@@ -427,15 +427,35 @@ def test_gestion_del_dueno(cliente, h_dueno, h_trabajadora):
     assert all(x["id"] != b["id"] for x in cliente.get("/api/banners").json())  # inactiva: no sale en el inicio
     assert cliente.delete(f"/api/banners/{b['id']}", headers=h_dueno).status_code == 204
 
-    t = cliente.post("/api/equipo", json={"nombre": "Rosa Huamán", "email": "rosa@playshoptek.pe", "telefono": "960210211"}, headers=h_dueno).json()
+    # Correo distinto en cada corrida: si la prueba se repite en la misma base, el correo anterior ya existe
+    import uuid
+    correo = f"rosa-{uuid.uuid4().hex[:8]}@playshoptek.pe"
+    r = cliente.post("/api/equipo", json={"nombre": "Rosa Huamán", "email": correo, "telefono": "960210211"}, headers=h_dueno)
+    assert r.status_code == 201, r.text
+    t = r.json()
     clave = t["clave_temporal"]
-    assert clave and cliente.post("/api/auth/login", json={"email": "rosa@playshoptek.pe", "password": clave}).status_code == 200
+    assert clave and cliente.post("/api/auth/login", json={"email": correo, "password": clave}).status_code == 200
+    assert cliente.post("/api/equipo", json={"nombre": "Otra", "email": correo}, headers=h_dueno).status_code == 409  # correo repetido
     cliente.patch(f"/api/equipo/{t['usuario_id']}", json={"activo": False}, headers=h_dueno)
-    assert cliente.post("/api/auth/login", json={"email": "rosa@playshoptek.pe", "password": clave}).status_code != 200
+    assert cliente.post("/api/auth/login", json={"email": correo, "password": clave}).status_code != 200
     assert any(x["nombre"].startswith("Linda") for x in cliente.get("/api/equipo", headers=h_dueno).json())
 
-    s = cliente.post("/api/servicios", json={"nombre": "Cambio de pantalla PS Portal", "tiempo": "1 a 2 días"}, headers=h_dueno).json()
+    s = cliente.post("/api/servicios", json={"nombre": f"Cambio de pantalla {uuid.uuid4().hex[:6]}", "tiempo": "1 a 2 días"}, headers=h_dueno).json()
     cliente.patch(f"/api/servicios/{s['id']}", json={"activo": False}, headers=h_dueno)
     assert all(x["id"] != s["id"] for x in cliente.get("/api/servicios").json())
-    g = cliente.post("/api/generos", json={"nombre": "Simulación"}, headers=h_dueno).json()
-    assert g["id"] == "simulacion" and cliente.post("/api/generos", json={"nombre": "simulación"}, headers=h_dueno).status_code == 409
+    nombre = "Simulación " + uuid.uuid4().hex[:4]
+    g = cliente.post("/api/generos", json={"nombre": nombre}, headers=h_dueno).json()
+    assert g["id"].startswith("simulacion-") and cliente.post("/api/generos", json={"nombre": nombre.lower()}, headers=h_dueno).status_code == 409
+
+
+def test_datos_para_catalogo_y_ficha(cliente):
+    """HU-25: el catálogo trae subcategoría, tipo de mando y qué incluye; la ficha trae las barras de estrellas."""
+    productos = cliente.get("/api/productos").json()
+    assert any(p["subcategoria"] == "Monitores" for p in productos)
+    assert any(p["origen"] == "Genérico" for p in productos if p["categoria"] == "Mandos")
+    assert any(p["incluye"] and "disco" in p["incluye"] for p in productos if p["categoria"] == "PS5")
+    p = next(x for x in productos if x["categoria"] == "PS5")
+    ficha = cliente.get(f"/api/productos/{p['id']}").json()
+    assert len(ficha["estrellas"]) == 5 and sum(ficha["estrellas"]) == ficha["total_resenas"]
+    todas = cliente.get(f"/api/productos/{p['id']}/resenas").json()
+    assert len(todas) == ficha["total_resenas"] >= len(ficha["resenas"])

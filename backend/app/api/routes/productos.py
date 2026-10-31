@@ -62,7 +62,14 @@ def a_salida(p: Producto, notas: dict[int, Decimal]) -> ProductoSalida:
         es_preventa=p.es_preventa, fecha_lanzamiento=p.fecha_lanzamiento, calificacion=notas.get(p.id),
         trailer_url=p.trailer_url, foto=next(iter(fotos_de(p)), None),
         oferta_termina=fin_de_oferta(o) if o else None,
+        subcategoria=p.subcategoria, origen=p.origen, incluye=incluye_de(p),
     )
+
+
+def incluye_de(p: Producto) -> str | None:
+    """HU-25: 'caja, manual, disco' para los juegos (lo que recibe el cliente)."""
+    partes = [n for n, v in (("caja", p.incluye_caja), ("manual", p.incluye_manual), ("disco", p.incluye_disco)) if v]
+    return ", ".join(partes) or None
 
 def cupos_de_reserva(db: Session, p: Producto) -> int | None:
     """HU-04: cupos de preventa = unidades que llegarán el día del lanzamiento - reservas ya hechas."""
@@ -124,16 +131,28 @@ def detalle(producto_id: int, db: Session = Depends(get_db)):
         raise HTTPException(404, "Producto no encontrado.")
     ultimas = db.scalars(select(Resena).where(Resena.producto_id == p.id).order_by(Resena.fecha.desc(), Resena.id.desc()).limit(6))
     total = db.scalar(select(func.count()).select_from(Resena).where(Resena.producto_id == p.id))
+    # HU-25: cuántas reseñas hay de cada número de estrellas (5, 4, 3, 2, 1)
+    por_estrellas = dict(db.execute(select(Resena.estrellas, func.count()).where(Resena.producto_id == p.id)
+                                    .group_by(Resena.estrellas)).all())
     return ProductoDetalle(
         **a_salida(p, calificaciones(db)).model_dump(),
-        descripcion=p.descripcion, subcategoria=p.subcategoria, incluye_caja=p.incluye_caja,
-        incluye_manual=p.incluye_manual, incluye_disco=p.incluye_disco, color=p.color, origen=p.origen,
+        descripcion=p.descripcion, incluye_caja=p.incluye_caja,
+        incluye_manual=p.incluye_manual, incluye_disco=p.incluye_disco, color=p.color,
         etiquetas=[e.etiqueta for e in p.etiquetas], modos=[m.modo for m in p.modos],
         fotos=fotos_de(p), monto_reserva=p.monto_reserva,
         cupos_reserva=cupos_de_reserva(db, p), total_resenas=total,
+        estrellas=[por_estrellas.get(n, 0) for n in (5, 4, 3, 2, 1)],
         resenas=[ResenaSalida(id=r.id, nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
                               respuesta=r.respuesta, verificada=r.venta_id is not None) for r in ultimas],
     )
+
+
+@router.get("/{producto_id}/resenas", response_model=list[ResenaSalida])
+def todas_las_resenas(producto_id: int, db: Session = Depends(get_db)):
+    """HU-25: "Ver todas las reseñas" de la ficha (la ficha trae solo las 6 últimas)."""
+    filas = db.scalars(select(Resena).where(Resena.producto_id == producto_id).order_by(Resena.fecha.desc(), Resena.id.desc()))
+    return [ResenaSalida(id=r.id, nombre=r.nombre_publico, estrellas=r.estrellas, texto=r.texto, fecha=r.fecha,
+                         respuesta=r.respuesta, verificada=r.venta_id is not None) for r in filas]
 
 
 @router.get("/{producto_id}/parecidos", response_model=list[ProductoSalida])

@@ -1,93 +1,106 @@
 // HU-01: catálogo con filtros por categoría, género y estado.
+// HU-25: como el prototipo: panel de filtros a la izquierda (con cuántos productos hay en cada opción)
+// y "Ordenar por" arriba. Los filtros viven en el enlace (/catalogo?categoria=PS5&genero=accion),
+// así el menú de categorías del inicio y el buscador de la cabecera llegan con el filtro ya puesto.
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api } from '../api.js'
+import FiltrosCatalogo, { etiquetaCategoria, pasa } from '../components/FiltrosCatalogo.jsx'
 import TarjetaProducto from '../components/TarjetaProducto.jsx'
 import { useFavoritos } from '../favoritos.js'
 
-const CATEGORIAS = ['PS5', 'PS4', 'PS3', 'PS2', 'Máquinas', 'Mandos', 'PC y periféricos']
-const GENEROS = [['accion', 'Acción'], ['aventura', 'Aventura'], ['deportes', 'Deportes'], ['carreras', 'Carreras'],
-  ['shooter', 'Disparos'], ['pelea', 'Pelea'], ['rol', 'Rol'], ['terror', 'Terror'], ['familiar', 'Familiar']]
-const ESTADOS = [['nuevo', 'Nuevo'], ['usado', 'Usado'], ['reacondicionado', 'Reacondicionado en taller']]
+const CLAVES = ['q', 'categoria', 'disp', 'genero', 'estado', 'plataforma', 'sub', 'origen']
+const ORDENES = [['recomendado', 'Recomendado para ti'], ['precio-asc', 'Precio: menor a mayor'], ['precio-desc', 'Precio: mayor a menor'],
+  ['valorados', 'Mejor valorados'], ['ofertas', 'Ofertas primero']]
+
+// "Recomendado": primero lo que se puede comprar hoy, luego lo que está en oferta y lo mejor calificado
+const ordenar = (lista, orden) => [...lista].sort((a, b) => {
+  if (orden === 'precio-asc') return a.precio_final - b.precio_final
+  if (orden === 'precio-desc') return b.precio_final - a.precio_final
+  if (orden === 'valorados') return (b.calificacion || 0) - (a.calificacion || 0)
+  if (orden === 'ofertas') return (b.descuento || 0) - (a.descuento || 0)
+  return (b.stock > 0) - (a.stock > 0) || (!!b.descuento - !!a.descuento) || (b.calificacion || 0) - (a.calificacion || 0)
+})
 
 export default function Catalogo() {
-  // HU-20: la búsqueda y la categoría pueden llegar en el enlace (ej. /catalogo?q=fifa desde el buscador de la cabecera)
-  const [parametros] = useSearchParams()
-  const [filtros, setFiltros] = useState(() => ({
-    categoria: parametros.get('categoria') || '', genero: '', estado: '', q: parametros.get('q') || '',
-  }))
-  const [productos, setProductos] = useState([])
+  const [parametros, setParametros] = useSearchParams()
+  const v = Object.fromEntries(CLAVES.map((k) => [k, parametros.get(k) || '']))
+  const orden = parametros.get('orden') || 'recomendado'
+  const [productos, setProductos] = useState(null) // null = cargando
+  const [generos, setGeneros] = useState({}) // { accion: 'Acción', ... }
   const [error, setError] = useState('')
-  const [cargando, setCargando] = useState(true) // TT-03: mientras llega la respuesta del servidor
-  // HU-21: corazón de favoritos (HU-22: la lógica se movió a favoritos.js para usarla también en Inicio)
   const [favoritos, alternarFavorito] = useFavoritos()
 
-  // Si se busca otra vez desde la cabecera estando ya en el catálogo, se actualizan los filtros
   useEffect(() => {
-    const q = parametros.get('q') || ''
-    const categoria = parametros.get('categoria') || ''
-    setFiltros((f) => (f.q === q && f.categoria === categoria ? f : { ...f, q, categoria }))
-  }, [parametros])
+    api('/productos').then(setProductos).catch((e) => setError(e.message))
+    api('/generos').then((gs) => setGeneros(Object.fromEntries(gs.map((g) => [g.id, g.nombre])))).catch(() => {})
+  }, [])
 
-  useEffect(() => {
-    const params = new URLSearchParams(Object.entries(filtros).filter(([, v]) => v))
-    setCargando(true)
-    api('/productos?' + params).then(setProductos).catch((e) => setError(e.message)).finally(() => setCargando(false))
-  }, [filtros])
+  // Cambia uno o varios filtros en el enlace (sin llenar el historial del navegador)
+  const poner = (cambios) => {
+    const nuevo = new URLSearchParams(parametros)
+    Object.entries(cambios).forEach(([k, valor]) => (valor ? nuevo.set(k, valor) : nuevo.delete(k)))
+    setParametros(nuevo, { replace: true })
+  }
+  const limpiar = () => setParametros(v.q ? { q: v.q } : {}, { replace: true })
+
+  const visibles = productos ? ordenar(productos.filter((p) => pasa(p, v)), orden) : []
 
   // HU-11: si la búsqueda no trae nada, se avisa a la tienda. Espera 1.5 s sin escribir
   // para no guardar cada letra ("g", "gt", "gta"...) sino la búsqueda completa.
   useEffect(() => {
-    const texto = filtros.q.trim()
-    if (texto.length < 3 || productos.length > 0) return
+    const texto = v.q.trim()
+    if (!productos || texto.length < 3 || visibles.length > 0) return
     const espera = setTimeout(() => api('/intereses', { metodo: 'POST', cuerpo: { texto } }).catch(() => {}), 1500)
     return () => clearTimeout(espera)
-  }, [productos, filtros.q])
+  }, [v.q, productos, visibles.length])
 
-  const cambiar = (k) => (e) => setFiltros({ ...filtros, [k]: e.target.value })
-  const selector = 'rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm'
+  const titulo = v.categoria ? etiquetaCategoria(v.categoria) : 'Catálogo completo'
+  const conStock = visibles.filter((p) => p.stock > 0).length
 
   return (
-    <section>
-      <h1 className="text-3xl font-semibold">Catálogo completo</h1>
-      <p className="mt-1 text-sm text-tinta/60">Juegos, consolas, mandos y accesorios de la tienda.</p>
+    <div className="grid gap-6 lg:grid-cols-[250px_minmax(0,1fr)]">
+      <FiltrosCatalogo productos={productos || []} v={v} poner={poner} limpiar={limpiar} generos={generos} />
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-4">
-        <input placeholder="Buscar..." value={filtros.q} onChange={cambiar('q')} className={selector} />
-        <select aria-label="Categoría" value={filtros.categoria} onChange={cambiar('categoria')} className={selector}>
-          <option value="">Todas las categorías</option>
-          {CATEGORIAS.map((c) => <option key={c}>{c}</option>)}
-        </select>
-        <select aria-label="Género" value={filtros.genero} onChange={cambiar('genero')} className={selector}>
-          <option value="">Todos los géneros</option>
-          {GENEROS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-        </select>
-        <select aria-label="Estado" value={filtros.estado} onChange={cambiar('estado')} className={selector}>
-          <option value="">Cualquier estado</option>
-          {ESTADOS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-        </select>
-      </div>
+      <section className="min-w-0">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-3xl font-semibold">{titulo}</h1>
+            {/* TT-03: el servidor gratuito se "duerme"; mientras despierta se avisa en lugar de mostrar "0 productos" */}
+            <p className="mt-1 text-sm text-tinta/60">
+              {productos ? `${visibles.length} productos · ${conStock} con stock hoy` : 'Cargando catálogo… La primera visita del día puede tardar hasta 1 minuto mientras el servidor despierta.'}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <input id="catalogo-buscar" type="search" placeholder="Buscar en el catálogo…" value={v.q} onChange={(e) => poner({ q: e.target.value })}
+              aria-label="Buscar en el catálogo" className="w-56 rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm" />
+            <label className="flex items-center gap-2 text-sm text-tinta/70">Ordenar por
+              <select id="catalogo-orden" value={orden} onChange={(e) => poner({ orden: e.target.value === 'recomendado' ? '' : e.target.value })}
+                className="rounded-lg border border-tinta/15 bg-superficie px-3 py-2 text-sm text-tinta">
+                {ORDENES.map(([k, t]) => <option key={k} value={k}>{t}</option>)}
+              </select>
+            </label>
+          </div>
+        </div>
 
-      {error && <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm text-error">{error}</p>}
-      {/* TT-03: el servidor gratuito se "duerme"; mientras despierta se avisa en lugar de mostrar "0 productos" */}
-      {cargando
-        ? <p className="mt-4 text-sm text-tinta/60">Cargando catálogo… La primera visita del día puede tardar hasta 1 minuto mientras el servidor despierta.</p>
-        : <p className="mt-4 text-sm text-tinta/60">{productos.length} productos</p>}
-      {!cargando && productos.length === 0 && filtros.q.trim().length >= 3 && (
-        <p className="mt-2 rounded-lg border border-tinta/15 p-3 text-sm">
-          No tenemos "{filtros.q.trim()}" por ahora. Le avisamos a la tienda que lo estás buscando;
-          también puedes preguntar por WhatsApp.
-        </p>
-      )}
+        {error && <p className="mt-4 rounded-lg bg-error/10 p-3 text-sm text-error">{error}</p>}
+        {productos && visibles.length === 0 && (
+          <p className="mt-4 rounded-lg border border-tinta/15 p-3 text-sm">
+            {v.q.trim().length >= 3
+              ? <>No tenemos "{v.q.trim()}" por ahora. Le avisamos a la tienda que lo estás buscando; también puedes preguntar por WhatsApp.</>
+              : 'No hay productos con esos filtros.'}
+          </p>
+        )}
 
-      <h2 className="sr-only">Productos</h2>
-      <ul className="mt-2 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {productos.map((p) => (
-          <li key={p.id}>
-            <TarjetaProducto p={p} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} />
-          </li>
-        ))}
-      </ul>
-    </section>
+        <h2 className="sr-only">Productos</h2>
+        <ul className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 lg:grid-cols-3">
+          {productos
+            ? visibles.map((p) => (
+              <li key={p.id}><TarjetaProducto p={p} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} /></li>
+            ))
+            : [1, 2, 3, 4].map((n) => <li key={n} className="h-96 animate-pulse rounded-2xl bg-tinta/5" />)}
+        </ul>
+      </section>
+    </div>
   )
 }
