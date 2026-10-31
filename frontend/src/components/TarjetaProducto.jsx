@@ -15,7 +15,8 @@ const quedan = (fin) => {
 }
 const etiqueta = (c) => (/^PS\d$/.test(c) ? 'Juegos ' + c : c)
 
-export default function TarjetaProducto({ p, favorito = false, onFavorito }) {
+// HU-27: razon = por qué se le recomienda ("Por tu gusto: Deportes"), como el prototipo
+export default function TarjetaProducto({ p, favorito = false, onFavorito, razon }) {
   const [agregado, setAgregado] = useState(false)
   const sePuedeComprar = !p.es_preventa && p.stock > 0
   const anadir = () => {
@@ -44,7 +45,7 @@ export default function TarjetaProducto({ p, favorito = false, onFavorito }) {
       </div>
 
       <div className="flex flex-1 flex-col gap-1 bg-gradient-to-b from-rosa/5 to-morado/10 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wider text-morado">{etiqueta(p.categoria)}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-morado">{etiqueta(p.categoria)}{razon && <span className="font-normal normal-case tracking-normal text-tinta/70"> · {razon}</span>}</p>
         <h3 className="font-semibold leading-snug">
           <Link to={'/producto/' + p.id} className="hover:text-rosa">{p.nombre}</Link>
         </h3>

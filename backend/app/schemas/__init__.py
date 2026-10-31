@@ -87,7 +87,9 @@ class ResenaInicio(BaseModel):
 
 class InicioSalida(BaseModel):
     recomendados: list[ProductoSalida]
-    personalizado: bool  # True si los recomendados se basan en las compras del cliente
+    personalizado: bool  # True si los recomendados se basan en la encuesta o las compras del cliente
+    razones: dict[int, str] = {}  # HU-27: {id del producto: "Por tu gusto: Deportes"}
+    perfil: str | None = None     # HU-27: "Juegas deportes y acción, en línea con amigos, en PS5"
     servicios: list[ServicioInicio]
     resenas: list[ResenaInicio]
 
@@ -504,3 +506,23 @@ class MiReparacion(BaseModel):
     costo: Decimal
     precio_acordado: bool
     estado: EstadoReparacion
+
+
+# ── HU-27: encuesta de gustos y recomendaciones ───────────────────────────────────────
+class Encuesta(BaseModel):
+    """Las 3 preguntas: géneros, si juega en línea y qué consola tiene. Todo vacío = "Saltar"."""
+    generos: list[str] = Field(default=[], max_length=12)
+    modo: ModoJuego | None = None  # online = "Sí, en línea"; local = "Solo en casa"; solo = "Prefiero un jugador"
+    consola: str | None = Field(default=None, pattern=r"^(PS5|PS5PRO|PS4|PS3|PS2|NO)$")
+
+
+class EncuestaSalida(Encuesta):
+    hecha: bool          # False = nunca la vio: se le muestra después de crear su cuenta
+    perfil: str | None   # "Juegas deportes y acción, en línea con amigos, en PS5"
+
+
+class Afinidad(BaseModel):
+    """Cuánto calza un producto con los gustos del cliente y por qué."""
+    producto_id: int
+    puntos: int
+    razon: str

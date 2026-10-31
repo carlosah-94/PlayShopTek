@@ -481,3 +481,30 @@ def test_mi_cuenta_y_mis_reparaciones(cliente):
     reps = cliente.get("/api/mi/reparaciones", headers=demo).json()
     assert reps and all(r["codigo"].startswith("R-") for r in reps)
     assert cliente.get("/api/mi/reparaciones", headers=h).json() == []
+
+
+def test_encuesta_de_gustos_y_recomendaciones(cliente):
+    """HU-27: la cuenta nueva no tiene encuesta; al responderla, "Recomendado para ti" la usa y explica por qué."""
+    import uuid
+    correo = f"gustos-{uuid.uuid4().hex[:8]}@demo.pe"
+    tok = cliente.post("/api/auth/registro", json={"nombre": "Luis Gamer", "email": correo, "password": "clave123"}).json()
+    h = {"Authorization": "Bearer " + tok["access_token"]}
+    assert cliente.get("/api/mi/encuesta", headers=h).json()["hecha"] is False  # se le muestra la primera vez
+
+    assert cliente.put("/api/mi/encuesta", json={"generos": ["no-existe"]}, headers=h).status_code == 422
+    assert cliente.put("/api/mi/encuesta", json={"consola": "XBOX"}, headers=h).status_code == 422
+    r = cliente.put("/api/mi/encuesta", json={"generos": ["pelea"], "modo": "local", "consola": "PS5"}, headers=h).json()
+    assert r["hecha"] and r["perfil"] == "Juegas pelea, con amigos en casa, en PS5"
+
+    inicio = cliente.get("/api/inicio", headers=h).json()
+    assert inicio["personalizado"] and inicio["perfil"].startswith("Juegas pelea")
+    primero = inicio["recomendados"][0]
+    assert "pelea" in primero["generos"] and inicio["razones"][str(primero["id"])] == "Por tu gusto: Pelea"
+
+    afinidad = {a["producto_id"]: a for a in cliente.get("/api/mi/afinidad", headers=h).json()}
+    assert afinidad[primero["id"]]["puntos"] >= 5  # género (+3) y su consola (+2)
+
+    # "Saltar": queda guardada vacía (no se vuelve a preguntar) y se recomienda lo más vendido
+    saltada = cliente.put("/api/mi/encuesta", json={}, headers=h).json()
+    assert saltada["hecha"] and saltada["perfil"] is None
+    assert cliente.get("/api/inicio", headers=h).json()["personalizado"] is False

@@ -8,6 +8,7 @@ import PanelGestion, { RUTAS_PANEL } from './components/PanelGestion.jsx'
 import Banners from './pages/Banners.jsx'
 import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
+import Encuesta from './pages/Encuesta.jsx'
 import Favoritos from './pages/Favoritos.jsx'
 import Informacion from './pages/Informacion.jsx'
 import Ficha from './pages/Ficha.jsx'
@@ -109,6 +110,7 @@ export default function App() {
       <Route path="/terminos" element={<Informacion tema="terminos" />} />
       <Route path="/favoritos" element={<Favoritos />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/encuesta" element={<Encuesta />} />
       <Route path="/panel" element={<Panel />} />
       <Route path="/taller" element={<Taller />} />
       <Route path="/vender" element={<VentaTienda />} />
@@ -125,6 +127,8 @@ export default function App() {
   if (sesion && rol !== 'cliente' && RUTAS_PANEL.some((r) => pathname.startsWith(r))) {
     return <PanelGestion usuario={sesion.usuario} tema={tema} setTema={setTema} salir={salir}>{rutas}</PanelGestion>
   }
+  // HU-27: la encuesta de gustos ocupa toda la pantalla, sin la cabecera de la tienda (como el prototipo)
+  if (pathname === '/encuesta') return rutas
 
   return (
     <div className="min-h-screen">

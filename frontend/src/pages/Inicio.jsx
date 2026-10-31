@@ -1,7 +1,7 @@
 // HU-22: página de inicio como la del prototipo: categorías, carrusel con fotos de la tienda, dos accesos
 // (ofertas y servicio técnico), recomendados, ofertas con contador, servicios del taller y reseñas de clientes.
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { api, leerSesion, urlImagen } from '../api.js'
 import { BotonWhatsApp } from '../components/Asesores.jsx'
 import Icono from '../components/Iconos.jsx'
@@ -128,6 +128,7 @@ function Acceso({ a, externo, foto, alt, titulo, texto, enlace, icono }) {
 
 export default function Inicio() {
   const sesion = leerSesion()
+  const aviso = useLocation().state?.aviso // HU-27: "Listo, tu vitrina está personalizada." al terminar la encuesta
   const [productos, setProductos] = useState(null) // null = todavía cargando
   const [inicio, setInicio] = useState(null)
   const [banners, setBanners] = useState(null) // HU-24: los maneja Ángel desde el panel
@@ -135,6 +136,10 @@ export default function Inicio() {
   const [abierta, setAbierta] = useState(null) // HU-25: categoría cuyo panel está abierto (solo en computadora)
   const [error, setError] = useState('')
   const [favoritos, alternarFavorito] = useFavoritos()
+  // Al volver de la encuesta, baja directo a "Recomendado para ti"
+  useEffect(() => {
+    if (aviso && inicio) document.getElementById('recomendados')?.scrollIntoView({ block: 'start' })
+  }, [aviso, inicio])
 
   // Dos pedidos al mismo tiempo: el catálogo (para contar categorías y ofertas) y los datos de inicio
   useEffect(() => {
@@ -195,22 +200,27 @@ export default function Inicio() {
         </div>
       </div>
 
-      {/* Recomendados: lo más vendido, o según sus compras si el cliente inició sesión (lo decide el servidor) */}
-      <section className="space-y-3">
+      {/* Recomendados: lo más vendido o, si el cliente inició sesión, según su encuesta de gustos y sus compras (HU-27, lo decide el servidor) */}
+      <section id="recomendados" className="scroll-mt-24 space-y-3">
+        {aviso && <p role="status" className="flex items-center gap-2 rounded-xl border border-ok/40 bg-ok/10 px-4 py-2.5 text-sm text-ok"><Icono nombre="check" tam={16} /> {aviso}</p>}
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
             <h2 className="text-2xl font-semibold">Recomendado para ti</h2>
-            <p className="text-sm text-tinta/60">{inicio?.personalizado ? 'Según lo que ya compraste en la tienda' : 'Lo más pedido en la tienda'}</p>
+            <p className="text-sm text-tinta/70">
+              {inicio?.perfil ? inicio.perfil + '. Estos productos calzan con eso y hay stock hoy.'
+                : inicio?.personalizado ? 'Según lo que ya compraste en la tienda' : 'Lo más pedido en la tienda'}
+            </p>
           </div>
           <div className="flex flex-wrap gap-4 text-sm font-semibold text-rosa">
-            {!sesion && <Link to="/login" className="flex items-center gap-1 hover:underline"><Icono nombre="usuarioMas" tam={16} /> Crea tu cuenta y te recomendamos mejor</Link>}
+            {sesion?.usuario.rol === 'cliente' && <Link to="/encuesta" className="flex items-center gap-1 hover:underline"><Icono nombre="ajustes" tam={16} /> Ajustar mis gustos</Link>}
+            {!sesion && <Link to="/login?crear=1" className="flex items-center gap-1 hover:underline"><Icono nombre="usuarioMas" tam={16} /> Crea tu cuenta y te recomendamos mejor</Link>}
             <Link to="/catalogo" className="flex items-center gap-1 hover:underline">Ver todo <Icono nombre="flechaDer" tam={14} /></Link>
           </div>
         </div>
         <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {inicio
             ? inicio.recomendados.map((p) => (
-              <li key={p.id}><TarjetaProducto p={p} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} /></li>
+              <li key={p.id}><TarjetaProducto p={p} razon={inicio.razones?.[p.id]} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} /></li>
             ))
             // Mientras carga se reserva el espacio, así la página no "salta" (TT-03)
             : [1, 2, 3, 4].map((n) => <li key={n} className="h-96 animate-pulse rounded-2xl bg-tinta/5" />)}

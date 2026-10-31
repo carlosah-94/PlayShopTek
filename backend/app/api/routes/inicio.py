@@ -1,12 +1,13 @@
 """HU-22: datos de la página de inicio en una sola llamada: recomendados, servicios del taller y reseñas."""
 from fastapi import APIRouter, Depends
 from sqlalchemy import func, or_, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import usuario_opcional
 from app.api.routes.productos import _consulta_base, a_salida, calificaciones
 from app.api.routes.resenas import COMPRADO
 from app.database import get_db
+from app.ia.recomendador import Gustos, puntuar
 from app.models import (
     Cliente,
     Producto,
@@ -31,11 +32,14 @@ def unidades_vendidas(db: Session) -> dict[int, int]:
     return {pid: int(n) for pid, n in filas}
 
 
-def compras_del_cliente(db: Session, usuario: Usuario | None) -> tuple[set[int], set[int]]:
-    """Qué productos ya compró el cliente y de qué categorías. Sin sesión, nada."""
+def cliente_de(db: Session, usuario: Usuario | None) -> Cliente | None:
     if usuario is None or usuario.rol != Rol.cliente:
-        return set(), set()
-    cliente = db.scalar(select(Cliente).where(Cliente.usuario_id == usuario.id))
+        return None
+    return db.scalar(select(Cliente).where(Cliente.usuario_id == usuario.id))
+
+
+def compras_del_cliente(db: Session, cliente: Cliente | None) -> tuple[set[int], set[int]]:
+    """Qué productos ya compró el cliente y de qué categorías. Sin sesión, nada."""
     if cliente is None:
         return set(), set()
     filas = db.execute(select(Producto.id, Producto.categoria_id)
@@ -52,15 +56,25 @@ def compras_del_cliente(db: Session, usuario: Usuario | None) -> tuple[set[int],
 def recomendados(db: Session, usuario: Usuario | None, cuantos: int = 4):
     """"Recomendado para ti":
     - Sin cuenta: lo más vendido de la tienda.
-    - Con cuenta de cliente: primero lo más vendido de las categorías que ya compró, sin repetir lo que ya tiene.
-    Solo productos que se pueden comprar hoy (con stock y que no sean preventa)."""
+    - Con cuenta de cliente (HU-27): primero lo que más calza con su encuesta de gustos y con las categorías
+      que ya compró (ver app/ia/recomendador.py), sin repetir lo que ya tiene; a igual puntaje, lo más vendido.
+    Solo productos que se pueden comprar hoy (con stock y que no sean preventa).
+    Devuelve (productos, ¿personalizado?, razones, perfil)."""
     vendidos = unidades_vendidas(db)
-    ya_tiene, le_gusta = compras_del_cliente(db, usuario)
-    candidatos = [p for p in db.scalars(_consulta_base())
+    cliente = cliente_de(db, usuario)
+    ya_tiene, le_gusta = compras_del_cliente(db, cliente)
+    gustos = Gustos.de(cliente.preferencias) if cliente else None
+    if gustos and gustos.vacios:
+        gustos = None  # saltó la encuesta
+    candidatos = [p for p in db.scalars(_consulta_base().options(selectinload(Producto.modos)))
                   if p.stock > 0 and not p.es_preventa and p.id not in ya_tiene]
-    candidatos.sort(key=lambda p: (p.categoria_id not in le_gusta, -vendidos.get(p.id, 0), p.id))
+    puntaje = {p.id: puntuar(p, gustos, le_gusta) for p in candidatos}
+    candidatos.sort(key=lambda p: (-puntaje[p.id][0], -vendidos.get(p.id, 0), p.id))
+    elegidos = candidatos[:cuantos]
+    personalizado = bool(gustos or le_gusta)
     notas = calificaciones(db)
-    return [a_salida(p, notas) for p in candidatos[:cuantos]], bool(le_gusta)
+    razones = {p.id: puntaje[p.id][1] for p in elegidos} if personalizado else {}
+    return [a_salida(p, notas) for p in elegidos], personalizado, razones, gustos.perfil() if gustos else None
 
 
 def servicios_del_taller(db: Session, cuantos: int = 4) -> list[ServicioInicio]:
@@ -93,7 +107,7 @@ def resenas_destacadas(db: Session, cuantas: int = 3) -> list[ResenaInicio]:
 
 @router.get("", response_model=InicioSalida)
 def inicio(db: Session = Depends(get_db), usuario: Usuario | None = Depends(usuario_opcional)):
-    """Pública: cualquiera la ve. Si el cliente inició sesión, los recomendados se basan en sus compras."""
-    productos, personalizado = recomendados(db, usuario)
-    return InicioSalida(recomendados=productos, personalizado=personalizado,
+    """Pública: cualquiera la ve. Si el cliente inició sesión, los recomendados se basan en su encuesta y sus compras."""
+    productos, personalizado, razones, perfil = recomendados(db, usuario)
+    return InicioSalida(recomendados=productos, personalizado=personalizado, razones=razones, perfil=perfil,
                         servicios=servicios_del_taller(db), resenas=resenas_destacadas(db))
