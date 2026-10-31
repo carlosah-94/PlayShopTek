@@ -68,7 +68,7 @@ export default function Catalogo() {
             <h1 className="text-3xl font-semibold">{titulo}</h1>
             {/* TT-03: el servidor gratuito se "duerme"; mientras despierta se avisa en lugar de mostrar "0 productos" */}
             <p className="mt-1 text-sm text-tinta/60">
-              {productos ? `${visibles.length} productos · ${conStock} con stock hoy` : 'Cargando catálogo… La primera visita del día puede tardar hasta 1 minuto mientras el servidor despierta.'}
+              {productos ? `${visibles.length} productos · ${conStock} con stock hoy` : 'Cargando catálogo…'}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -93,12 +93,17 @@ export default function Catalogo() {
         )}
 
         <h2 className="sr-only">Productos</h2>
-        <ul className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 lg:grid-cols-3">
+        <ul className={'mt-4 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 lg:grid-cols-3' + (productos ? '' : ' min-h-screen content-start')}>
           {productos
             ? visibles.map((p) => (
               <li key={p.id}><TarjetaProducto p={p} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} /></li>
             ))
-            : [1, 2, 3, 4].map((n) => <li key={n} className="h-96 animate-pulse rounded-2xl bg-tinta/5" />)}
+            // Mientras carga se reserva el espacio de las tarjetas (así la página no "salta"); el aviso va dentro
+            : [1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+              <li key={'carga-' + n} className="grid h-[480px] animate-pulse sm:h-[570px] lg:h-[490px] place-items-center rounded-2xl bg-tinta/5 p-4 text-center text-xs text-tinta/70">
+                {n === 1 && 'La primera visita del día puede tardar hasta 1 minuto mientras el servidor despierta.'}
+              </li>
+            ))}
         </ul>
       </section>
     </div>

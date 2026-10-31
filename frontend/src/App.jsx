@@ -1,38 +1,41 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Asistente from './components/Asistente.jsx'
 import { PanelWhatsApp, useDesplegable } from './components/Asesores.jsx'
 import Icono from './components/Iconos.jsx'
 import { MenuCuenta, Notificaciones } from './components/MenusCliente.jsx'
 import PanelGestion, { RUTAS_PANEL } from './components/PanelGestion.jsx'
-import Banners from './pages/Banners.jsx'
 import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
-import Encuesta from './pages/Encuesta.jsx'
 import Favoritos from './pages/Favoritos.jsx'
-import Informacion from './pages/Informacion.jsx'
 import Ficha from './pages/Ficha.jsx'
 import Inicio from './pages/Inicio.jsx'
-import Inventario from './pages/Inventario.jsx'
-import LibroReclamaciones from './pages/LibroReclamaciones.jsx'
 import Login from './pages/Login.jsx'
-import MiCuenta from './pages/MiCuenta.jsx'
-import MiEquipo from './pages/MiEquipo.jsx'
-import MiTienda from './pages/MiTienda.jsx'
-import MisCompras from './pages/MisCompras.jsx'
-import MisReparaciones from './pages/MisReparaciones.jsx'
 import Ofertas from './pages/Ofertas.jsx'
-import Pago from './pages/Pago.jsx'
-import Panel from './pages/Panel.jsx'
 import Rastreo from './pages/Rastreo.jsx'
-import Reclamos from './pages/Reclamos.jsx'
 import Reparaciones from './pages/Reparaciones.jsx'
-import Resenas from './pages/Resenas.jsx'
-import ServiciosTecnicos from './pages/ServiciosTecnicos.jsx'
-import Taller from './pages/Taller.jsx'
-import VentaTienda from './pages/VentaTienda.jsx'
 import { api, cerrarSesion, leerSesion } from './api.js'
 import { leerCarrito, unidades } from './carrito.js'
+
+// Rendimiento: las páginas que se usan poco (panel del equipo, cuenta, pago, información) se descargan
+// recién cuando alguien entra a ellas. Así el inicio, el catálogo y la ficha cargan más rápido en celular.
+const Banners = lazy(() => import('./pages/Banners.jsx'))
+const Encuesta = lazy(() => import('./pages/Encuesta.jsx'))
+const Informacion = lazy(() => import('./pages/Informacion.jsx'))
+const Inventario = lazy(() => import('./pages/Inventario.jsx'))
+const LibroReclamaciones = lazy(() => import('./pages/LibroReclamaciones.jsx'))
+const MiCuenta = lazy(() => import('./pages/MiCuenta.jsx'))
+const MiEquipo = lazy(() => import('./pages/MiEquipo.jsx'))
+const MiTienda = lazy(() => import('./pages/MiTienda.jsx'))
+const MisCompras = lazy(() => import('./pages/MisCompras.jsx'))
+const MisReparaciones = lazy(() => import('./pages/MisReparaciones.jsx'))
+const Pago = lazy(() => import('./pages/Pago.jsx'))
+const Panel = lazy(() => import('./pages/Panel.jsx'))
+const Reclamos = lazy(() => import('./pages/Reclamos.jsx'))
+const Resenas = lazy(() => import('./pages/Resenas.jsx'))
+const ServiciosTecnicos = lazy(() => import('./pages/ServiciosTecnicos.jsx'))
+const Taller = lazy(() => import('./pages/Taller.jsx'))
+const VentaTienda = lazy(() => import('./pages/VentaTienda.jsx'))
 
 function WhatsAppFlotante() {
   const [abierto, alternar, cerrar] = useDesplegable()
@@ -93,6 +96,7 @@ export default function App() {
   // HU-24: las páginas del equipo van dentro del "Panel de gestión" (menú a la izquierda, sin la cabecera de la tienda)
   const { pathname } = useLocation()
   const rutas = (
+    <Suspense fallback={<p className="min-h-[60vh] p-6 text-tinta/60">Cargando…</p>}>
     <Routes>
       <Route path="/" element={<Inicio />} />
       <Route path="/catalogo" element={<Catalogo />} />
@@ -123,6 +127,7 @@ export default function App() {
       <Route path="/libro-de-reclamaciones" element={<LibroReclamaciones />} />
       <Route path="/reclamos" element={<Reclamos />} />
     </Routes>
+    </Suspense>
   )
   if (sesion && rol !== 'cliente' && RUTAS_PANEL.some((r) => pathname.startsWith(r))) {
     return <PanelGestion usuario={sesion.usuario} tema={tema} setTema={setTema} salir={salir}>{rutas}</PanelGestion>
