@@ -1,5 +1,6 @@
 // HU-16: una sola entrada para todos; te lleva a la tienda o al panel según tu cuenta.
 // HU-26: con el diseño del prototipo y la opción "Crear una cuenta" para clientes nuevos.
+// HU-27: el cliente que nunca respondió la encuesta de gustos pasa primero por ella (3 pasos).
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { api, guardarSesion } from '../api.js'
@@ -24,7 +25,12 @@ export default function Login() {
         ? await api('/auth/login', { metodo: 'POST', cuerpo: { email: datos.email, password: datos.password } })
         : await api('/auth/registro', { metodo: 'POST', cuerpo: { ...datos, telefono: datos.telefono.replace(/\s/g, '') || null } })
       guardarSesion(r)
-      navegar(params.get('volver') || (r.usuario.rol === 'cliente' ? '/' : '/panel'))
+      const volver = params.get('volver')
+      if (r.usuario.rol !== 'cliente') return navegar(volver || '/panel')
+      // Si venía a pagar, primero termina su compra; la encuesta sale la próxima vez que entre
+      if (volver) return navegar(volver)
+      const encuesta = modo === 'crear' ? { hecha: false } : await api('/mi/encuesta').catch(() => ({ hecha: true }))
+      navegar(encuesta.hecha ? '/' : '/encuesta')
     } catch (err) {
       setError(err.message)
     }

@@ -1,24 +1,31 @@
 """HU-05: favoritos, "Avísame cuando llegue" y notificaciones del cliente.
-HU-26: "Mi cuenta" (datos y contraseña) y "Mis reparaciones"."""
+HU-26: "Mi cuenta" (datos y contraseña) y "Mis reparaciones".
+HU-27: encuesta de gustos (3 pasos después de crear la cuenta) y afinidad de cada producto con esos gustos."""
 from fastapi import APIRouter, Depends, HTTPException, Response, status
-from sqlalchemy import select, update
-from sqlalchemy.orm import Session
+from sqlalchemy import func, select, update
+from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import solo_cliente
 from app.api.routes.productos import _consulta_base, a_salida, calificaciones
 from app.core.security import hash_password, verificar_password
 from app.database import get_db
+from app.ia.recomendador import Gustos, puntuar
 from app.models import (
     AvisoLlegada,
     Cliente,
     Favorito,
+    Genero,
     GrupoInteres,
     Notificacion,
+    PreferenciaCliente,
     Producto,
     Reparacion,
     Usuario,
 )
 from app.schemas import (
+    Afinidad,
+    Encuesta,
+    EncuestaSalida,
     AvisoSalida,
     CambioClave,
     MiReparacion,
@@ -157,3 +164,43 @@ def mis_reparaciones(cliente: Cliente = Depends(mi_cliente), db: Session = Depen
                        .order_by(Reparacion.fecha_ingreso.desc(), Reparacion.id.desc()))
     return [MiReparacion(codigo=r.codigo, fecha=r.fecha_ingreso, equipo=r.equipo, falla=r.falla, costo=r.costo,
                          precio_acordado=r.precio_acordado, estado=r.estado) for r in filas]
+
+
+# ── HU-27: encuesta de gustos ─────────────────────────────────────────────────────────
+def encuesta_de(cliente: Cliente) -> EncuestaSalida:
+    pref = cliente.preferencias
+    if pref is None:
+        return EncuestaSalida(hecha=False, perfil=None)
+    gustos = Gustos.de(pref)
+    return EncuestaSalida(hecha=True, generos=list(gustos.generos), modo=pref.modo_juego, consola=pref.consola,
+                          perfil=None if gustos.vacios else gustos.perfil())
+
+
+@router.get("/encuesta", response_model=EncuestaSalida)
+def mi_encuesta(cliente: Cliente = Depends(mi_cliente)):
+    """hecha=False: el cliente nunca respondió ni saltó la encuesta (se le muestra la primera vez)."""
+    return encuesta_de(cliente)
+
+
+@router.put("/encuesta", response_model=EncuestaSalida)
+def responder_encuesta(datos: Encuesta, cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    """Guarda (o cambia, con "Ajustar mis gustos") las respuestas. Si salta la encuesta llega todo vacío
+    y igual se guarda, para no volver a preguntarle."""
+    generos = list(db.scalars(select(Genero).where(Genero.id.in_(datos.generos)))) if datos.generos else []
+    if len(generos) != len(set(datos.generos)):
+        raise HTTPException(422, "Hay un género que no existe.")
+    pref = cliente.preferencias or PreferenciaCliente(cliente=cliente)
+    pref.generos, pref.modo_juego, pref.consola = generos, datos.modo, datos.consola
+    pref.completada_en = func.now()
+    db.add(pref)
+    db.commit()
+    db.refresh(cliente)
+    return encuesta_de(cliente)
+
+
+@router.get("/afinidad", response_model=list[Afinidad])
+def mi_afinidad(cliente: Cliente = Depends(mi_cliente), db: Session = Depends(get_db)):
+    """Puntos y razón de cada producto según la encuesta (para ordenar "Para ti primero" en Ofertas)."""
+    gustos = Gustos.de(cliente.preferencias)
+    productos = db.scalars(_consulta_base().options(selectinload(Producto.modos)))
+    return [Afinidad(producto_id=p.id, puntos=n, razon=r) for p in productos for n, r in [puntuar(p, gustos)]]
