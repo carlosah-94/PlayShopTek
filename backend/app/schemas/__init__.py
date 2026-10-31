@@ -350,6 +350,7 @@ class AsistenteSalida(BaseModel):
     respuesta: str
     productos: list[ProductoSalida] = []
     acciones: list[AccionAsistente] = []
+    servicios: list["ServicioInicio"] = []  # los servicios del taller, cuando pregunta por reparaciones
 
 class ReclamoEntrada(BaseModel):
     """HU-18: hoja del Libro de Reclamaciones (Ley N.º 29571). La llena el cliente desde la web."""

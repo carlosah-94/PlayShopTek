@@ -324,3 +324,59 @@ lo agrego al carrito,agregar_carrito
 añadir al carrito,agregar_carrito
 dale agregalo,agregar_carrito
 echalo al carrito,agregar_carrito
+vende mandos,buscar_producto
+venden mandos,buscar_producto
+vendes mandos,buscar_producto
+que mandos tienen,buscar_producto
+que mandos venden,buscar_producto
+tienen mandos para ps5,buscar_producto
+venden consolas,buscar_producto
+que consolas venden,buscar_producto
+tienen una ps5,buscar_producto
+venden juegos de ps4,buscar_producto
+que juegos de ps5 tienen,buscar_producto
+tienen juegos de pelea,buscar_producto
+venden audifonos,buscar_producto
+tienen teclados,buscar_producto
+hay mandos genericos baratos,buscar_producto
+venden ps2,buscar_producto
+recomiendame un juego,recomendar
+que me recomiendas,recomendar
+que juego me recomiendas,recomendar
+recomiendame algo,recomendar
+que juego compro,recomendar
+no se que juego comprar,recomendar
+sugiereme un juego,recomendar
+que me sugieres,recomendar
+algun juego para mi,recomendar
+que me conviene comprar,recomendar
+dame una recomendacion,recomendar
+que juego va con mis gustos,recomendar
+que deberia jugar,recomendar
+algo bueno para jugar,recomendar
+que juego esta bueno,recomendar
+recomiendame un juego de futbol,recomendar
+que juego me iria bien,recomendar
+que regalo para un gamer,recomendar
+quiero algo para jugar con amigos,recomendar
+que juego me compro para mi ps5,recomendar
+ayudame a elegir un juego,recomendar
+cual me recomiendas,recomendar
+un juego para mi hijo,recomendar
+que juego nuevo hay que valga la pena,recomendar
+recomendaciones para mi,recomendar
+que juegos me gustarian,recomendar
+segun mis gustos que me recomiendas,recomendar
+quiero una sugerencia,recomendar
+llevame a ofertas,navegar
+quiero ver las ofertas,navegar
+abre el catalogo,navegar
+llevame a reparaciones,navegar
+tiene el juego onimusha,buscar_producto
+tiene el juego minecraft,buscar_producto
+tienes el gta,buscar_producto
+tiene fifa,buscar_producto
+tiene el resident evil 4,buscar_producto
+tiene mandos,buscar_producto
+tiene la ps5 pro,buscar_producto
+tienes god of war,buscar_producto
