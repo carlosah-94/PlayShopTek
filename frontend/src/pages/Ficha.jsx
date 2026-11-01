@@ -133,7 +133,7 @@ export default function Ficha() {
           {/* HU-21: galería: la pieza grande con flechas y, debajo, las 4 miniaturas (la 4.ª puede ser el tráiler) */}
           <div className="relative overflow-hidden rounded-2xl border border-tinta/10 bg-white">
             {!galeria.length && <div className="grid aspect-square place-items-center text-tinta/60">Foto pendiente</div>}
-            {pieza?.tipo === 'foto' && <img src={urlImagen(pieza.url)} alt={p.nombre} width="600" height="600" className="aspect-square w-full object-contain p-4" />}
+            {pieza?.tipo === 'foto' && <img src={urlImagen(pieza.url)} alt={p.nombre} fetchPriority="high" width="600" height="600" className="aspect-square w-full object-contain p-4" />}
             {pieza?.tipo === 'video' && (
               <div className="grid aspect-square w-full place-items-center bg-[#0b0820]">
                 <iframe key={pieza.id} src={'https://www.youtube-nocookie.com/embed/' + pieza.id + '?autoplay=1&rel=0'} title={'Tráiler de ' + p.nombre}
