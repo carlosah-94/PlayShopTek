@@ -16,7 +16,9 @@ const quedan = (fin) => {
 const etiqueta = (c) => (/^PS\d$/.test(c) ? 'Juegos ' + c : c)
 
 // HU-27: razon = por qué se le recomienda ("Por tu gusto: Deportes"), como el prototipo
-export default function TarjetaProducto({ p, favorito = false, onFavorito, razon }) {
+// Rendimiento: prioridad = true en las primeras tarjetas que se ven al abrir la página.
+// Su foto se pide de inmediato y antes que las demás (las de más abajo siguen esperando a que el cliente baje).
+export default function TarjetaProducto({ p, favorito = false, onFavorito, razon, prioridad = false }) {
   const [agregado, setAgregado] = useState(false)
   const sePuedeComprar = !p.es_preventa && p.stock > 0
   const anadir = () => {
@@ -31,7 +33,7 @@ export default function TarjetaProducto({ p, favorito = false, onFavorito, razon
         <Link to={'/producto/' + p.id} tabIndex={-1}>
           {/* HU-25: como el prototipo: la foto vertical sobre una franja lila suave */}
           {p.foto
-            ? <div className="bg-morado/10 px-3 pt-6 pb-3"><img src={urlImagen(p.foto)} alt={p.nombre} loading="lazy" width="300" height="340" className="aspect-[7/8] w-full object-contain" /></div>
+            ? <div className="bg-morado/10 px-3 pt-6 pb-3"><img src={urlImagen(p.foto)} alt={p.nombre} loading={prioridad ? 'eager' : 'lazy'} fetchPriority={prioridad ? 'high' : 'auto'} width="300" height="340" className="aspect-[7/8] w-full object-contain" /></div>
             : <div className="grid aspect-[4/5] place-items-center bg-morado/10 text-sm text-tinta/60">Foto pendiente</div>}
         </Link>
         {p.descuento && <span className="absolute left-2 top-2 rounded-full bg-rosa px-2 py-0.5 text-xs font-semibold text-white">-{p.descuento}%</span>}

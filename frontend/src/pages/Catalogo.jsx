@@ -95,8 +95,9 @@ export default function Catalogo() {
         <h2 className="sr-only">Productos</h2>
         <ul className={'mt-4 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 lg:grid-cols-3' + (productos ? '' : ' min-h-screen content-start')}>
           {productos
-            ? visibles.map((p) => (
-              <li key={p.id}><TarjetaProducto p={p} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} /></li>
+            ? visibles.map((p, i) => (
+              // Rendimiento: las 2 primeras tarjetas son las que se ven sin bajar, en celular y en computadora
+              <li key={p.id}><TarjetaProducto p={p} prioridad={i < 2} favorito={favoritos.has(p.id)} onFavorito={alternarFavorito} /></li>
             ))
             // Mientras carga se reserva el espacio de las tarjetas (así la página no "salta"); el aviso va dentro
             : [1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
