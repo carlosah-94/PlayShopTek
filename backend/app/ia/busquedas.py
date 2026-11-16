@@ -6,7 +6,10 @@
   3. Probar K-Means con varios K y DBSCAN con varios radios; quedarse con el de mejor
      coeficiente de silueta (qué tan juntos y separados quedan los grupos).
   4. Medir contra los grupos que ya estaban hechos a mano (Adjusted Rand Index).
-  5. Guardar el grupo de cada búsqueda nueva para que el tablero las cuente juntas.
+  5. Regla del negocio: si en un grupo hay juegos de la misma saga con distinto número o letra
+     ("silent hill 2" y "silent hill f"), se separan. K-Means solo ve letras parecidas; no sabe que
+     el número cambia el juego. Las métricas de arriba son las de K-Means, antes de esta regla.
+  6. Guardar el grupo de cada búsqueda nueva para que el tablero las cuente juntas.
 
 Uso:  python -m app.ia.busquedas   (muestra el reporte sin guardar nada)
 """
@@ -27,8 +30,9 @@ from app.models import GrupoInteres, Interes
 SINONIMOS = [
     (r"\bgrand theft auto\b", "gta"), (r"\bgran turismo\b", "gt"), (r"\bcall of duty\b", "cod"),
     (r"\bblack ops\b", "bo"), (r"\bcontrol\b", "mando"), (r"\bvi\b", "6"), (r"\biv\b", "4"), (r"\bv\b", "5"),
-    (r"\bps[2-5]\b", ""), (r"\bpara\b", ""), (r"\bremake\b", ""), (r"\bnintendo\b", ""),
+    (r"\bps[2-5]\b", ""), (r"\bpara\b", ""), (r"\bremake\b", ""), (r"\bnintendo\b", ""), (r"\bzero\b", "0"),
 ]
+LETRAS_COMUNES = {"a", "e", "o", "u", "y"}  # "mando a pilas": esas letras no son la edición de un juego
 
 
 def normalizar(texto: str) -> str:
@@ -37,6 +41,17 @@ def normalizar(texto: str) -> str:
         t = re.sub(patron, cambio, t)
     t = re.sub(r"([a-z])(\d)", r"\1 \2", t)  # "gta6" -> "gta 6", "bo7" -> "bo 7"
     return re.sub(r"\s+", " ", t).strip()
+
+
+def edicion(texto: str) -> tuple:
+    """El número o la letra que distingue un juego de su saga: 'silent hill f' -> ('f',), 'gta vi' -> ('6',)."""
+    return tuple(p for p in normalizar(texto).split() if p.isdigit() or (len(p) == 1 and p not in LETRAS_COMUNES))
+
+
+def separar_sagas(grupo_de_texto: dict) -> dict:
+    """Dentro de cada grupo de K-Means, los textos con distinta edición quedan en grupos distintos."""
+    claves = {}
+    return {t: claves.setdefault((g, edicion(t)), len(claves)) for t, g in grupo_de_texto.items()}
 
 
 def agrupar(textos: list[str]) -> dict:
@@ -80,7 +95,7 @@ def ejecutar(db: Session, guardar: bool = True) -> dict:
     ari = adjusted_rand_score(manual["grupo"], [grupo_de_texto[t] for t in manual["texto"]]) if len(manual) > 1 else None
 
     # Cada grupo de la IA hereda el grupo manual que más se repite dentro de él; si no hay, se crea uno nuevo
-    df["cluster"] = df["texto"].map(grupo_de_texto)
+    df["cluster"] = df["texto"].map(separar_sagas(grupo_de_texto))
     nuevos, asignadas, grupos = 0, 0, []
     for cluster, miembros in df.groupby("cluster"):
         conocidos = miembros["grupo"].dropna()

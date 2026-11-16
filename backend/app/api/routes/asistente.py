@@ -5,7 +5,6 @@ Mejora (como el prototipo): entiende plurales y categorías ("¿venden mandos?" 
 recomienda según la encuesta de gustos (HU-27) y muestra los servicios del taller.
 """
 import re
-from datetime import date
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
@@ -13,11 +12,12 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import usuario_opcional
 from app.api.routes.inicio import cliente_de, compras_del_cliente, recomendados, servicios_del_taller, unidades_vendidas
+from app.api.routes.intereses import anotar
 from app.api.routes.productos import _consulta_base, a_salida, calificaciones
 from app.database import get_db
 from app.ia.asistente import clasificar, limpiar
 from app.ia.recomendador import CONSOLAS, NOMBRE_CONSOLA, Gustos, compatible, puntuar
-from app.models import ChatbotMensaje, Cliente, Interes, Producto, Usuario
+from app.models import ChatbotMensaje, Cliente, Producto, Usuario
 from app.models.enums import OrigenInteres
 from app.schemas import AccionAsistente, AsistenteEntrada, AsistenteSalida, ServicioInicio
 
@@ -137,7 +137,7 @@ def buscar_productos(db: Session, mensaje: str, limite: int = 3, gustos: Gustos 
 
 
 # "Recomiéndame algo de terror", "un mando bueno y barato": lo que pide el mensaje manda sobre la encuesta
-GENEROS_PALABRAS = {"accion": "Acción", "aventura": "Aventura", "carrera": "Carreras", "auto": "Carreras",
+GENEROS_PALABRAS = {"accion": "Acción", "soul": "Acción", "historia": "Aventura", "aventura": "Aventura", "carrera": "Carreras", "auto": "Carreras",
                     "deporte": "Deportes", "futbol": "Deportes", "disparo": "Disparos", "shooter": "Disparos",
                     "balacera": "Disparos", "familia": "Familiar", "nino": "Familiar", "niño": "Familiar",
                     "hijo": "Familiar", "sobrino": "Familiar", "pelea": "Pelea", "lucha": "Pelea", "rol": "Rol",
@@ -244,9 +244,7 @@ def conversar(datos: AsistenteEntrada, db: Session = Depends(get_db), usuario: U
             # Solo se parece ("the evil within" -> Resident Evil): decirlo claro, mostrar lo parecido y anotarlo para Ángel
             respuesta = (f"No tenemos “{buscado}” por ahora; ya lo anoté para que Ángel sepa que lo buscaste. "
                          "Esto es lo más parecido que hay:")
-            if len(buscado) >= 3:
-                db.add(Interes(texto=buscado, origen=OrigenInteres.chatbot, cliente_id=cliente_id,
-                               tuvo_resultados=False, fecha=date.today()))
+            anotar(db, buscado, OrigenInteres.chatbot, cliente_id, tuvo_resultados=False)
             acciones = ASESORES
         elif productos and categoria and total > len(productos):
             # "¿Venden mandos?": algunos y el botón para ver todos en el catálogo
@@ -261,9 +259,7 @@ def conversar(datos: AsistenteEntrada, db: Session = Depends(get_db), usuario: U
         else:
             # Lo que no tenemos se guarda como búsqueda sin resultado: así Ángel sabe qué traer (HU-11)
             respuesta = "Ahora no lo tenemos, pero ya lo anoté para que Ángel sepa que lo buscaste. ¿Quieres consultar con un asesor?"
-            if len(buscado) >= 3:
-                db.add(Interes(texto=buscado, origen=OrigenInteres.chatbot, cliente_id=cliente_id,
-                               tuvo_resultados=False, fecha=date.today()))
+            anotar(db, buscado, OrigenInteres.chatbot, cliente_id, tuvo_resultados=False)
             acciones = ASESORES
     elif intencion == "recomendar" and (pedido := recomendar_segun_mensaje(db, datos.mensaje, usuario)) is not None:
         productos, respuesta, acciones = pedido
