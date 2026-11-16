@@ -7,7 +7,7 @@ from app.api.deps import usuario_opcional
 from app.api.routes.productos import _consulta_base, a_salida, calificaciones
 from app.api.routes.resenas import COMPRADO
 from app.database import get_db
-from app.ia.recomendador import Gustos, puntuar
+from app.ia.recomendador import CONSOLAS, Gustos, compatible, puntuar
 from app.models import (
     Cliente,
     Producto,
@@ -66,8 +66,11 @@ def recomendados(db: Session, usuario: Usuario | None, cuantos: int = 4):
     gustos = Gustos.de(cliente.preferencias) if cliente else None
     if gustos and gustos.vacios:
         gustos = None  # saltó la encuesta
+    # Solo lo que le sirve: juegos y mandos de su consola; si ya tiene consola, no se le ofrece otra aquí
+    consola = CONSOLAS.get(gustos.consola or "") if gustos else None
     candidatos = [p for p in db.scalars(_consulta_base().options(selectinload(Producto.modos)))
-                  if p.stock > 0 and not p.es_preventa and p.id not in ya_tiene]
+                  if p.stock > 0 and not p.es_preventa and p.id not in ya_tiene and compatible(p, consola)
+                  and not (consola and p.categoria.nombre == "Máquinas")]
     puntaje = {p.id: puntuar(p, gustos, le_gusta) for p in candidatos}
     candidatos.sort(key=lambda p: (-puntaje[p.id][0], -vendidos.get(p.id, 0), p.id))
     elegidos = candidatos[:cuantos]

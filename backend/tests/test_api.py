@@ -530,3 +530,51 @@ def test_asistente_categorias_recomendaciones_y_taller(cliente, h_cliente):
     assert taller["intencion"] == "reparacion" and taller["servicios"] and taller["acciones"][0]["tipo"] == "whatsapp"
     assert decir("llevame a ofertas")["acciones"][0]["destino"] == "/ofertas"
     assert "agotado" in decir("tienen el gran turismo 7")["respuesta"]
+
+
+def test_asistente_no_confunde_productos_parecidos(cliente):
+    """El asistente no dice "sí, tenemos" si solo coincide una palabra o el número del juego."""
+    def preguntar(mensaje):
+        return cliente.post("/api/asistente", json={"mensaje": mensaje, "sesion": "prueba-pytest"}).json()
+
+    r = preguntar("tiene el juego diablo 4")  # solo coincide el "4" de Resident Evil 4
+    assert r["productos"] == [] and "no lo tenemos" in r["respuesta"]
+
+    r = preguntar("tiene el juego the evil within")  # "evil" se parece a Resident Evil, pero no es
+    assert r["respuesta"].startswith("No tenemos “the evil within”")
+    assert all("Evil Within" not in p["nombre"] for p in r["productos"])
+
+    r = preguntar("tienen resident evil 4")  # el producto exacto sí se confirma
+    assert r["respuesta"].startswith("Sí, tenemos Resident Evil 4")
+
+    r = preguntar("agrega el diablo 4")  # no agrega otro juego al carrito
+    assert r["productos"] == []
+
+
+def test_asistente_recomienda_segun_el_mensaje_y_la_consola(cliente):
+    """Quien tiene PS4 no recibe juegos ni mandos de PS5, y el mensaje (género, mandos, precio) manda."""
+    import uuid
+    email = f"ps4-{uuid.uuid4().hex[:6]}@demo.pe"
+    r = cliente.post("/api/auth/registro", json={"nombre": "Cliente PS4", "email": email, "password": "secreto1"})
+    h = {"Authorization": f"Bearer {r.json()['access_token']}"}
+    cliente.put("/api/mi/encuesta", headers=h, json={"generos": ["accion", "terror"], "modo": "solo", "consola": "PS4"})
+
+    def preguntar(mensaje):
+        return cliente.post("/api/asistente", headers=h, json={"mensaje": mensaje, "sesion": "prueba-pytest"}).json()
+
+    inicio = cliente.get("/api/inicio", headers=h).json()["recomendados"]
+    assert inicio and all(p["plataforma"] == "PS4" for p in inicio)  # nada de PS5 ni consolas
+
+    r = preguntar("que mandos me recomiendas calidad precio")
+    assert r["productos"] and all(p["categoria"] == "Mandos" and p["plataforma"] == "PS4" for p in r["productos"])
+    precios = [float(p["precio_final"]) for p in r["productos"]]
+    assert precios == sorted(precios)  # el más barato primero
+
+    r = preguntar("me gustan los juegos de accion que me recomiendas")
+    assert r["productos"] and all(p["plataforma"] == "PS4" for p in r["productos"])
+
+    r = preguntar("que juego me recomiendas por menos de 80 soles")
+    assert all(float(p["precio_final"]) <= 80 for p in r["productos"])
+
+    r = cliente.post("/api/asistente", json={"mensaje": "que mando me recomiendas", "sesion": "prueba-pytest"}).json()
+    assert r["productos"] == [] and "qué consola" in r["respuesta"]  # sin saber su consola, pregunta
