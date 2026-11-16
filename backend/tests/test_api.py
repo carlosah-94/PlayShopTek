@@ -578,3 +578,31 @@ def test_asistente_recomienda_segun_el_mensaje_y_la_consola(cliente):
 
     r = cliente.post("/api/asistente", json={"mensaje": "que mando me recomiendas", "sesion": "prueba-pytest"}).json()
     assert r["productos"] == [] and "qué consola" in r["respuesta"]  # sin saber su consola, pregunta
+
+
+def test_busquedas_sin_ruido_y_sagas_separadas(cliente):
+    """El tablero no guarda códigos de reparación, el chat cuenta una vez por persona al día
+    y la regla de sagas separa 'the evil within 2' de 'the evil within' (pero junta 'gta 6' y 'gta vi')."""
+    from app.database import SessionLocal
+    from app.ia.busquedas import agrupar, separar_sagas
+    from app.models import Interes
+    from sqlalchemy import func, select
+
+    def contar(texto):
+        with SessionLocal() as db:
+            return db.scalar(select(func.count()).select_from(Interes).where(Interes.texto == texto))
+
+    antes = contar("hollow knight silksong")
+    for _ in range(3):  # el mismo cliente (sin sesión) pregunta 3 veces el mismo día
+        cliente.post("/api/asistente", json={"mensaje": "tienen hollow knight silksong", "sesion": "prueba-pytest"})
+    assert contar("hollow knight silksong") == antes + 1
+
+    cliente.post("/api/intereses", json={"texto": "R-2061"})
+    assert contar("r-2061") == 0
+
+    textos = ["gta 6", "gta vi", "grand theft auto 6", "the evil within", "evil within", "the evil within 2",
+              "silent hill 2", "silent hill f", "black ops 7", "black ops 7 ps5"]
+    grupo = separar_sagas(dict(zip(textos, agrupar(textos)["etiquetas"])))
+    assert grupo["gta 6"] == grupo["gta vi"] == grupo["grand theft auto 6"]
+    assert grupo["the evil within"] != grupo["the evil within 2"]
+    assert grupo["silent hill 2"] != grupo["silent hill f"]
