@@ -4,6 +4,7 @@ import { api } from '../api.js'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE', { maximumFractionDigits: 0 })
 const caja = 'rounded-xl border border-tinta/10 bg-superficie p-4'
+const unidades = (n) => Number(n).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 export default function ResumenIA() {
   const [r, setR] = useState(null)
@@ -47,12 +48,24 @@ export default function ResumenIA() {
 
       {r && !oculto && (
         <>
-          <p className="text-xs text-tinta/60">
-            Ganó <b>{r.modelo.algoritmo_elegido}</b> · aprendió de {r.modelo.filas} semanas-producto
-            {' '}({r.modelo.productos} productos, {r.modelo.semanas} semanas de historial) · error promedio (MAE):{' '}
-            {Object.entries(r.modelo.resultados).map(([nombre, x]) => nombre + ' ' + x.mae_prueba).join(' · ')} unidades.
-            {r.modelo.historial_simulado && ' Historial de la tienda simulado hasta tener las ventas reales.'}
-          </p>
+          {/* Se muestran las dos medidas: la validación decide al ganador; el examen final confirma */}
+          <div className="space-y-1 rounded-xl bg-superficie/70 p-3 text-xs text-tinta/70">
+            <p>
+              Ganó <b className="text-tinta">{r.modelo.algoritmo_elegido}</b>: se equivocó menos en la{' '}
+              <b>validación</b> (entrena con semanas pasadas y prueba con las siguientes, 4 veces):{' '}
+              {Object.entries(r.modelo.resultados).filter(([, x]) => x.mae_validacion !== null)
+                .map(([nombre, x]) => nombre + ' ' + unidades(x.mae_validacion)).join(' · ')} unidades por semana.
+            </p>
+            <p>
+              <b>Examen final</b> (las 8 últimas semanas, que ningún modelo vio):{' '}
+              {Object.entries(r.modelo.resultados).map(([nombre, x]) => nombre + ' ' + unidades(x.mae_prueba)).join(' · ')}.
+              {' '}Error promedio (MAE): menos es mejor.
+            </p>
+            <p>
+              Aprendió de {r.modelo.filas} semanas-producto ({r.modelo.productos} productos, {r.modelo.semanas} semanas de historial).
+              {r.modelo.historial_simulado && ' Historial de la tienda simulado hasta tener las ventas reales.'}
+            </p>
+          </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
             <div className={caja}>
