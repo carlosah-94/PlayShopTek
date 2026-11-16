@@ -11,6 +11,10 @@ Pesos (los mismos del prototipo):
 - calza con cómo juega (en línea / en casa / solo): +2 (+1 si prefiere un jugador)
 - lo compró antes en esa categoría: +1
 - sin stock hoy (y no es preventa): -4
+- si todavía no tiene consola, las consolas suman +3 ("Para empezar a jugar")
+
+Compatibilidad: a quien tiene PS4 no se le recomiendan juegos ni mandos de PS5, porque no le servirían.
+La PS5 sí lee juegos de PS4, pero cada consola usa sus propios mandos.
 """
 from dataclasses import dataclass, field
 
@@ -19,6 +23,18 @@ from app.models.enums import ModoJuego
 
 CONSOLAS = {"PS5": "PS5", "PS5PRO": "PS5", "PS4": "PS4", "PS3": "PS3", "PS2": "PS2", "NO": None}
 NOMBRE_CONSOLA = {"PS5": "PS5", "PS5PRO": "PS5 Pro", "PS4": "PS4", "PS3": "PS3", "PS2": "PS2"}
+JUEGOS_QUE_LEE = {"PS5": {"PS5", "PS4"}, "PS4": {"PS4"}, "PS3": {"PS3"}, "PS2": {"PS2"}}
+
+
+def compatible(p: Producto, plataforma: str | None) -> bool:
+    """¿Le sirve este producto a quien tiene esa consola? Solo importa en juegos y mandos."""
+    if not plataforma:
+        return True
+    if p.categoria.es_juego:
+        return p.plataforma in JUEGOS_QUE_LEE.get(plataforma, {plataforma})
+    if p.categoria.nombre == "Mandos":
+        return p.plataforma == plataforma
+    return True
 
 
 @dataclass
@@ -63,6 +79,9 @@ def puntuar(p: Producto, gustos: Gustos | None, categorias_compradas: set[int] =
         if plataforma and p.plataforma == plataforma:
             puntos += 2
             razon = razon or "Para tu " + NOMBRE_CONSOLA[gustos.consola]
+        if gustos.consola == "NO" and p.categoria.nombre == "Máquinas":
+            puntos += 3
+            razon = razon or "Para empezar a jugar"
         if p.categoria.es_juego and gustos.modo:
             modos = {m.modo for m in p.modos} or {ModoJuego.solo}
             if gustos.modo == ModoJuego.online and ModoJuego.online in modos:

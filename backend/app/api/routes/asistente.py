@@ -12,11 +12,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import usuario_opcional
-from app.api.routes.inicio import recomendados, servicios_del_taller
+from app.api.routes.inicio import cliente_de, compras_del_cliente, recomendados, servicios_del_taller, unidades_vendidas
 from app.api.routes.productos import _consulta_base, a_salida, calificaciones
 from app.database import get_db
 from app.ia.asistente import clasificar, limpiar
-from app.ia.recomendador import Gustos, puntuar
+from app.ia.recomendador import CONSOLAS, NOMBRE_CONSOLA, Gustos, compatible, puntuar
 from app.models import ChatbotMensaje, Cliente, Interes, Producto, Usuario
 from app.models.enums import OrigenInteres
 from app.schemas import AccionAsistente, AsistenteEntrada, AsistenteSalida, ServicioInicio
@@ -66,7 +66,7 @@ VACIAS = set("""a al algo algun alguna aun busco cual cuales cuanto cuanta cuest
 en es esta estan hay info juego juegos la las lo los me mi muestrame para pa por precio precios que quiero
 sale stock su tienen tiene un una unos venden vende ver y o consola consolas comprar vale valen
 agrega agregalo agregame agregar agrego anade anadelo anadir pon ponlo mete echalo carrito si ok dale ese eso
-llevo llevarme separalo dos uno compro cuale alguno tiene vendes vende ustede""".split())
+llevo llevarme separalo dos uno compro cuale alguno tiene vendes vende ustede the of""".split())
 ROMANOS = {"ii": "2", "iii": "3", "iv": "4", "v": "5", "vi": "6", "vii": "7"}
 SINONIMOS = [(r"\bgrand theft auto\b", "gta"), (r"\bcall of duty\b", "cod"), (r"\bcontrol(es)?\b", "mando"),
              (r"\bplaystation\b", "ps"), (r"\bplay\b", "ps"), (r"\bps (\d)\b", r"ps\1"), (r"\bspider man\b", "spiderman")]
@@ -98,10 +98,12 @@ def ver_todo(mensaje: str) -> str | None:
     return categoria_pedida(mensaje)
 
 
-def buscar_productos(db: Session, mensaje: str, limite: int = 3, gustos: Gustos | None = None) -> tuple[list, int]:
+def buscar_productos(db: Session, mensaje: str, limite: int = 3, gustos: Gustos | None = None) -> tuple[list, int, bool]:
     """Busca por coincidencia de palabras. Si el cliente dice la plataforma (ps4), filtra por ella; si nombra una
     categoría ("mandos", "consolas"), filtra por ella. Devuelve los mejores y cuántos coinciden en total.
-    Con cuenta y encuesta (HU-27), a igual coincidencia muestra primero lo que va con sus gustos."""
+    Con cuenta y encuesta (HU-27), a igual coincidencia muestra primero lo que va con sus gustos.
+    El tercer valor dice si es el producto pedido (coinciden TODAS las palabras) o solo algo parecido:
+    "the evil within" no es "Resident Evil 4", y "diablo 4" tampoco (que coincida solo el número no cuenta)."""
     todas = _palabras(mensaje)
     solo_juegos = "juego" in todas
     categoria = categoria_pedida(mensaje)
@@ -109,7 +111,8 @@ def buscar_productos(db: Session, mensaje: str, limite: int = 3, gustos: Gustos 
     plataformas = {p.upper() for p in palabras if re.fullmatch(r"ps[2-5]", p)}
     claves = [p for p in palabras if p.upper() not in plataformas]
     if not claves and not plataformas and not categoria:
-        return [], 0
+        return [], 0, False
+    textos = [c for c in claves if not c.isdigit()]  # los números ya se exigen abajo
     puntajes = []
     for p in db.scalars(_consulta_base().options(selectinload(Producto.modos))):
         if plataformas and p.plataforma not in plataformas:
@@ -121,16 +124,106 @@ def buscar_productos(db: Session, mensaje: str, limite: int = 3, gustos: Gustos 
         nombre = _palabras(p.nombre)
         if any(c.isdigit() and c not in nombre for c in claves):
             continue  # "gta 6" no es "GTA V": si el número no coincide, no es ese producto
-        puntos = sum(1 for c in claves if any(n == c or (len(c) >= 4 and n.startswith(c)) for n in nombre))
-        if puntos or not claves:
+        puntos = sum(1 for c in textos if any(n == c or (len(c) >= 4 and n.startswith(c)) for n in nombre))
+        if puntos or not textos:
             puntajes.append((puntos, p.stock > 0 or p.es_preventa, puntuar(p, gustos)[0], p))
     if not puntajes:
-        return [], 0
+        return [], 0, False
     mejor = max(x[0] for x in puntajes)
     iguales = [x for x in puntajes if x[0] == mejor]
     elegidos = sorted(iguales, key=lambda x: (not x[1], -x[2], x[3].id))[:limite]
     notas = calificaciones(db)
-    return [a_salida(p, notas) for *_, p in elegidos], len(iguales)
+    return [a_salida(p, notas) for *_, p in elegidos], len(iguales), mejor == len(textos)
+
+
+# "Recomiéndame algo de terror", "un mando bueno y barato": lo que pide el mensaje manda sobre la encuesta
+GENEROS_PALABRAS = {"accion": "Acción", "aventura": "Aventura", "carrera": "Carreras", "auto": "Carreras",
+                    "deporte": "Deportes", "futbol": "Deportes", "disparo": "Disparos", "shooter": "Disparos",
+                    "balacera": "Disparos", "familia": "Familiar", "nino": "Familiar", "niño": "Familiar",
+                    "hijo": "Familiar", "sobrino": "Familiar", "pelea": "Pelea", "lucha": "Pelea", "rol": "Rol",
+                    "rpg": "Rol", "terror": "Terror", "miedo": "Terror", "zombi": "Terror"}
+PERIFERICOS = {"audifono": "audífonos", "teclado": "teclados", "mouse": "mouse", "monitor": "monitores",
+               "ram": "memorias RAM", "ssd": "discos SSD"}
+BARATO = ("barato", "economico", "calidad precio", "buen precio", "precio")
+PLURAL = {"Mandos": "mandos", "Máquinas": "consolas"}
+
+
+def recomendar_segun_mensaje(db: Session, mensaje: str, usuario: Usuario | None):
+    """Recomienda leyendo el mensaje (género, consola, mandos/consolas/periféricos, precio) y la encuesta.
+    Devuelve (productos, respuesta, acciones) o None si el mensaje no pide nada en particular."""
+    palabras = _palabras(mensaje)
+    texto = " ".join(palabras)
+    cliente = cliente_de(db, usuario)
+    gustos = Gustos.de(cliente.preferencias) if cliente else None
+    if gustos and gustos.vacios:
+        gustos = None
+    generos = {nombre for p in palabras for clave, nombre in GENEROS_PALABRAS.items() if p.startswith(clave)}
+    plataforma_msg = next((p.upper() for p in palabras if re.fullmatch(r"ps[2-5]", p)), None)
+    consola = plataforma_msg or (CONSOLAS.get(gustos.consola or "") if gustos else None)
+    categoria = categoria_pedida(mensaje)
+    periferico = next((k for k in PERIFERICOS if any(p.startswith(k) for p in palabras)), None)
+    barato = any(b in texto for b in BARATO)
+    tope = re.search(r"(?:menos de|hasta|maximo|no mas de)\s*(?:s\s*)?(\d{2,5})", limpiar(mensaje))
+    tope = int(tope.group(1)) if tope else None
+    if not (generos or plataforma_msg or categoria or periferico or barato or tope):
+        return None  # "¿qué me recomiendas?": se usa la encuesta tal cual (ver más abajo)
+
+    if categoria == "Mandos" and not consola:
+        return [], ("¿Para qué consola es el mando? Cada consola usa sus propios mandos. "
+                    "Escríbeme, por ejemplo: “mando barato para PS4”."), []
+    ya_tiene, le_gusta = compras_del_cliente(db, cliente)
+    vendidos, notas, elegidos = unidades_vendidas(db), calificaciones(db), []
+    for p in db.scalars(_consulta_base().options(selectinload(Producto.modos))):
+        if p.stock == 0 or p.es_preventa or p.id in ya_tiene:
+            continue
+        if periferico:
+            if p.categoria.nombre != "PC y periféricos" or periferico not in limpiar(p.nombre):
+                continue
+        elif categoria:
+            if p.categoria.nombre != categoria:
+                continue
+        elif not p.categoria.es_juego:
+            continue  # sin decir qué, se recomiendan juegos
+        if not compatible(p, consola):
+            continue  # a quien tiene PS4 no le sirven los juegos ni los mandos de PS5
+        if categoria == "Máquinas" and consola and p.plataforma < consola:
+            continue  # si ya tiene PS4, no se le recomienda una PS3 ("PS3" < "PS4" también como texto)
+        nombres = {g.nombre for g in p.generos}
+        if generos and p.categoria.es_juego and not generos & nombres:
+            continue  # pidió terror: solo terror
+        salida = a_salida(p, notas)
+        if tope and salida.precio_final > tope:
+            continue
+        puntos = puntuar(p, gustos, le_gusta)[0] + 4 * len(generos & nombres) + 3 * (p.plataforma == plataforma_msg)
+        elegidos.append((salida, puntos, vendidos.get(p.id, 0)))
+
+    if barato or tope:
+        elegidos.sort(key=lambda x: (x[0].precio_final, -x[1]))
+    else:
+        elegidos.sort(key=lambda x: (-x[1], -x[2], x[0].precio_final))
+    productos = [x[0] for x in elegidos[:3]]
+
+    que = PERIFERICOS.get(periferico) or PLURAL.get(categoria, "juegos")
+    detalle = ""
+    if generos:
+        detalle += " " + " y ".join("familiares" if g == "Familiar" else "de " + g.lower() for g in sorted(generos))
+    if consola and not (periferico or categoria == "Máquinas"):  # la consola solo importa en juegos y mandos
+        nombre = NOMBRE_CONSOLA.get(gustos.consola, consola) if gustos and not plataforma_msg else consola
+        detalle += f" para {plataforma_msg}" if plataforma_msg else f" para tu {nombre} (según tu encuesta)"
+    if tope:
+        detalle += f" de hasta S/ {tope}"
+    acciones = [AccionAsistente(tipo="ir", etiqueta="Ajustar mis gustos", destino="/encuesta")] if gustos else []
+    if not productos:
+        return [], f"Ahora no tengo {que}{detalle} con stock. ¿Te paso con un asesor para que lo consiga?", ASESORES
+    p = productos[0]
+    respuesta = (f"Buscando {que}{detalle}" + (", con el mejor precio" if barato else "")
+                 + f": te recomiendo {p.nombre} a S/ {p.precio_final:,.0f}.")
+    originales = [x for x in productos[1:] if "generico" not in limpiar(x.nombre)]
+    if categoria == "Mandos" and barato and "generico" in limpiar(p.nombre) and originales:
+        respuesta += f" Si prefieres el original, {originales[0].nombre} cuesta S/ {originales[0].precio_final:,.0f}."
+    elif len(productos) > 1:
+        respuesta += " También te muestro otras opciones:"
+    return productos, respuesta, acciones
 
 
 @router.post("", response_model=AsistenteSalida)
@@ -144,9 +237,18 @@ def conversar(datos: AsistenteEntrada, db: Session = Depends(get_db), usuario: U
     gustos = Gustos.de(cliente.preferencias) if cliente else None
 
     if intencion == "buscar_producto":
-        productos, total = buscar_productos(db, datos.mensaje, gustos=gustos)
+        productos, total, exacto = buscar_productos(db, datos.mensaje, gustos=gustos)
         categoria = ver_todo(datos.mensaje)
-        if productos and categoria and total > len(productos):
+        buscado = " ".join(p for p in _palabras(datos.mensaje) if p not in VACIAS or p in ("the", "of"))[:80]
+        if productos and not exacto:
+            # Solo se parece ("the evil within" -> Resident Evil): decirlo claro, mostrar lo parecido y anotarlo para Ángel
+            respuesta = (f"No tenemos “{buscado}” por ahora; ya lo anoté para que Ángel sepa que lo buscaste. "
+                         "Esto es lo más parecido que hay:")
+            if len(buscado) >= 3:
+                db.add(Interes(texto=buscado, origen=OrigenInteres.chatbot, cliente_id=cliente_id,
+                               tuvo_resultados=False, fecha=date.today()))
+            acciones = ASESORES
+        elif productos and categoria and total > len(productos):
             # "¿Venden mandos?": algunos y el botón para ver todos en el catálogo
             nombre = "Juegos " + categoria if categoria.startswith("PS") else categoria
             respuesta = f"Sí, encontré {total} opciones en {nombre}. Te muestro {len(productos)}; desliza para verlas:"
@@ -159,11 +261,12 @@ def conversar(datos: AsistenteEntrada, db: Session = Depends(get_db), usuario: U
         else:
             # Lo que no tenemos se guarda como búsqueda sin resultado: así Ángel sabe qué traer (HU-11)
             respuesta = "Ahora no lo tenemos, pero ya lo anoté para que Ángel sepa que lo buscaste. ¿Quieres consultar con un asesor?"
-            texto = " ".join(p for p in _palabras(datos.mensaje) if p not in VACIAS)[:80]
-            if len(texto) >= 3:
-                db.add(Interes(texto=texto, origen=OrigenInteres.chatbot, cliente_id=cliente_id,
+            if len(buscado) >= 3:
+                db.add(Interes(texto=buscado, origen=OrigenInteres.chatbot, cliente_id=cliente_id,
                                tuvo_resultados=False, fecha=date.today()))
             acciones = ASESORES
+    elif intencion == "recomendar" and (pedido := recomendar_segun_mensaje(db, datos.mensaje, usuario)) is not None:
+        productos, respuesta, acciones = pedido
     elif intencion == "recomendar":
         # HU-27: usa el mismo recomendador que "Recomendado para ti" (encuesta de gustos + compras)
         productos, _, _, perfil = recomendados(db, usuario, 12)
@@ -190,7 +293,9 @@ def conversar(datos: AsistenteEntrada, db: Session = Depends(get_db), usuario: U
             acciones = [AccionAsistente(tipo="ir", etiqueta=nombre, destino=ruta) for _, ruta, nombre in SECCIONES[:4]]
     elif intencion == "agregar_carrito":
         # Si nombra el producto se busca; si dice "agrégalo", se usa el último que mostró el chat
-        encontrados, _ = buscar_productos(db, datos.mensaje, limite=1)
+        encontrados, _, exacto = buscar_productos(db, datos.mensaje, limite=1)
+        if not exacto:
+            encontrados = []  # "agrega el diablo 4" no debe agregar Resident Evil 4
         if not encontrados and datos.ultimo_producto_id:
             p = db.scalar(_consulta_base().where(Producto.id == datos.ultimo_producto_id))
             encontrados = [a_salida(p, calificaciones(db))] if p else []
