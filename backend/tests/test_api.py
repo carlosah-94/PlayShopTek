@@ -592,10 +592,11 @@ def test_busquedas_sin_ruido_y_sagas_separadas(cliente):
         with SessionLocal() as db:
             return db.scalar(select(func.count()).select_from(Interes).where(Interes.texto == texto))
 
-    antes = contar("hollow knight silksong")
+    import uuid
+    juego = f"hollow knight {uuid.uuid4().hex[:5]}"  # texto único para que la prueba se pueda repetir el mismo día
     for _ in range(3):  # el mismo cliente (sin sesión) pregunta 3 veces el mismo día
-        cliente.post("/api/asistente", json={"mensaje": "tienen hollow knight silksong", "sesion": "prueba-pytest"})
-    assert contar("hollow knight silksong") == antes + 1
+        cliente.post("/api/asistente", json={"mensaje": f"tienen {juego}", "sesion": "prueba-pytest"})
+    assert contar(juego) == 1
 
     cliente.post("/api/intereses", json={"texto": "R-2061"})
     assert contar("r-2061") == 0
@@ -606,3 +607,18 @@ def test_busquedas_sin_ruido_y_sagas_separadas(cliente):
     assert grupo["gta 6"] == grupo["gta vi"] == grupo["grand theft auto 6"]
     assert grupo["the evil within"] != grupo["the evil within 2"]
     assert grupo["silent hill 2"] != grupo["silent hill f"]
+
+
+def test_busqueda_nueva_se_ve_en_el_tablero(cliente):
+    """Un juego que nadie había buscado aparece en el tablero aunque tenga 1 sola búsqueda,
+    y al agrupar se informa en qué grupo quedó."""
+    import uuid
+    juego = f"juego prueba {uuid.uuid4().hex[:6]}"
+    cliente.post("/api/intereses", json={"texto": juego})
+    from conftest import token
+    h = token(cliente, "angel@playshoptek.pe", "tienda123")
+    ia = cliente.post("/api/ia/agrupar-busquedas", headers=h).json()
+    assert any(juego in a["textos"] for a in ia["agrupadas_ahora"])
+    tablero = cliente.get("/api/tablero?dias=7", headers=h).json()
+    assert any(juego in b["nombre"].lower() for b in tablero["mas_buscados"])
+    assert any(f["nombre"] == juego for f in tablero["sin_resultado"])

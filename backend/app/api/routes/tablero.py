@@ -55,7 +55,8 @@ def tablero(dias: int = Query(30, ge=7, le=365, description="Período: últimos 
     # Lo más buscado: búsquedas agrupadas (gta 6 = gta vi = grand theft auto 6) y pedidos de "Avísame"
     busquedas = db.execute(
         select(GrupoInteres, func.count(Interes.id)).join(Interes, Interes.grupo_clave == GrupoInteres.clave)
-        .where(Interes.fecha >= desde).group_by(GrupoInteres.clave).order_by(func.count(Interes.id).desc()).limit(5)
+        .where(Interes.fecha >= desde).group_by(GrupoInteres.clave)
+        .order_by(func.count(Interes.id).desc(), func.max(Interes.id).desc()).limit(8)  # a igual cantidad, lo más reciente
     ).all()
     avisos = dict(db.execute(select(AvisoLlegada.grupo_clave, func.count()).group_by(AvisoLlegada.grupo_clave)).all())
     buscados = []
@@ -67,7 +68,7 @@ def tablero(dias: int = Query(30, ge=7, le=365, description="Período: últimos 
     # HU-11: lo que buscaron y no encontraron (texto tal cual, agrupado por igualdad)
     sin_resultado = db.execute(
         select(Interes.texto, func.count()).where(Interes.fecha >= desde, Interes.tuvo_resultados.is_(False))
-        .group_by(Interes.texto).order_by(func.count().desc()).limit(5)
+        .group_by(Interes.texto).order_by(func.count().desc(), func.max(Interes.id).desc()).limit(8)
     ).all()
     
     # Últimas 8 semanas, de lunes a domingo, para el gráfico
