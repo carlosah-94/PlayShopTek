@@ -180,6 +180,17 @@ export default function Tablero({ usuario }) {
             {' · '}{ia.busquedas_agrupadas} búsquedas nuevas agrupadas, {ia.grupos_nuevos} grupos nuevos.
           </p>
         )}
+        {ia?.agrupadas_ahora && (
+          <div className="mb-3 rounded-lg border border-morado/30 p-2 text-xs text-tinta/80">
+            {ia.agrupadas_ahora.length === 0
+              ? 'No había búsquedas nuevas: todas ya estaban agrupadas.'
+              : ia.agrupadas_ahora.map((a) => (
+                <p key={a.grupo}>
+                  <b>{a.grupo}</b>{a.nuevo ? ' (grupo nuevo)' : ''} ← {a.textos.map((t) => '“' + t + '”').join(', ')}
+                </p>
+              ))}
+          </div>
+        )}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-xs uppercase tracking-wide text-tinta/60">

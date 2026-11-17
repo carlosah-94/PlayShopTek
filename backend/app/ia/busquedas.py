@@ -96,7 +96,7 @@ def ejecutar(db: Session, guardar: bool = True) -> dict:
 
     # Cada grupo de la IA hereda el grupo manual que más se repite dentro de él; si no hay, se crea uno nuevo
     df["cluster"] = df["texto"].map(separar_sagas(grupo_de_texto))
-    nuevos, asignadas, grupos = 0, 0, []
+    nuevos, asignadas, grupos, ahora = 0, 0, [], []
     for cluster, miembros in df.groupby("cluster"):
         conocidos = miembros["grupo"].dropna()
         nombre_comun = Counter(miembros["texto"]).most_common(1)[0][0]
@@ -109,6 +109,11 @@ def ejecutar(db: Session, guardar: bool = True) -> dict:
                 db.flush()
                 nuevos += 1
         sin_grupo = miembros[miembros["grupo"].isna()]
+        if len(sin_grupo):  # lo que se agrupó en este clic: para mostrarlo en el tablero
+            nombre = nombre_comun[:1].upper() + nombre_comun[1:]
+            if len(conocidos) and (g := db.get(GrupoInteres, clave)):
+                nombre = g.nombre
+            ahora.append({"grupo": nombre, "nuevo": not len(conocidos), "textos": sorted(sin_grupo["texto"].unique())})
         if guardar and len(sin_grupo):
             for interes in db.scalars(select(Interes).where(Interes.id.in_(sin_grupo["id"].tolist()))):
                 interes.grupo_clave = clave
@@ -124,6 +129,7 @@ def ejecutar(db: Session, guardar: bool = True) -> dict:
         "algoritmo_elegido": r["ganador"]["algoritmo"], "kmeans": resumen(r["mejor"]["K-Means"]),
         "dbscan": resumen(r["mejor"]["DBSCAN"]), "ari_vs_grupos_manuales": round(float(ari), 3) if ari is not None else None,
         "textos_distintos": len(textos), "grupos_nuevos": nuevos, "busquedas_agrupadas": asignadas, "grupos": grupos,
+        "agrupadas_ahora": ahora,
     }
 
 
