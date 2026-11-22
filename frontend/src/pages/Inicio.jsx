@@ -2,7 +2,7 @@
 // (ofertas y servicio técnico), recomendados, ofertas con contador, servicios del taller y reseñas de clientes.
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { api, leerSesion, urlImagen } from '../api.js'
+import { api, fotoChica, leerSesion, urlImagen } from '../api.js'
 import { BotonWhatsApp } from '../components/Asesores.jsx'
 import Icono from '../components/Iconos.jsx'
 import MenuCategoria from '../components/MenuCategoria.jsx'
@@ -67,7 +67,8 @@ function Carrusel({ diapositivas }) {
       {diapositivas.map((x, i) => (
         // HU-24: si Ángel subió una foto cuadrada para celular, se usa en pantallas chicas
         <picture key={x.foto + i}>
-          {x.fotoMovil && <source media="(max-width: 640px)" srcSet={x.fotoMovil} />}
+          {/* Mejora 3: si no hay foto para celular, el celular baja la copia chica (800 px en vez de 1200) */}
+          <source media="(max-width: 640px)" srcSet={x.fotoMovil || fotoChica(x.foto)} />
           <img src={x.foto} alt={i === actual ? x.alt : ''} aria-hidden={i !== actual}
             width="1200" height="680" fetchPriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'}
             className={'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ' + (i === actual ? 'opacity-100' : 'opacity-0')} />
@@ -111,7 +112,7 @@ function Carrusel({ diapositivas }) {
 function Acceso({ a, externo, foto, alt, titulo, texto, enlace, icono }) {
   const contenido = (
     <>
-      <img src={foto} alt={alt} loading="lazy" width="480" height="480" className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-105" />
+      <img src={fotoChica(foto)} alt={alt} loading="lazy" width="480" height="480" className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-105" />
       <div className="absolute inset-0 bg-gradient-to-t from-noche via-noche/70 to-noche/10" />
       <div className="relative mt-auto p-4 text-white">
         <p className="flex items-center gap-2 font-titulo text-lg font-semibold leading-tight">{icono} {titulo}</p>

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { agregarAlCarrito } from '../carrito.js'
-import { urlImagen } from '../api.js'
+import { fotoAdaptable } from '../api.js'
 import Icono from './Iconos.jsx'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
@@ -33,7 +33,7 @@ export default function TarjetaProducto({ p, favorito = false, onFavorito, razon
         <Link to={'/producto/' + p.id} tabIndex={-1}>
           {/* HU-25: como el prototipo: la foto vertical sobre una franja lila suave */}
           {p.foto
-            ? <div className="bg-morado/10 px-3 pt-6 pb-3"><img src={urlImagen(p.foto)} alt={p.nombre} loading={prioridad ? 'eager' : 'lazy'} fetchPriority={prioridad ? 'high' : 'auto'} width="300" height="340" className="aspect-[7/8] w-full object-contain" /></div>
+            ? <div className="bg-morado/10 px-3 pt-6 pb-3"><img {...fotoAdaptable(p.foto, 300, 600, '(min-width: 1280px) 230px, (min-width: 1024px) 28vw, (min-width: 640px) 45vw, 160px')} alt={p.nombre} loading={prioridad ? 'eager' : 'lazy'} fetchPriority={prioridad ? 'high' : 'auto'} width="300" height="340" className="aspect-[7/8] w-full object-contain" /></div>
             : <div className="grid aspect-[4/5] place-items-center bg-morado/10 text-sm text-tinta/60">Foto pendiente</div>}
         </Link>
         {p.descuento && <span className="absolute left-2 top-2 rounded-full bg-rosa px-2 py-0.5 text-xs font-semibold text-white">-{p.descuento}%</span>}

@@ -5,6 +5,16 @@ const BASE = import.meta.env.VITE_API_URL || ''
 // HU-24: las fotos que sube Ángel viven en el servidor (/api/imagenes/15); las demás, en Vercel (/productos/p1-1.webp)
 export const urlImagen = (u) => (u && u.startsWith('/api/') ? BASE + u : u)
 
+// Mejora 3: las fotos de la tienda (/productos y /inicio) tienen una copia "chica" (-chica.webp).
+// El navegador elige sola cuál bajar según el ancho de la pantalla: el celular baja la chica.
+// Las fotos que sube Ángel desde el panel (/api/...) ya se achican al subirlas, así que quedan igual.
+const TIENE_CHICA = /^\/(productos|inicio)\/[^/]+\.webp$/
+export const fotoChica = (u) => (u && TIENE_CHICA.test(u) ? u.replace(/\.webp$/, '-chica.webp') : urlImagen(u))
+export function fotoAdaptable(u, anchoChica, anchoGrande, sizes) {
+  if (!u || !TIENE_CHICA.test(u)) return { src: urlImagen(u) }
+  return { src: u, srcSet: `${fotoChica(u)} ${anchoChica}w, ${u} ${anchoGrande}w`, sizes }
+}
+
 export function guardarSesion(datos) { localStorage.setItem('psk-sesion', JSON.stringify(datos)) }
 export function leerSesion() { try { return JSON.parse(localStorage.getItem('psk-sesion')) } catch { return null } }
 export function cerrarSesion() { localStorage.removeItem('psk-sesion') }
