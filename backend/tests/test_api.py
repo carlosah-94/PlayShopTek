@@ -116,6 +116,8 @@ def test_rastreo_pide_codigo_y_celular(cliente):
     d = r.json()
     assert d["cliente"] == "Kevin" and d["historial"][0]["estado"] == "recibido"
     assert cliente.get("/api/rastreo/2062", params={"celular": "2445"}).status_code == 200  # sin "R-" también vale
+    assert cliente.get("/api/rastreo/r2062", params={"celular": "2445"}).status_code == 200  # minúsculas y sin guion también
+    assert cliente.get("/api/rastreo/R-2061", params={"celular": "8465"}).json()["estado"] == "listo_para_recoger"
     assert cliente.get("/api/rastreo/R-2062", params={"celular": "0000"}).status_code == 404  # celular de otro
     assert cliente.get("/api/rastreo/R-9999", params={"celular": "2445"}).status_code == 404
 
@@ -622,3 +624,20 @@ def test_busqueda_nueva_se_ve_en_el_tablero(cliente):
     tablero = cliente.get("/api/tablero?dias=7", headers=h).json()
     assert any(juego in b["nombre"].lower() for b in tablero["mas_buscados"])
     assert any(f["nombre"] == juego for f in tablero["sin_resultado"])
+
+
+def test_rastreo_bloquea_tras_5_intentos_fallidos(cliente):
+    """Freno a la fuerza bruta: 5 celulares equivocados para el mismo código -> 10 minutos bloqueado.
+    Otra conexión no queda bloqueada, y el bloqueo es solo para ese código."""
+    from app.api.routes import rastreo
+    rastreo.FALLOS.clear()
+    atacante = {"X-Forwarded-For": "203.0.113.7"}
+    for intento in range(5):
+        r = cliente.get("/api/rastreo/R-2062", params={"celular": f"000{intento}"}, headers=atacante)
+        assert r.status_code == 404
+    r = cliente.get("/api/rastreo/R-2062", params={"celular": "2445"}, headers=atacante)  # aunque ahora acierte
+    assert r.status_code == 429 and "Demasiados intentos" in r.json()["detail"]
+    assert cliente.get("/api/rastreo/R-2061", params={"celular": "8465"}, headers=atacante).status_code == 200  # otro código
+    assert cliente.get("/api/rastreo/R-2062", params={"celular": "2445"},
+                       headers={"X-Forwarded-For": "198.51.100.4"}).status_code == 200  # otra persona
+    rastreo.FALLOS.clear()
