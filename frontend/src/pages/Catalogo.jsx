@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api } from '../api.js'
-import FiltrosCatalogo, { etiquetaCategoria, pasa } from '../components/FiltrosCatalogo.jsx'
+import FiltrosCatalogo, { EstadoRapido, etiquetaCategoria, pasa } from '../components/FiltrosCatalogo.jsx'
 import TarjetaProducto from '../components/TarjetaProducto.jsx'
 import { useFavoritos } from '../favoritos.js'
 
@@ -82,6 +82,8 @@ export default function Catalogo() {
             </label>
           </div>
         </div>
+
+        {productos && <EstadoRapido productos={productos} v={v} poner={poner} />}
 
         {error && <p className="mt-4 rounded-lg bg-error/10 p-3 text-sm text-error">{error}</p>}
         {productos && visibles.length === 0 && (
