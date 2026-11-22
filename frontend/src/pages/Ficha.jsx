@@ -3,7 +3,7 @@
 // HU-25: con el diseño del prototipo: galería con flechas, cantidad, beneficios, detalles y reseñas con barras.
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { api, leerSesion, urlImagen } from '../api.js'
+import { api, fotoAdaptable, fotoChica, leerSesion } from '../api.js'
 import { agregarAlCarrito } from '../carrito.js'
 import { BotonWhatsApp } from '../components/Asesores.jsx'
 import Icono from '../components/Iconos.jsx'
@@ -133,7 +133,7 @@ export default function Ficha() {
           {/* HU-21: galería: la pieza grande con flechas y, debajo, las 4 miniaturas (la 4.ª puede ser el tráiler) */}
           <div className="relative overflow-hidden rounded-2xl border border-tinta/10 bg-white">
             {!galeria.length && <div className="grid aspect-square place-items-center text-tinta/60">Foto pendiente</div>}
-            {pieza?.tipo === 'foto' && <img src={urlImagen(pieza.url)} alt={p.nombre} fetchPriority="high" width="600" height="600" className="aspect-square w-full object-contain p-4" />}
+            {pieza?.tipo === 'foto' && <img {...fotoAdaptable(pieza.url, 300, 600, '(min-width: 768px) 40vw, 90vw')} alt={p.nombre} fetchPriority="high" width="600" height="600" className="aspect-square w-full object-contain p-4" />}
             {pieza?.tipo === 'video' && (
               <div className="grid aspect-square w-full place-items-center bg-[#0b0820]">
                 <iframe key={pieza.id} src={'https://www.youtube-nocookie.com/embed/' + pieza.id + '?autoplay=1&rel=0'} title={'Tráiler de ' + p.nombre}
@@ -157,7 +157,7 @@ export default function Ficha() {
                   aria-label={m.tipo === 'video' ? 'Ver tráiler' : 'Ver foto ' + (i + 1)}
                   className={'relative aspect-square overflow-hidden rounded-[10px] border-2 bg-white ' + (i === actual ? 'border-rosa shadow-[0_0_0_3px_rgba(222,28,187,.18)]' : 'border-tinta/10')}>
                   {m.tipo === 'foto'
-                    ? <img src={urlImagen(m.url)} alt="" loading="lazy" className="h-full w-full object-contain p-1" />
+                    ? <img src={fotoChica(m.url)} alt="" loading="lazy" className="h-full w-full object-contain p-1" />
                     : (
                       <>
                         <img src={'https://i.ytimg.com/vi/' + m.id + '/mqdefault.jpg'} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-60" />
