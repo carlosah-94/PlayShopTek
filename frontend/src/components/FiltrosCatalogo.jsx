@@ -7,7 +7,7 @@ import Icono from './Iconos.jsx'
 export const CATEGORIAS = ['PS2', 'PS3', 'PS4', 'PS5', 'Máquinas', 'Mandos', 'PC y periféricos']
 export const ES_JUEGO = (c) => /^PS\d$/.test(c)
 export const etiquetaCategoria = (c) => (ES_JUEGO(c) ? 'Juegos ' + c : c)
-const ESTADOS = [['nuevo', 'Nuevo'], ['usado', 'Usado'], ['reacondicionado', 'Reacondicionado en taller']]
+export const ESTADOS = [['nuevo', 'Nuevo'], ['usado', 'Usado'], ['reacondicionado', 'Reacondicionado en taller']]
 
 // ¿El producto pasa todos los filtros? (los usan el catálogo, las ofertas y los conteos)
 export function pasa(p, v, sin = '') {
@@ -52,6 +52,30 @@ function Radio({ nombre, activo, onChange, texto, n }) {
   )
 }
 
+// Mejora 2: botones grandes "Nuevo / Usado / Reacondicionado" encima de los productos.
+// En la encuesta, a 3 de 7 personas les costó encontrar el filtro de estado (estaba al final del panel
+// y en celular escondido tras el botón "Filtros"). Aquí se ve siempre, con cuántos productos hay en cada uno.
+export function EstadoRapido({ productos, v, poner }) {
+  const opciones = [['', 'Todos'], ['nuevo', 'Nuevo'], ['usado', 'Usado'], ['reacondicionado', 'Reacondicionado']]
+  return (
+    <div role="group" aria-label="Estado del producto" className="mt-4 flex flex-wrap items-center gap-2">
+      <span className="text-sm font-semibold text-tinta/80">Estado:</span>
+      {opciones.map(([valor, texto]) => {
+        const activo = (v.estado || '') === valor
+        const n = productos.filter((p) => pasa(p, { ...v, estado: valor })).length
+        return (
+          <button key={texto} type="button" id={'estado-' + (valor || 'todos')} aria-pressed={activo}
+            onClick={() => poner({ estado: valor })}
+            className={'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ' +
+              (activo ? 'border-rosa bg-rosa text-white shadow-sm' : 'border-tinta/15 bg-superficie hover:border-rosa/50 hover:bg-rosa/10')}>
+            {texto}<span className={'rounded-full px-2 text-xs tabular-nums ' + (activo ? 'bg-white/25' : 'bg-tinta/5 text-tinta/70')}>{n}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function FiltrosCatalogo({ productos, v, poner, limpiar, generos }) {
   const [abierto, setAbierto] = useState(false) // en celular
   const cuantos = (k, valor) => productos.filter((p) => pasa(p, { ...v, [k]: valor }, '')).length
@@ -75,6 +99,14 @@ export default function FiltrosCatalogo({ productos, v, poner, limpiar, generos 
         {CATEGORIAS.map((cat) => (
           <Opcion key={cat} activo={c === cat} texto={etiquetaCategoria(cat)} n={cuantos('categoria', cat)}
             onClick={() => poner({ categoria: c === cat ? '' : cat, genero: '', plataforma: '', sub: '', origen: '' })} />
+        ))}
+      </Grupo>
+
+      {/* Mejora 2: "Estado" sube justo debajo de Categoría (antes estaba al final, tras la lista de géneros) */}
+      <Grupo titulo="Estado">
+        <Radio nombre="estado" activo={!v.estado} onChange={() => poner({ estado: '' })} texto="Todos" />
+        {conProductos('estado', ESTADOS).map(([x, t, n]) => (
+          <Radio key={x} nombre="estado" activo={v.estado === x} onChange={() => poner({ estado: x })} texto={t} n={n} />
         ))}
       </Grupo>
 
@@ -115,12 +147,6 @@ export default function FiltrosCatalogo({ productos, v, poner, limpiar, generos 
         </Grupo>
       )}
 
-      <Grupo titulo="Estado">
-        <Radio nombre="estado" activo={!v.estado} onChange={() => poner({ estado: '' })} texto="Todos" />
-        {conProductos('estado', ESTADOS).map(([x, t, n]) => (
-          <Radio key={x} nombre="estado" activo={v.estado === x} onChange={() => poner({ estado: x })} texto={t} n={n} />
-        ))}
-      </Grupo>
     </div>
   )
 
