@@ -6,8 +6,20 @@ import tailwindcss from '@tailwindcss/vite'
 // Dentro de Docker el backend se llama "backend"; fuera, "localhost".
 const destino = process.env.API_PROXY || 'http://localhost:8000'
 
+// Mejora 3b: "saludar" al servidor de Render apenas abre la página (preconnect).
+// Así la conexión (DNS + TCP + TLS) se arma mientras baja el código, y no después,
+// cuando el catálogo o la ficha recién piden los productos. Solo en producción (VITE_API_URL).
+const saludarServidor = {
+  name: 'preconnect-api',
+  transformIndexHtml() {
+    const url = process.env.VITE_API_URL
+    if (!url) return []
+    return [{ tag: 'link', attrs: { rel: 'preconnect', href: new URL(url).origin, crossorigin: '' }, injectTo: 'head-prepend' }]
+  },
+}
+
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), saludarServidor],
   server: {
     host: true,
     port: 5173,
