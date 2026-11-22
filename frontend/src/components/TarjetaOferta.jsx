@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { agregarAlCarrito } from '../carrito.js'
-import { urlImagen } from '../api.js'
+import { fotoAdaptable } from '../api.js'
 import Icono from './Iconos.jsx'
 
 const soles = (n) => 'S/ ' + Number(n).toLocaleString('es-PE')
@@ -43,7 +43,7 @@ export default function TarjetaOferta({ p, onTermina, vertical = false }) {
       {/* HU-22: en celular la foto se limita a 14 rem de alto para que la oferta no ocupe toda la pantalla */}
       <Link to={'/producto/' + p.id} tabIndex={-1} className={'relative block ' + (vertical ? 'bg-morado/10 px-3 pt-6 pb-3' : 'bg-white')}>
         {p.foto
-          ? <img src={urlImagen(p.foto)} alt={p.nombre} loading="lazy" width="240" height="300"
+          ? <img {...fotoAdaptable(p.foto, 300, 600, '(min-width: 640px) 240px, 170px')} alt={p.nombre} loading="lazy" width="240" height="300"
               className={vertical ? 'mx-auto aspect-[7/8] max-h-56 w-auto object-contain sm:max-h-none sm:w-full' : 'mx-auto aspect-[4/5] h-56 w-auto object-contain p-2 sm:h-full sm:w-full'} />
           : <div className="grid aspect-[4/5] place-items-center text-sm text-[#5c5096]">Foto pendiente</div>}
         <span className="absolute left-2 top-2 rounded-full bg-rosa px-2 py-0.5 text-sm font-semibold text-white">-{p.descuento}%</span>
