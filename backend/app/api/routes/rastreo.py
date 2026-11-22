@@ -1,5 +1,7 @@
 """HU-07: el cliente rastrea su reparación con el código y los 4 últimos dígitos de su celular."""
-from fastapi import APIRouter, Depends, HTTPException, Query
+import time
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
@@ -11,6 +13,19 @@ router = APIRouter(prefix="/rastreo", tags=["Rastreo"])
 
 NO_ENCONTRADA = "No encontramos una reparación con ese código y celular. Revisa los datos o escríbenos por WhatsApp."
 
+# Freno a la "fuerza bruta": con 4 dígitos hay 10 000 combinaciones y un programa las probaría en minutos.
+# 5 intentos fallidos para el mismo código desde la misma conexión -> 10 minutos de espera.
+# Se cuenta por código para que, en un mismo wifi (universidad, encuesta), un error ajeno no bloquee a los demás.
+MAX_FALLOS, ESPERA_SEGUNDOS = 5, 10 * 60
+BLOQUEADO = "Demasiados intentos con este código. Espera 10 minutos o escríbenos por WhatsApp."
+FALLOS: dict[tuple[str, str], list[float]] = {}  # (conexión, código) -> momentos de los intentos fallidos
+
+
+def _conexion(request: Request) -> str:
+    """La IP del cliente. En Render llega en X-Forwarded-For; se usa la última, la que agrega su proxy."""
+    reenviada = request.headers.get("x-forwarded-for")
+    return reenviada.split(",")[-1].strip() if reenviada else (request.client.host if request.client else "?")
+
 
 def normalizar(codigo: str) -> str:
     """Acepta 'r-2063', 'R2063' o solo '2063' y lo deja como 'R-2063'."""
@@ -19,10 +34,16 @@ def normalizar(codigo: str) -> str:
 
 
 @router.get("/{codigo}", response_model=RastreoSalida)
-def rastrear(codigo: str, celular: str = Query(pattern=r"^\d{4}$", description="4 últimos dígitos del celular"),
+def rastrear(request: Request, codigo: str,
+             celular: str = Query(pattern=r"^\d{4}$", description="4 últimos dígitos del celular"),
              db: Session = Depends(get_db)):
     """Público (sin iniciar sesión). Pide los 4 últimos dígitos del celular para que nadie
-    vea la reparación de otra persona solo adivinando códigos."""
+    vea la reparación de otra persona solo adivinando códigos, y limita los intentos fallidos."""
+    clave = (_conexion(request), normalizar(codigo))
+    ahora = time.time()
+    recientes = [t for t in FALLOS.get(clave, []) if ahora - t < ESPERA_SEGUNDOS]
+    if len(recientes) >= MAX_FALLOS:
+        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, BLOQUEADO)
     fila = db.execute(
         select(Reparacion, Cliente).join(Cliente, Cliente.id == Reparacion.cliente_id)
         .where(Reparacion.codigo == normalizar(codigo))
@@ -30,7 +51,9 @@ def rastrear(codigo: str, celular: str = Query(pattern=r"^\d{4}$", description="
     ).first()
     # El mismo mensaje si el código no existe o si el celular no coincide: así no se revela cuál falló
     if fila is None or not (fila.Cliente.telefono or "").endswith(celular):
+        FALLOS[clave] = recientes + [ahora]
         raise HTTPException(404, NO_ENCONTRADA)
+    FALLOS.pop(clave, None)  # acertó: se reinicia la cuenta
     r, c = fila
     return RastreoSalida(
         codigo=r.codigo, cliente=c.nombre.split(" ")[0], equipo=r.equipo, falla=r.falla,
