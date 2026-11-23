@@ -83,7 +83,8 @@ export default function Catalogo() {
           </div>
         </div>
 
-        {productos && <EstadoRapido productos={productos} v={v} poner={poner} />}
+        {/* Mejora 3c: la fila se dibuja desde el inicio (sin números mientras cargan) para que no empuje la página al aparecer */}
+        <EstadoRapido productos={productos} v={v} poner={poner} />
 
         {error && <p className="mt-4 rounded-lg bg-error/10 p-3 text-sm text-error">{error}</p>}
         {productos && visibles.length === 0 && (
