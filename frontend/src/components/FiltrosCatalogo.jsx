@@ -62,7 +62,7 @@ export function EstadoRapido({ productos, v, poner }) {
       <span className="text-sm font-semibold text-tinta/80">Estado:</span>
       {opciones.map(([valor, texto]) => {
         const activo = (v.estado || '') === valor
-        const n = productos.filter((p) => pasa(p, { ...v, estado: valor })).length
+        const n = productos ? productos.filter((p) => pasa(p, { ...v, estado: valor })).length : '·'
         return (
           <button key={texto} type="button" id={'estado-' + (valor || 'todos')} aria-pressed={activo}
             onClick={() => poner({ estado: valor })}

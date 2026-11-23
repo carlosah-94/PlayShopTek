@@ -1,24 +1,26 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import Asistente from './components/Asistente.jsx'
 import { PanelWhatsApp, useDesplegable } from './components/Asesores.jsx'
 import Icono from './components/Iconos.jsx'
 import { MenuCuenta, Notificaciones } from './components/MenusCliente.jsx'
 import PanelGestion, { RUTAS_PANEL } from './components/PanelGestion.jsx'
-import Carrito from './pages/Carrito.jsx'
 import Catalogo from './pages/Catalogo.jsx'
-import Favoritos from './pages/Favoritos.jsx'
 import Ficha from './pages/Ficha.jsx'
 import Inicio from './pages/Inicio.jsx'
-import Login from './pages/Login.jsx'
-import Ofertas from './pages/Ofertas.jsx'
-import Rastreo from './pages/Rastreo.jsx'
-import Reparaciones from './pages/Reparaciones.jsx'
 import { api, cerrarSesion, leerSesion } from './api.js'
 import { leerCarrito, unidades } from './carrito.js'
 
 // Rendimiento: las páginas que se usan poco (panel del equipo, cuenta, pago, información) se descargan
 // recién cuando alguien entra a ellas. Así el inicio, el catálogo y la ficha cargan más rápido en celular.
+// Mejora 3c: el asistente y las páginas que no son de entrada (carrito, login, ofertas, rastreo...)
+// se bajan recién cuando se usan. Así el celular procesa menos código al abrir el inicio, el catálogo o una ficha.
+const Asistente = lazy(() => import('./components/Asistente.jsx'))
+const Carrito = lazy(() => import('./pages/Carrito.jsx'))
+const Favoritos = lazy(() => import('./pages/Favoritos.jsx'))
+const Login = lazy(() => import('./pages/Login.jsx'))
+const Ofertas = lazy(() => import('./pages/Ofertas.jsx'))
+const Rastreo = lazy(() => import('./pages/Rastreo.jsx'))
+const Reparaciones = lazy(() => import('./pages/Reparaciones.jsx'))
 const Banners = lazy(() => import('./pages/Banners.jsx'))
 const Encuesta = lazy(() => import('./pages/Encuesta.jsx'))
 const Informacion = lazy(() => import('./pages/Informacion.jsx'))
@@ -232,7 +234,7 @@ export default function App() {
 
       {/* HU-20: botón flotante de WhatsApp (el asistente queda encima). HU-26: abre los asesores, como el prototipo */}
       <WhatsAppFlotante />
-      <Asistente />
+      <Suspense fallback={null}><Asistente /></Suspense>
     </div>
   )
 }
