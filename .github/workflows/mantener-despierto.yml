@@ -1,0 +1,21 @@
+# Mejora 4: primera carga sin espera.
+# Render (plan gratis) duerme el servidor tras ~15 minutos sin visitas, y el primer visitante
+# esperaba ~60 s. Este flujo lo visita cada 10 minutos para que siga despierto.
+# Gratis: el repositorio es público (minutos de Actions sin límite) y Render da 750 h al mes
+# por cuenta, suficientes para un solo servicio prendido todo el mes.
+name: Mantener despierto el servidor
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # cada 10 minutos (GitHub puede retrasarlo unos minutos)
+  workflow_dispatch:         # botón "Run workflow" para probarlo a mano
+
+jobs:
+  visitar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Visitar /api/despertar
+        run: |
+          curl --fail --silent --show-error --retry 3 --retry-delay 10 --max-time 90 \
+            https://playshoptek-api-jzme.onrender.com/api/despertar

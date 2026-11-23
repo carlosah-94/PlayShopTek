@@ -7,6 +7,12 @@ def test_salud(cliente):
     assert r.json() == {"api": "ok", "base_de_datos": "ok"}
 
 
+
+def test_despertar_responde_sin_base_de_datos(cliente):
+    """Mejora 4: GitHub Actions visita esta ruta cada 10 min para que Render no duerma el servidor."""
+    r = cliente.get("/api/despertar")
+    assert r.status_code == 200 and r.json() == {"api": "despierta"}
+
 def test_login_devuelve_el_rol(cliente):
     for email, pwd, rol in [("angel@playshoptek.pe", "tienda123", "dueno"),
                             ("linda@playshoptek.pe", "tienda123", "trabajadora"),

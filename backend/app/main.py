@@ -38,6 +38,13 @@ def salud():
     return {"api": "ok", "base_de_datos": "ok"}
 
 
+@api.get("/despertar", tags=["Sistema"])
+def despertar():
+    """Mejora 4: lo visita GitHub Actions cada 10 minutos para que Render no duerma el servidor.
+    No toca la base de datos a propósito: así Neon sí puede dormir y no gastamos sus horas gratis."""
+    return {"api": "despierta"}
+
+
 api.include_router(auth.router)
 api.include_router(productos.router)
 api.include_router(reparaciones.router)
